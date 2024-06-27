@@ -18,7 +18,7 @@ const Status = () => {
     setError('');
 
     try {
-      const response = await axios.post('https://apps.laoagcity.gov.ph:3002/users/login', {
+      const response = await axios.post('https://apps.laoagcity.gov.ph:3002/status/', {
         ticket
       });
       dispatch(setCredentials({
@@ -45,7 +45,7 @@ const Status = () => {
             <h2 className="mb-2">Laoag City DPS Citations and Ticketing status check</h2>
             <Form.Group controlId="formBasicUsername">
               <Form.Label>Ticket Number</Form.Label>
-              <Form.Control type="text" placeholder="Enter Ticker Number" value={ticket} onChange={(e) => setTicket(e.target.value)} required />
+              <Form.Control type="text" placeholder="Enter Ticket Number" value={ticket} onChange={(e) => setTicket(e.target.value)} required />
             </Form.Group>
             <Button variant="primary" type="submit" className="mt-4 w-100">
               Check
