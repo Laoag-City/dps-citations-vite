@@ -3,12 +3,9 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './components/Home';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
-import NewOSCPRecord from './components/NewOSCPRecord'
-//import NewOSCPRecord2 from './components/NewOSCPRecord2'
+import NewDPSRecord from './components/NewDPSCitationRecord'
 import PrivateRoute from './components/PrivateRoute';
 
-//import reactLogo from './assets/react.svg'
-//import viteLogo from '/vite.svg'
 import './App.css'
 //import 'bootstrap/dist/css/bootstrap.min.css';
 import './assets/bootstrap-darkly-theme.min.css'
@@ -23,9 +20,9 @@ function App() {
             <Dashboard />
           </PrivateRoute>
         } />
-        <Route path="/newoscpapplication" element={
+        <Route path="/newdpscitation" element={
           <PrivateRoute>
-            <NewOSCPRecord />
+            <NewDPSRecord />
           </PrivateRoute>
         } />
         {/*

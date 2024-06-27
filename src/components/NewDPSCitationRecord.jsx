@@ -8,7 +8,7 @@ import axios from 'axios';
 import TopBar from './TopBar';
 import Footer from './Footer';
 
-function ApplicationForm() {
+function DPSCitationRecordForm() {
   const navigate = useNavigate();
   const { token, user } = useSelector(state => state.auth);
 
@@ -79,56 +79,16 @@ function ApplicationForm() {
     e.preventDefault();
     console.log(formData);
     try {
-      const response = await axios.post('https://apps.laoagcity.gov.ph:3001/oscpapplications', JSON.stringify(formData), config);
+      const response = await axios.post('https://apps.laoagcity.gov.ph:3002/dpscitations', JSON.stringify(formData), config);
       console.log("Response data: ", response.data);
-      alert('New OSCP Application accepted');
-      //const data = await response.json(); // Assuming response is JSON
+      alert('New DPS Record accepted');
       navigate("/");
     } catch (error) {
       console.error('Error submitting form:', error);
-      alert('OSCP New Application error.');
+      alert('DPS New Record error.');
       navigate("/");
     }
   };
-  {/*
-  const renderSignatoryForm = (signatories, section) => (
-    signatories.map((signatory, index) => (
-      <Card key={index}>
-        <Card.Header>Signatory {index + 1}</Card.Header> 
-        <Card.Header>{signatory.signatory}</Card.Header>
-        <Card.Body>
-          <Form.Group className="mb-3">
-            <Form.Label>Status</Form.Label>
-            <Form.Control
-              type="text"
-              name="status"
-              value={signatory.status}
-              onChange={e => handleChange(e, section, index)}
-            />
-          </Form.Group>
-          <Form.Group className="mb-3">
-            <Form.Label>Remarks</Form.Label>
-            <Form.Control
-              type="text"
-              name="remarks"
-              value={signatory.remarks}
-              onChange={e => handleChange(e, section, index)}
-            />
-          </Form.Group>
-          <Form.Group className="mb-3">
-            <Form.Label>Sign Date and Time</Form.Label>
-            <Form.Control
-              type="datetime-local"
-              name="signDate"
-              value={signatory.signDate}
-              onChange={e => handleChange(e, section, index)}
-            />
-          </Form.Group>
-        </Card.Body>
-      </Card >
-    ))
-  );
-*/}
 
   return (
     <Container className="align-items-center">
@@ -193,56 +153,4 @@ function ApplicationForm() {
   );
 }
 
-export default ApplicationForm;
-
-{/*
-      <Form.Group className="mb-3">
-      <Form.Label>Signatory</Form.Label>
-      <Form.Control
-      type="text"
-      name="signatory"
-      value={signatory.signatory}
-      onChange={e => handleChange(e, section, index)}
-      />
-      </Form.Group>
-          <Accordion.Item eventKey="1">
-            <Accordion.Header>Conversion Signatories</Accordion.Header>
-            <Accordion.Body>
-              {renderSignatoryForm(formData.conversionSignatories, 'conversionSignatories')}
-            </Accordion.Body>
-          </Accordion.Item>
-
-      <Accordion.Item eventKey="1">
-            <Accordion.Header>Conversion Signatories</Accordion.Header>
-            <Accordion.Body>
-              {renderSignatoryForm(formData.conversionSignatories, 'conversionSignatories')}
-            </Accordion.Body>
-          </Accordion.Item>
-  
-      <Form.Group as={Col}>
-        <Form.Label>Conversion Status</Form.Label>
-          <Form.Check
-            type="switch"
-              id="conversion-status-switch"
-              name="conversionStatus"
-              checked={formData.conversionStatus}
-              onChange={handleChange}
-          />
-      </Form.Group>
-      <Form.Group as={Col}>
-        <Form.Label>Construction Permit Status</Form.Label>
-            <Form.Check
-              type="switch"
-              id="construction-permit-status-switch"
-              name="cPermitStatus"
-              checked={formData.cPermitStatus}
-              onChange={handleChange}
-              />
-      </Form.Group>
-      <Accordion.Item eventKey="1">
-        <Accordion.Header>Construction Permit Signatories</Accordion.Header>
-        <Accordion.Body>
-          {renderSignatoryForm(formData.constructionPermitSignatories, 'constructionPermitSignatories')}
-        </Accordion.Body>
-          </Accordion.Item>
-*/}
+export default DPSCitationRecordForm;

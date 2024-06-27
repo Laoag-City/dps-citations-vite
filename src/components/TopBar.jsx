@@ -40,7 +40,7 @@ const TopBar = ({ username, userrole }) => {
               <Navbar.Text>Hello {username}
               </Navbar.Text>
             </Nav>
-            <Nav>{userrole === "oscpreceiving" && <Nav.Link href="/newoscpapplication">New OSCP Application</Nav.Link>}
+            <Nav>{userrole === "dpsstaff" && <Nav.Link href="/newdpscitation">New DPS Citation</Nav.Link>}
               {/*               <Nav.Link href="#deets">More deets</Nav.Link>*/}            </Nav>
             <Form className="d-flex">
               <Form.Control
