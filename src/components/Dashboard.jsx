@@ -93,7 +93,7 @@ const Dashboard = () => {
                     <td>{citation.plateNumber}</td>
                     <td>{citation.vehicleColor}</td>
                     <td>{citation.apprehendingOfficer}</td>
-                    <td>{citation.amendStatus ? 'Amended' : 'Not Amended'}</td>
+                    <td>{citation.amendStatus ? 'Commuted' : 'Not Commuted'}</td>
                     <td>{violationCount(citation.violations)}</td>
                   </tr>
                 </tbody>
@@ -109,32 +109,6 @@ const Dashboard = () => {
                       <p>Name: {selectedCitation.lastName}, {selectedCitation.firstName}</p>
                       <p>Apprehended by: {selectedCitation.apprehendingOfficer}</p>
                       <p>Total: {sumAmounts(selectedCitation.violations)} | {selectedCitation.amendStatus ? 'Amended' : 'Not Amended'}</p>
-                      <Form>
-                        {['checkbox'].map((type) => (
-                          <div key={`inline-${type}`} className="mb-3">
-                            <Form.Check
-                              inline
-                              label="1"
-                              name="group1"
-                              type={type}
-                              id={`inline-${type}-1`}
-                            />
-                            <Form.Check
-                              inline
-                              label="2"
-                              name="group1"
-                              type={type}
-                              id={`inline-${type}-2`}
-                            />
-                            <Form.Check
-                              inline
-                              label="3"
-                              type={type}
-                              id={`inline-${type}-3`}
-                            />
-                          </div>
-                        ))}
-                      </Form>
                       <ListGroup.Item><strong>Violation/s:</strong>
                         {selectedCitation.violations.map((violation) => (
                           <div key={violation._id}>
