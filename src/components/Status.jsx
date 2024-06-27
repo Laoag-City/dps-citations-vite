@@ -18,7 +18,7 @@ const Status = () => {
     setError('');
 
     try {
-      const response = await axios.post('https://apps.laoagcity.gov.ph:3002/status/', {
+      const response = await axios.post('https://apps.laoagcity.gov.ph:3002/dpscitations/status/', {
         ticket
       });
       dispatch(setCredentials({

@@ -75,6 +75,7 @@ const Dashboard = () => {
               <Table striped bordered hover>
                 <thead>
                   <tr>
+                    <th>Ticket Number</th>
                     <th>License Number</th>
                     <th>Date Apprehended</th>
                     <th>Street Apprehended</th>
@@ -87,6 +88,7 @@ const Dashboard = () => {
                 </thead>
                 <tbody>
                   <tr key={citation._id} onClick={() => handleShow(citation)}>
+                    <td>{citation.ticketNumber}</td>
                     <td>{citation.licenseNumber}</td>
                     <td>{formatDate(citation.dateApprehended)}</td>
                     <td>{citation.streetApprehended}</td>

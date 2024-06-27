@@ -65,6 +65,7 @@ function DPSCitationRecordForm() {
   const currentTime = new Date().toISOString().slice(0, 16); // ISO string for datetime-local input
 
   const [formData, setFormData] = useState({
+    ticketNumber: '',
     firstName: '',
     lastName: '',
     middleName: '',
@@ -156,6 +157,14 @@ function DPSCitationRecordForm() {
       <TopBar username={user.username} userrole={user.userrole} bg="light" expand="lg" data-bs-theme="dark" />
       <h3 className="text-right">New DPS Citation Record</h3>
       <Form onSubmit={handleSubmit}>
+        <Row>
+          <Col>
+            <Form.Group controlId="ticketNumber">
+              <Form.Label>Ticket Number</Form.Label>
+              <Form.Control type="text" name="ticketNumber" value={formData.ticketNumber} onChange={handleChange} />
+            </Form.Group>
+          </Col>
+        </Row>
         <Row>
           <Col>
             <Form.Group controlId="firstName">
