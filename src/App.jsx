@@ -3,7 +3,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './components/Home';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
-import NewDPSRecord from './components/NewDPSCitationRecord'
+import NewDPSRecord from './components/NewDPSCitationRecord';
+import CitationStatus from './components/Status';
 import PrivateRoute from './components/PrivateRoute';
 
 import './App.css'
@@ -15,6 +16,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/status" element={<CitationStatus />} />
         <Route path="/dashboard" element={
           <PrivateRoute>
             <Dashboard />
