@@ -181,26 +181,21 @@ function DPSCitationRecordForm() {
     }));
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    // Replace 'your-api-endpoint' with the actual endpoint URL
-    fetch('your-api-endpoint', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(formData),
-    })
-      .then(response => response.json())
-      .then(data => {
-        console.log('Success:', data);
-        // Handle success response
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-        // Handle errors here
-      });
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log(formData);
+    try {
+      const response = await axios.post('https://apps.laoagcity.gov.ph:3002/dpscitations', JSON.stringify(formData), config);
+      console.log("Response data: ", response.data);
+      alert('New DPS Record accepted');
+      navigate("/");
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      alert('DPS New Record error.');
+      navigate("/");
+    }
   };
+
   return (
     <Container className="align-items-center">
       <TopBar username={user.username} userrole={user.userrole} bg="light" expand="lg" data-bs-theme="dark" />
@@ -252,7 +247,11 @@ function DPSCitationRecordForm() {
         ))}
         <Button variant="secondary" onClick={addViolation}>Add Violation</Button>
         <br />
-        <Button type="submit">Submit</Button>
+        <Button type="submit" >Submit</Button>
+        <Button variant="secondary" onClick={backToHome}>
+          Back to Home
+        </Button>{' '}
+
       </Form>
     </Container>
   );
