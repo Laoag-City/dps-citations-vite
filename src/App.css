@@ -1,0 +1,17 @@
+.background-image-container {
+    background-image: url('./assets/laoaglogo.png');
+    background-size: cover;
+    background-position: center;
+    min-height: 70vh;
+    width: 70vw;
+}
+
+.unscaled-logo-container {
+    background-image: url('./assets/oscp.svg');
+    display: block;
+    margin: 0 auto;
+    background-size: 30vh;
+    background-repeat: no-repeat;
+    background-position: center;
+    /* opacity: 0.8; */
+}
