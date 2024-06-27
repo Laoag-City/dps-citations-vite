@@ -45,7 +45,7 @@ const Login = () => {
       <Col>
         <Container fluid="md" className="d-flex align-items-top justify-content-center">
           <Form onSubmit={handleLogin}>
-            <h2 className="mb-2">OSCP Login</h2>
+            <h2 className="mb-2">Laoag City DPS Citations and Ticketing Login</h2>
             <Form.Group controlId="formBasicUsername">
               <Form.Label>Username</Form.Label>
               <Form.Control type="text" placeholder="Enter username" value={username} onChange={(e) => setUsername(e.target.value)} required />

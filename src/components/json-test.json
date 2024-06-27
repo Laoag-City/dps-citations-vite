@@ -1,0 +1,73 @@
+[
+    {
+        "firstName": "Richard",
+        "lastName": "Alhama",
+        "middleName": "Laure",
+        "homeAddress": "188 Juan Luna",
+        "licenseNumber": "93012390- asdas",
+        "dateApprehended": "2024-06-21T13:55",
+        "timeApprehended": "04:58",
+        "streetApprehended": "188 Juan Luna",
+        "plateNumber": "SDAF DAS",
+        "vehicleColor": "bnu",
+        "apprehendingOfficer": "SDAFDS FSDA  ",
+        "amendStatus": false,
+        "dateAmended": "",
+        "violations": [
+            {
+                "violation": "Par",
+                "amount": "5",
+                "remarks": ""
+            }
+        ]
+    },
+    {
+        "firstName": "John",
+        "lastName": "Doe",
+        "middleName": "Michael",
+        "homeAddress": "123 Main St, Springfield, IL 62704",
+        "licenseNumber": "D1234567",
+        "dateApprehended": "2024-06-25T14:30:00Z",
+        "timeApprehended": "2024-06-25T14:30:00Z",
+        "streetApprehended": "456 Elm St, Springfield, IL 62704",
+        "plateNumber": "ABC1234",
+        "vehicleColor": "Red",
+        "apprehendingOfficer": "Officer Smith",
+        "amendStatus": false,
+        "dateAmended": null,
+        "violations": [
+            {
+                "violation": "Speeding",
+                "amount": 150,
+                "remarks": "Exceeded speed limit by 20 mph"
+            },
+            {
+                "violation": "Running a red light",
+                "amount": 200,
+                "remarks": "Failed to stop at a red light"
+            }
+        ]
+    },
+    {
+        "firstName": "Richard",
+        "lastName": "Alhama",
+        "middleName": "LAURE",
+        "homeAddress": "188 Juan Luna",
+        "licenseNumber": "93012390- asdas",
+        "dateApprehended": "2024-06-27T14: 00",
+        "timeApprehended": "18: 04",
+        "streetApprehended": "188 Juan Luna",
+        "plateNumber": "SDAF DAS",
+        "vehicleColor": "bnu",
+        "apprehendingOfficer": "SDAFDS FSDA  ",
+        "amendStatus": false,
+        "dateAmended": "",
+        "violations": [
+            {
+                "violation": "Par",
+                "amount": "423",
+                "remarks": "345"
+            }
+        ]
+    }
+]

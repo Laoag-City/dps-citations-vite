@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 const instance = axios.create({
-  baseURL: 'https://apps.laoagcity.gov.ph:3001/',
+  baseURL: 'https://apps.laoagcity.gov.ph:3002/',
   headers: {
     'Content-Type': 'application/json'
   }

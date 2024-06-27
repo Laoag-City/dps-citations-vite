@@ -17,7 +17,7 @@ const TopBar = ({ username, userrole }) => {
     return (
       <Navbar bg="dark" variant="dark" expand="lg">
         <Container>
-          <Navbar.Brand href="/login">OSCP Laoag City</Navbar.Brand>
+          <Navbar.Brand href="/login">Laoag City DPS Citations System</Navbar.Brand>
         </Container>
       </Navbar>
     )
