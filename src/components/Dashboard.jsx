@@ -14,7 +14,7 @@ const Dashboard = () => {
   const [selectedCitation, setSelectedCitation] = useState(null);
   const [error, setError] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(20);
   const [sortField, setSortField] = useState('dateApprehended');
   const [sortOrder, setSortOrder] = useState('asc');
   const [totalPages, setTotalPages] = useState(1);
