@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import { logout } from '../features/auth/authSlice';
 import { useNavigate } from 'react-router-dom';
-import { Accordion, Alert, Button, Container, ListGroup, Modal, Spinner, Table, Pagination } from 'react-bootstrap';
+import { Accordion, Alert, Button, Container, ListGroup, Modal, Spinner, Table } from 'react-bootstrap';
 import TopBar from './TopBar';
 import Footer from './Footer';
 
@@ -13,11 +13,6 @@ const Dashboard = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedCitation, setSelectedCitation] = useState(null);
   const [error, setError] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
-  const [sortField, setSortField] = useState('dateApprehended');
-  const [sortOrder, setSortOrder] = useState('asc');
-  const [totalPages, setTotalPages] = useState(1);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -30,16 +25,9 @@ const Dashboard = () => {
     const fetchDPSCitationsData = async () => {
       try {
         const response = await axios.get('https://apps.laoagcity.gov.ph:3002/dpscitations', {
-          headers: { Authorization: `Bearer ${token}` },
-          params: {
-            page: currentPage,
-            limit: pageSize,
-            sortField: sortField,
-            sortOrder: sortOrder,
-          },
+          headers: { Authorization: `Bearer ${token}` }
         });
-        setCitations(response.data.dpsCitations);
-        setTotalPages(response.data.totalPages);
+        setCitations(response.data);
       } catch (error) {
         if (error.response && error.response.status === 401) {
           dispatch(logout());
@@ -51,16 +39,16 @@ const Dashboard = () => {
     };
 
     fetchDPSCitationsData();
-  }, [token, navigate, dispatch, currentPage, pageSize, sortField, sortOrder]);
+  }, [token, navigate, dispatch]);
 
   const handleShow = (citation) => {
     setSelectedCitation(citation);
-    setShowModal(true);
+    setShowModal(+true);
   };
 
   const handleClose = () => {
-    setShowModal(false);
-    setSelectedCitation(null);
+    setShowModal(+false);
+    setSelectedCitation(null); // Reset selected application on close
   };
 
   const formatDate = (date) => date ? new Date(date).toLocaleDateString() : null;
@@ -68,68 +56,7 @@ const Dashboard = () => {
   const sumAmounts = (amounts) => {
     return amounts.map(item => item.amount).reduce((accumulator, currentValue) => accumulator + currentValue, 0);
   }
-
   const violationCount = (count) => { return count.length }
-
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-  };
-
-  const handleSortChange = (field) => {
-    const order = (sortField === field && sortOrder === 'asc') ? 'desc' : 'asc';
-    setSortField(field);
-    setSortOrder(order);
-  };
-
-  const renderPaginationItems = () => {
-    const items = [];
-    const pageNeighbors = 2;
-    const totalNumbers = (pageNeighbors * 2) + 3;
-    const totalBlocks = totalNumbers + 2;
-
-    if (totalPages > totalBlocks) {
-      const startPage = Math.max(2, currentPage - pageNeighbors);
-      const endPage = Math.min(totalPages - 1, currentPage + pageNeighbors);
-
-      items.push(
-        <Pagination.Item key={1} active={currentPage === 1} onClick={() => handlePageChange(1)}>
-          1
-        </Pagination.Item>
-      );
-
-      if (startPage > 2) {
-        items.push(<Pagination.Ellipsis key="start-ellipsis" />);
-      }
-
-      for (let page = startPage; page <= endPage; page++) {
-        items.push(
-          <Pagination.Item key={page} active={currentPage === page} onClick={() => handlePageChange(page)}>
-            {page}
-          </Pagination.Item>
-        );
-      }
-
-      if (endPage < totalPages - 1) {
-        items.push(<Pagination.Ellipsis key="end-ellipsis" />);
-      }
-
-      items.push(
-        <Pagination.Item key={totalPages} active={currentPage === totalPages} onClick={() => handlePageChange(totalPages)}>
-          {totalPages}
-        </Pagination.Item>
-      );
-    } else {
-      for (let page = 1; page <= totalPages; page++) {
-        items.push(
-          <Pagination.Item key={page} active={currentPage === page} onClick={() => handlePageChange(page)}>
-            {page}
-          </Pagination.Item>
-        );
-      }
-    }
-
-    return items;
-  };
 
   if (!token) {
     return null;
@@ -148,14 +75,14 @@ const Dashboard = () => {
               <Table striped bordered hover>
                 <thead>
                   <tr>
-                    <th onClick={() => handleSortChange('ticketNumber')}>Ticket Number</th>
-                    <th onClick={() => handleSortChange('licenseNumber')}>License Number</th>
-                    <th onClick={() => handleSortChange('dateApprehended')}>Date Apprehended</th>
-                    <th onClick={() => handleSortChange('streetApprehended')}>Street Apprehended</th>
-                    <th onClick={() => handleSortChange('plateNumber')}>Plate Number</th>
-                    <th onClick={() => handleSortChange('vehicleColor')}>Vehicle Color</th>
-                    <th onClick={() => handleSortChange('apprehendingOfficer')}>Apprehending Officer</th>
-                    <th onClick={() => handleSortChange('amendStatus')}>Amend Status</th>
+                    <th>Ticket Number</th>
+                    <th>License Number</th>
+                    <th>Date Apprehended</th>
+                    <th>Street Apprehended</th>
+                    <th>Plate Number</th>
+                    <th>Vehicle Color</th>
+                    <th>Apprehending Officer</th>
+                    <th>Amend Status</th>
                     <th>Violations</th>
                   </tr>
                 </thead>
@@ -202,15 +129,13 @@ const Dashboard = () => {
                   </Button>
                 </Modal.Footer>
               </Modal>
+
             </Accordion.Body>
           </Accordion.Item>
         ))) : (
           error ? <Alert variant="danger" className="mt-3">{error}</Alert> : <Spinner animation="border" role="status"><span className="visually-hidden">Loading...</span></Spinner>
         )}
       </Accordion>
-      <Pagination className="mt-3">
-        {renderPaginationItems()}
-      </Pagination>
       <Footer />
     </Container>
   );
