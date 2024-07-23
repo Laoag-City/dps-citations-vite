@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { Container, Form, Button, Col, Row } from 'react-bootstrap';
@@ -6,7 +6,7 @@ import axios from 'axios';
 import TopBar from './TopBar';
 import Footer from './Footer';
 
-const violationsList = [
+/* const violationsList = [
   { violation: 'arrogant driver', amount: 150 },
   { violation: 'jaywalking', amount: 150 },
   { violation: 'invalid/fake registration or unregistered', amount: 3000 },
@@ -60,9 +60,31 @@ const violationsList = [
   { violation: 'speed limit of 50 kph passing through gilbert bridge', amount: 200 },
   { violation: 'no loading or unloading along the southern and northern approach of the gilbert bridge', amount: 1000 }
 ];
-
+ */
 function DPSCitationRecordForm() {
+  const [violationsList, setViolationsList] = useState(null);
+  const [error, setError] = useState('');
   const currentTime = new Date().toISOString().slice(0, 16); // ISO string for datetime-local input
+
+  useEffect(() => {
+    const fetchViolationsData = async () => {
+      try {
+        const response = await axios.get('https://apps.laoagcity.gov.ph:3002/violations', {
+        });
+        setViolationsList(response.data);
+        // Log fetched data
+        //console.log("Fetched violationsList: ", response.data); 
+      } catch (error) {
+        if (error.response && error.response.status === 401) {
+          setError('Unauthorized access please authenticate')
+        } else {
+          setError('Failed to fetch data. Please try again later.');
+        }
+      }
+    };
+
+    fetchViolationsData();
+  }, []);
 
   const [formData, setFormData] = useState({
     ticketNumber: '',
