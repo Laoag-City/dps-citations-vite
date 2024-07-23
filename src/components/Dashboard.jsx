@@ -18,6 +18,7 @@ const Dashboard = () => {
   const [sortField, setSortField] = useState('dateApprehended');
   const [sortOrder, setSortOrder] = useState('asc');
   const [totalPages, setTotalPages] = useState(1);
+  const [searchQuery, setSearchQuery] = useState('');
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -36,6 +37,7 @@ const Dashboard = () => {
             limit: pageSize,
             sortField: sortField,
             sortOrder: sortOrder,
+            search: searchQuery,
           },
         });
         setCitations(response.data.dpsCitations);
@@ -51,7 +53,7 @@ const Dashboard = () => {
     };
 
     fetchDPSCitationsData();
-  }, [token, navigate, dispatch, currentPage, pageSize, sortField, sortOrder]);
+  }, [token, navigate, dispatch, currentPage, pageSize, sortField, sortOrder, searchQuery]);
 
   const handleShow = (citation) => {
     setSelectedCitation(citation);
@@ -79,6 +81,11 @@ const Dashboard = () => {
     const order = (sortField === field && sortOrder === 'asc') ? 'desc' : 'asc';
     setSortField(field);
     setSortOrder(order);
+  };
+
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+    setCurrentPage(1); // Reset to first page on new search
   };
 
   const renderPaginationItems = () => {
@@ -137,7 +144,7 @@ const Dashboard = () => {
 
   return (
     <Container className="align-items-center">
-      <TopBar username={user.username} userrole={user.userrole} bg="light" expand="lg" data-bs-theme="light" />
+      <TopBar username={user.username} userrole={user.userrole} bg="light" expand="lg" data-bs-theme="light" onSearch={handleSearch} />
       <h3 className="text-right">DPS Citation List</h3>
       <Accordion>
         {citations ? (citations.map((citation, index) => (
