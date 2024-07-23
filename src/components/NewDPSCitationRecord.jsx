@@ -99,8 +99,10 @@ function DPSCitationRecordForm() {
     plateNumber: '',
     vehicleColor: '',
     apprehendingOfficer: '',
-    amendStatus: false,
-    dateAmended: '',
+    commuteStatus: false,
+    commuteDate: null,
+    paymentStatus: false,
+    paymentDate: null,
     violations: []
   });
 
