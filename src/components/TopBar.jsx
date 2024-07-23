@@ -1,16 +1,23 @@
+import { useState } from 'react';
 import { Navbar, Container, Nav, Form, Button } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { logout } from '../features/auth/authSlice';
 import propTypes from 'prop-types';
 
-const TopBar = ({ username, userrole }) => {
+const TopBar = ({ username, userrole, onSearch }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState('');
 
   const handleLogout = () => {
     dispatch(logout());
     navigate('/login');
+  };
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    onSearch(searchQuery);
   };
 
   if (!username) {
@@ -37,24 +44,25 @@ const TopBar = ({ username, userrole }) => {
           </Navbar.Brand>
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto align-right">
-              <Navbar.Text>Hello {username}
-              </Navbar.Text>
+              <Navbar.Text>Hello {username}</Navbar.Text>
             </Nav>
-            <Nav>{userrole === "dpsstaff" && <Nav.Link href="/newdpscitation">New DPS Citation</Nav.Link>}
-              {/*               <Nav.Link href="#deets">More deets</Nav.Link>*/}            </Nav>
-            <Form className="d-flex">
+            <Nav>
+              {userrole === "dpsstaff" && <Nav.Link href="/newdpscitation">New DPS Citation</Nav.Link>}
+            </Nav>
+            <Form className="d-flex" onSubmit={handleSearch}>
               <Form.Control
                 type="search"
                 placeholder="Search"
                 className="me-2"
                 aria-label="Search"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
               />
-              <Button variant="outline-success">Search</Button>
+              <Button variant="outline-success" type="submit">Search</Button>
             </Form>
             <span className="mx-2"></span>
             <Button variant="primary" onClick={handleLogout}>Logout</Button>
           </Navbar.Collapse>
-
         </Container>
       </Navbar>
     )
@@ -62,6 +70,8 @@ const TopBar = ({ username, userrole }) => {
 
 TopBar.propTypes = {
   username: propTypes.string,
-  userrole: propTypes.string
+  userrole: propTypes.string,
+  onSearch: propTypes.func.isRequired,
 };
+
 export default TopBar;
