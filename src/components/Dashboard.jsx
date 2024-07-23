@@ -14,9 +14,7 @@ const Dashboard = () => {
   const [selectedCitation, setSelectedCitation] = useState(null);
   const [error, setError] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(20);
-  const [sortField, setSortField] = useState('dateApprehended');
-  const [sortOrder, setSortOrder] = useState('asc');
+  const [pageSize, setPageSize] = useState(10);
   const [totalPages, setTotalPages] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
   const dispatch = useDispatch();
@@ -35,8 +33,6 @@ const Dashboard = () => {
           params: {
             page: currentPage,
             limit: pageSize,
-            sortField: sortField,
-            sortOrder: sortOrder,
             search: searchQuery,
           },
         });
@@ -53,7 +49,7 @@ const Dashboard = () => {
     };
 
     fetchDPSCitationsData();
-  }, [token, navigate, dispatch, currentPage, pageSize, sortField, sortOrder, searchQuery]);
+  }, [token, navigate, dispatch, currentPage, pageSize, searchQuery]);
 
   const handleShow = (citation) => {
     setSelectedCitation(citation);
@@ -75,12 +71,6 @@ const Dashboard = () => {
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
-  };
-
-  const handleSortChange = (field) => {
-    const order = (sortField === field && sortOrder === 'asc') ? 'desc' : 'asc';
-    setSortField(field);
-    setSortOrder(order);
   };
 
   const handleSearch = (query) => {
@@ -155,14 +145,14 @@ const Dashboard = () => {
               <Table striped bordered hover>
                 <thead>
                   <tr>
-                    <th onClick={() => handleSortChange('ticketNumber')}>Ticket Number</th>
-                    <th onClick={() => handleSortChange('licenseNumber')}>License Number</th>
-                    <th onClick={() => handleSortChange('dateApprehended')}>Date Apprehended</th>
-                    <th onClick={() => handleSortChange('streetApprehended')}>Street Apprehended</th>
-                    <th onClick={() => handleSortChange('plateNumber')}>Plate Number</th>
-                    <th onClick={() => handleSortChange('vehicleColor')}>Vehicle Color</th>
-                    <th onClick={() => handleSortChange('apprehendingOfficer')}>Apprehending Officer</th>
-                    <th onClick={() => handleSortChange('amendStatus')}>Amend Status</th>
+                    <th>Ticket Number</th>
+                    <th>License Number</th>
+                    <th>Date Apprehended</th>
+                    <th>Street Apprehended</th>
+                    <th>Plate Number</th>
+                    <th>Vehicle Color</th>
+                    <th>Apprehending Officer</th>
+                    <th>Amend Status</th>
                     <th>Violations</th>
                   </tr>
                 </thead>
@@ -209,6 +199,7 @@ const Dashboard = () => {
                   </Button>
                 </Modal.Footer>
               </Modal>
+
             </Accordion.Body>
           </Accordion.Item>
         ))) : (
