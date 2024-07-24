@@ -3,7 +3,7 @@ import { Navbar, Container, Nav, Form, Button } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { logout } from '../features/auth/authSlice';
-import propTypes from 'prop-types';
+import PropTypes from 'prop-types';
 
 const TopBar = ({ username, userrole, onSearch }) => {
   const dispatch = useDispatch();
@@ -24,11 +24,26 @@ const TopBar = ({ username, userrole, onSearch }) => {
     return (
       <Navbar bg="dark" variant="dark" expand="lg">
         <Container>
-          <Navbar.Brand href="/login">Laoag City DPS Citations System</Navbar.Brand>
+          <Navbar.Brand href="/">
+            <img
+              src="/laoaglogo.png"
+              width="40"
+              height="40"
+              className="d-inline-block align-center"
+              alt="React Bootstrap logo"
+            />
+          </Navbar.Brand>
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="me-auto">
+              <Nav.Link href="/">Home</Nav.Link>
+              <Nav.Link href="/login">Login</Nav.Link>
+            </Nav>
+          </Navbar.Collapse>
         </Container>
       </Navbar>
-    )
-  } else
+    );
+  } else {
     return (
       <Navbar bg="dark" variant="dark" expand="lg">
         <Container>
@@ -43,11 +58,10 @@ const TopBar = ({ username, userrole, onSearch }) => {
             />
           </Navbar.Brand>
           <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="me-auto align-right">
-              <Navbar.Text>Hello {username}</Navbar.Text>
-            </Nav>
-            <Nav>
+            <Nav className="me-auto">
+              <Navbar.Text className="me-auto">Hello {username}</Navbar.Text>
               {userrole === "dpsstaff" && <Nav.Link href="/newdpscitation">New DPS Citation</Nav.Link>}
+              {userrole === "dpsstaff" && <Nav.Link href="/reporting">Reporting</Nav.Link>}
             </Nav>
             <Form className="d-flex" onSubmit={handleSearch}>
               <Form.Control
@@ -65,13 +79,14 @@ const TopBar = ({ username, userrole, onSearch }) => {
           </Navbar.Collapse>
         </Container>
       </Navbar>
-    )
+    );
+  }
 };
 
 TopBar.propTypes = {
-  username: propTypes.string,
-  userrole: propTypes.string,
-  onSearch: propTypes.func.isRequired,
+  username: PropTypes.string,
+  userrole: PropTypes.string,
+  onSearch: PropTypes.func.isRequired,
 };
 
 export default TopBar;
