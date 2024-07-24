@@ -140,6 +140,12 @@ const Dashboard = () => {
     return '';
   };
 
+  const handleAmendClick = (citation) => {
+    // Perform the amend action here
+    console.log('Amend action for citation:', citation);
+  };
+
+
   if (!token) {
     return null;
   }
@@ -173,7 +179,10 @@ const Dashboard = () => {
                 <td>{citation.plateNumber}</td>
                 <td>{citation.vehicleColor}</td>
                 <td>{citation.apprehendingOfficer}</td>
-                <td>{citation.amendStatus ? 'Commuted' : 'Not Commuted'}</td>
+                <td>
+                  {/*citation.amendStatus ? 'Commuted' : 'Not Commuted'*/}
+                  {citation.amendStatus ? 'Commuted' : <Button variant="warning" onClick={() => handleAmendClick(citation)}>Commute</Button>}
+                </td>
                 <td>{violationCount(citation.violations)}</td>
               </tr>
             ))}
