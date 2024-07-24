@@ -17,6 +17,7 @@ const Footer = () => {
           alt="Baro a Laoag Logo"
         />
         <p>&copy; {new Date().getFullYear()} City Government of Laoag. All rights reserved.</p>
+        <small>coded by: Laoag City ICTO app dev team</small>
       </Container>
     </footer>
   );

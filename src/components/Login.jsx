@@ -45,41 +45,47 @@ const Login = () => {
   return (
     <div className="container mt-2">
       <TopBar />
-      <Col>
-        <Container fluid="md" className="d-flex align-items-top justify-content-center">
-          <Form onSubmit={handleLogin}>
-            <h2 className="mb-4">Laoag City DPS Citations and Ticketing Login</h2>
-            <Form.Group controlId="formBasicUsername" className="mb-3">
-              <Form.Label>Username</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Enter username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                required
-              />
-            </Form.Group>
-            <Form.Group controlId="formBasicPassword" className="mb-3">
-              <Form.Label>Password</Form.Label>
-              <Form.Control
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </Form.Group>
-            <Button variant="primary" type="submit" className="w-100 mb-3">
-              Login
-            </Button>
-            {error && (
-              <Row className="mt-2">
-                <Alert variant="danger" className="w-100">{error}</Alert>
-              </Row>
-            )}
-          </Form>
-        </Container>
-      </Col>
+      <Container className="align-items-top justify-content-center">
+        <Row className="justify-content-center">
+          <Col xs lg="8" className="text-center">
+            <h2 className="mb-8">DPS Citations Monitoring System Login</h2>
+          </Col>
+        </Row>
+        <Row className="justify-content-center">
+          <Col sm={3}>
+            <Form onSubmit={handleLogin} className="text-center">
+              <Form.Group controlId="formBasicUsername" className="mb-3">
+                <Form.Label>Username</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  required
+                />
+              </Form.Group>
+              <Form.Group controlId="formBasicPassword" className="mb-3">
+                <Form.Label>Password</Form.Label>
+                <Form.Control
+                  type="password"
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+              </Form.Group>
+              <Button className="justify-content-center" variant="primary" type="submit">
+                Login
+              </Button>
+              {error && (
+                <Row className="mt-2 justify-content-center">
+                  <Alert variant="danger" className="w-100">{error}</Alert>
+                </Row>
+              )}
+            </Form>
+          </Col>
+        </Row>
+      </Container>
       <Footer />
     </div >
   );

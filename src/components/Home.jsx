@@ -23,10 +23,10 @@ const Home = () => {
   }; 1
 
   return (
-    <Container>
+    <Container className="align-items-top justify-content-center">
       <TopBar bg="light" expand="lg" data-bs-theme="light" />
-      <Row className="justify-content-md-center">
-        <Col md="auto">
+      <Row className="justify-content-center">
+        <Col xs lg="4" className="text-center">
           {!token && (
             <Form onSubmit={handleSubmit}>
               <Form.Group controlId="formBasicInput">
