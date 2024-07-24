@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import { logout } from '../features/auth/authSlice';
 import { useNavigate } from 'react-router-dom';
-import { Accordion, Alert, Button, Container, ListGroup, Modal, Spinner, Table, Pagination } from 'react-bootstrap';
+import { Alert, Button, Container, ListGroup, Modal, Spinner, Table, Pagination } from 'react-bootstrap';
 import TopBar from './TopBar';
 import Footer from './Footer';
 
@@ -128,6 +128,18 @@ const Dashboard = () => {
     return items;
   };
 
+  const getRowClass = (dateApprehended) => {
+    //const dateDifference = (new Date() - new Date(dateApprehended)) / (1000 * 60 * 60 * 24);
+    const referenceDate = new Date(dateApprehended);
+    const currentDate = new Date();
+    const timeDifference = currentDate - referenceDate; // result is in milliseconds
+    const dayDifference = timeDifference / (1000 * 60 * 60 * 24); // Convert milliseconds to days
+
+    if (dayDifference > 7) return 'table-danger';
+    if (dayDifference > 3) return 'table-warning';
+    return '';
+  };
+
   if (!token) {
     return null;
   }
@@ -136,76 +148,71 @@ const Dashboard = () => {
     <Container className="align-items-center">
       <TopBar username={user.username} userrole={user.userrole} bg="light" expand="lg" data-bs-theme="light" onSearch={handleSearch} />
       <h3 className="text-right">DPS Citation List</h3>
-      <Accordion>
-        {citations ? (citations.map((citation, index) => (
-          <Accordion.Item key={index} eventKey={String(index)}>
-            <Accordion.Header>{citation.firstName} {citation.middleName[0]}. {citation.lastName} : {citation.amendStatus ? 'Commuted' : 'Not Commuted'}
-            </Accordion.Header>
-            <Accordion.Body>
-              <Table striped bordered hover>
-                <thead>
-                  <tr>
-                    <th>Ticket Number</th>
-                    <th>License Number</th>
-                    <th>Date Apprehended</th>
-                    <th>Street Apprehended</th>
-                    <th>Plate Number</th>
-                    <th>Vehicle Color</th>
-                    <th>Apprehending Officer</th>
-                    <th>Amend Status</th>
-                    <th>Violations</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr key={citation._id} onClick={() => handleShow(citation)}>
-                    <td>{citation.ticketNumber}</td>
-                    <td>{citation.licenseNumber}</td>
-                    <td>{formatDate(citation.dateApprehended)}</td>
-                    <td>{citation.streetApprehended}</td>
-                    <td>{citation.plateNumber}</td>
-                    <td>{citation.vehicleColor}</td>
-                    <td>{citation.apprehendingOfficer}</td>
-                    <td>{citation.amendStatus ? 'Commuted' : 'Not Commuted'}</td>
-                    <td>{violationCount(citation.violations)}</td>
-                  </tr>
-                </tbody>
-              </Table>
-              <Modal show={showModal} onHide={handleClose}>
-                <Modal.Header closeButton>
-                  <Modal.Title>Citation Details</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                  {selectedCitation ? (
-                    <>
-                      <p>Apprehended on: {formatDate(selectedCitation.dateApprehended)}</p>
-                      <p>Name: {selectedCitation.lastName}, {selectedCitation.firstName}</p>
-                      <p>Apprehended by: {selectedCitation.apprehendingOfficer}</p>
-                      <p>Total: {sumAmounts(selectedCitation.violations)} | {selectedCitation.amendStatus ? 'Amended' : 'Not Amended'}</p>
-                      <ListGroup.Item><strong>Violation/s:</strong>
-                        {selectedCitation.violations.map((violation) => (
-                          <div key={violation._id}>
-                            {violation.violation} - {violation.amount} on {violation.remarks}
-                          </div>
-                        ))}
-                      </ListGroup.Item>
-                    </>
-                  ) : (
-                    <p>Loading...</p>
-                  )}
-                </Modal.Body>
-                <Modal.Footer>
-                  <Button variant="secondary" onClick={handleClose}>
-                    Close
-                  </Button>
-                </Modal.Footer>
-              </Modal>
-
-            </Accordion.Body>
-          </Accordion.Item>
-        ))) : (
-          error ? <Alert variant="danger" className="mt-3">{error}</Alert> : <Spinner animation="border" role="status"><span className="visually-hidden">Loading...</span></Spinner>
-        )}
-      </Accordion>
+      {citations ? (
+        <Table striped bordered hover>
+          <thead>
+            <tr>
+              <th>Ticket Number</th>
+              <th>License Number</th>
+              <th>Date Apprehended</th>
+              <th>Street Apprehended</th>
+              <th>Plate Number</th>
+              <th>Vehicle Color</th>
+              <th>Apprehending Officer</th>
+              <th>Commute Status</th>
+              <th>Violations</th>
+            </tr>
+          </thead>
+          <tbody>
+            {citations.map((citation) => (
+              <tr key={citation._id} onClick={() => handleShow(citation)} className={getRowClass(citation.dateApprehended)}>
+                <td>{citation.ticketNumber}</td>
+                <td>{citation.licenseNumber}</td>
+                <td>{formatDate(citation.dateApprehended)}</td>
+                <td>{citation.streetApprehended}</td>
+                <td>{citation.plateNumber}</td>
+                <td>{citation.vehicleColor}</td>
+                <td>{citation.apprehendingOfficer}</td>
+                <td>{citation.amendStatus ? 'Commuted' : 'Not Commuted'}</td>
+                <td>{violationCount(citation.violations)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+      ) : (
+        error ? <Alert variant="danger" className="mt-3">{error}</Alert> : <Spinner animation="border" role="status"><span className="visually-hidden">Loading...</span></Spinner>
+      )}
+      {citations && (
+        <Modal show={showModal} onHide={handleClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>Citation Details</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            {selectedCitation ? (
+              <>
+                <p>Apprehended on: {formatDate(selectedCitation.dateApprehended)}</p>
+                <p>Name: {selectedCitation.lastName}, {selectedCitation.firstName}</p>
+                <p>Apprehended by: {selectedCitation.apprehendingOfficer}</p>
+                <p>Total: {sumAmounts(selectedCitation.violations)} | {selectedCitation.amendStatus ? 'Amended' : 'Not Amended'}</p>
+                <ListGroup.Item><strong>Violation/s:</strong>
+                  {selectedCitation.violations.map((violation) => (
+                    <div key={violation._id}>
+                      {violation.violation} - {violation.amount} on {violation.remarks}
+                    </div>
+                  ))}
+                </ListGroup.Item>
+              </>
+            ) : (
+              <p>Loading...</p>
+            )}
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleClose}>
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      )}
       <Pagination className="mt-3">
         {renderPaginationItems()}
       </Pagination>
