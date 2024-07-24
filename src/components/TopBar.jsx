@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Navbar, Container, Nav, Form, Button } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { logout } from '../features/auth/authSlice';
 import PropTypes from 'prop-types';
 
@@ -60,8 +60,9 @@ const TopBar = ({ username, userrole, onSearch }) => {
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
               <Navbar.Text className="me-auto">Hello {username}</Navbar.Text>
-              {userrole === "dpsstaff" && <Nav.Link href="/newdpscitation">New DPS Citation</Nav.Link>}
-              {userrole === "dpsstaff" && <Nav.Link href="/reporting">Reporting</Nav.Link>}
+              {userrole === "dpsstaff" && <Nav.Link as={Link} to="/newdpscitation">New DPS Citation</Nav.Link>}
+              {userrole === "dpsstaff" && <Nav.Link as={Link} to="/reporting">Reporting</Nav.Link>}
+              {/*<Nav.Link as={Link} to="/reporting">Reporting</Nav.Link>*/}
             </Nav>
             <Form className="d-flex" onSubmit={handleSearch}>
               <Form.Control

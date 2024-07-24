@@ -1,22 +1,23 @@
-//import { useState } from 'react'
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Home from './components/Home';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 import NewDPSRecord from './components/NewDPSCitationRecord';
-import CitationStatus from './components/Status';
+import Reporting from './components/Reporting';
 import PrivateRoute from './components/PrivateRoute';
+//import Status from './components/Status';
 
-import './App.css'
-//import 'bootstrap/dist/css/bootstrap.min.css';
-import './assets/bootstrap-darkly-theme.min.css'
+import './App.css';
+import './assets/bootstrap-darkly-theme.min.css';
+
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/status" element={<CitationStatus />} />
+        {/* Uncomment and use the route below when ready */}
+        {/* <Route path="/status" element={<CitationStatus />} /> */}
         <Route path="/dashboard" element={
           <PrivateRoute>
             <Dashboard />
@@ -27,17 +28,15 @@ function App() {
             <NewDPSRecord />
           </PrivateRoute>
         } />
-        {/*
-        <Route path="/newoscpapplication2" element={
+        <Route path="/reporting" element={
           <PrivateRoute>
-            <NewOSCPRecord2 />
+            <Reporting />
           </PrivateRoute>
         } />
-        */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
   );
-
 }
 
-export default App
+export default App;

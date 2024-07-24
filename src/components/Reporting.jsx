@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Container, Form, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
-const DPSReports = () => {
+const Reporting = () => {
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
     const navigate = useNavigate();
@@ -37,4 +37,4 @@ const DPSReports = () => {
     );
 };
 
-export default DPSReports;
+export default Reporting;
