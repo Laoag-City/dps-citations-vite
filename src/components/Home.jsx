@@ -19,10 +19,9 @@ import TopBar from './TopBar';
 import Footer from './Footer';
 
 const Home = () => {
-  const { token, user } = useSelector(state => state.auth);
+  const { token } = useSelector(state => state.auth);
   const navigate = useNavigate();
   const [ticketNumberValue, setTicketNumberValue] = useState('');
-  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     if (token) {
@@ -34,16 +33,11 @@ const Home = () => {
     event.preventDefault();
     console.log('Form submitted with:', ticketNumberValue);
     // Handle form submission logic here
-  };
-
-  const handleSearch = (query) => {
-    setSearchQuery(query);
-  };
-
+  }; 1
 
   return (
     <Container>
-      <TopBar username={user.username} userrole={user.userrole} bg="light" expand="lg" data-bs-theme="light" onSearch={handleSearch} />
+      <TopBar bg="light" expand="lg" data-bs-theme="light" />
       <Row className="justify-content-md-center">
         <Col md="auto">
           {!token && (

@@ -13,7 +13,6 @@ const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [searchQuery, setSearchQuery] = useState('');
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -43,13 +42,9 @@ const Login = () => {
     }
   };
 
-  const handleSearch = (query) => {
-    setSearchQuery(query);
-  };
-
   return (
     <div className="container mt-2">
-      <TopBar onSearch={handleSearch} />
+      <TopBar />
       <Col>
         <Container fluid="md" className="d-flex align-items-top justify-content-center">
           <Form onSubmit={handleLogin}>

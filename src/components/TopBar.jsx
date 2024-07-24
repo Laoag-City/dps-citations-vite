@@ -86,7 +86,7 @@ const TopBar = ({ username, userrole, onSearch }) => {
 TopBar.propTypes = {
   username: PropTypes.string,
   userrole: PropTypes.string,
-  onSearch: PropTypes.func.isRequired,
+  onSearch: PropTypes.func,
 };
 
 export default TopBar;
