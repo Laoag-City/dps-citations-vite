@@ -130,10 +130,11 @@ const Dashboard = () => {
 
   const getRowClass = (dateApprehended) => {
     //const dateDifference = (new Date() - new Date(dateApprehended)) / (1000 * 60 * 60 * 24);
-    const referenceDate = new Date(dateApprehended);
-    const currentDate = new Date();
-    const timeDifference = currentDate - referenceDate; // result is in milliseconds
-    const dayDifference = timeDifference / (1000 * 60 * 60 * 24); // Convert milliseconds to days
+    //const referenceDate = new Date(dateApprehended);
+    //const currentDate = new Date();
+    const dayDifference = (new Date() - new Date(dateApprehended)) / (1000 * 60 * 60 * 24);
+    //const timeDifference = currentDate - referenceDate; // result is in milliseconds
+    //const dayDifference = timeDifference / (1000 * 60 * 60 * 24); // Convert milliseconds to days
 
     if (dayDifference > 7) return 'table-danger';
     if (dayDifference > 3) return 'table-warning';
@@ -166,13 +167,14 @@ const Dashboard = () => {
               <th>Vehicle Color</th>
               <th>Apprehending Officer</th>
               <th>Commute Status</th>
+              <th>Payment Status</th>
               <th>Violations</th>
             </tr>
           </thead>
           <tbody>
             {citations.map((citation) => (
-              <tr key={citation._id} onClick={() => handleShow(citation)} className={getRowClass(citation.dateApprehended)}>
-                <td>{citation.ticketNumber}</td>
+              <tr key={citation._id} className={getRowClass(citation.dateApprehended)}>
+                <td onClick={() => handleShow(citation)} >{citation.ticketNumber}</td>
                 <td>{citation.licenseNumber}</td>
                 <td>{formatDate(citation.dateApprehended)}</td>
                 <td>{citation.streetApprehended}</td>
@@ -181,8 +183,13 @@ const Dashboard = () => {
                 <td>{citation.apprehendingOfficer}</td>
                 <td>
                   {/*citation.amendStatus ? 'Commuted' : 'Not Commuted'*/}
-                  {citation.amendStatus ? 'Commuted' : <Button variant="warning" onClick={() => handleAmendClick(citation)}>Commute</Button>}
+                  {citation.commuteStatus ? 'Commuted' : <Button variant="warning" onClick={() => handleAmendClick(citation)}>Commute</Button>}
                 </td>
+                <td>
+                  {!citation.PaymentStatus ? <Button variant="warning" onClick={() => handleAmendClick(citation)}>Pay</Button> : 'Paid'}
+                  {/*citation.PaymentStatus ? 'Paid' : <Button variant="warning" onClick={() => handleAmendClick(citation)}>Pay</Button>*/}
+                </td>
+
                 <td>{violationCount(citation.violations)}</td>
               </tr>
             ))}

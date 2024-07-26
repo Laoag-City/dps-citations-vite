@@ -59,7 +59,8 @@ const TopBar = ({ username, userrole, onSearch }) => {
           </Navbar.Brand>
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
-              {/* <Navbar.Text className="me-auto">Hello {username}</Navbar.Text> */}              {userrole === "dpsstaff" && <Nav.Link as={Link} to="/newdpscitation">New DPS Citation</Nav.Link>}
+              {/* <Navbar.Text className="me-auto">Hello {username}</Navbar.Text> */}
+              {userrole === "dpsstaff" && <Nav.Link as={Link} to="/newdpscitation">New DPS Citation</Nav.Link>}
               {userrole === "dpsstaff" && <Nav.Link as={Link} to="/reporting">Reporting</Nav.Link>}
               {/*<Nav.Link as={Link} to="/reporting">Reporting</Nav.Link>*/}
             </Nav>
