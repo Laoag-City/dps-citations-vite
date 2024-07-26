@@ -1,17 +1,19 @@
-// File path: src/components/Dashboard.js
+// File path: src/components/Dashboard.jsx
 
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import { logout } from '../features/auth/authSlice';
 import { useNavigate } from 'react-router-dom';
-import { Alert, Button, Container, ListGroup, Modal, Spinner, Table, Pagination, Tabs, Tab } from 'react-bootstrap';
+import { Alert, Button, Container, Modal, Spinner, Table, Pagination, Tabs, Tab } from 'react-bootstrap';
 import TopBar from './TopBar';
 import Footer from './Footer';
+import SearchResults from './SearchResults';
 
 const Dashboard = () => {
   const { token, user } = useSelector(state => state.auth);
   const [citations, setCitations] = useState([]);
+  const [searchResults, setSearchResults] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [selectedCitation, setSelectedCitation] = useState(null);
   const [error, setError] = useState('');
@@ -95,9 +97,28 @@ const Dashboard = () => {
     setCurrentPage(page);
   };
 
-  const handleSearch = (query) => {
+  const handleSearch = async (query) => {
     setSearchQuery(query);
     setCurrentPage(1); // Reset to first page on new search
+    try {
+      const response = await axios.get('https://apps.laoagcity.gov.ph:3002/dpscitations', {
+        headers: { Authorization: `Bearer ${token}` },
+        params: {
+          page: 1,
+          limit: pageSize,
+          search: query,
+        },
+      });
+      setSearchResults(response.data.dpsCitations);
+      setTotalPages(response.data.totalPages);
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        dispatch(logout());
+        navigate('/login');
+      } else {
+        setError('Failed to fetch data. Please try again later.');
+      }
+    }
   };
 
   const renderPaginationItems = () => {
@@ -185,31 +206,45 @@ const Dashboard = () => {
     <Container className="align-items-center">
       <TopBar username={user.username} userrole={user.userrole} bg="light" expand="lg" data-bs-theme="light" onSearch={handleSearch} />
       <h3 className="text-right">DPS Citation List</h3>
-      <Tabs activeKey={activeTab} onSelect={(k) => setActiveTab(k)}>
-        <Tab eventKey="all" title="All">
-          {renderCitationTable(filterCitations('all'))}
-        </Tab>
-        <Tab eventKey="paid" title="Paid">
-          {renderCitationTable(filterCitations('paid'))}
-        </Tab>
-        <Tab eventKey="unpaid" title="Unpaid">
-          {renderCitationTable(filterCitations('unpaid'))}
-        </Tab>
-        <Tab eventKey="delinquent" title="Delinquent">
-          {renderCitationTable(filterCitations('delinquent'))}
-        </Tab>
-        <Tab eventKey="for-case-filing" title="For Case Filing">
-          {renderCitationTable(filterCitations('for-case-filing'))}
-        </Tab>
-      </Tabs>
-      <Pagination className="mt-3">
-        {renderPaginationItems()}
-      </Pagination>
+      {searchResults ? (
+        <SearchResults
+          searchResults={searchResults}
+          error={error}
+          handleShow={handleShow}
+          getRowClass={getRowClass}
+          handleAmendClick={handleAmendClick}
+          formatDate={formatDate}
+          violationCount={violationCount}
+        />
+      ) : (
+        <>
+          <Tabs activeKey={activeTab} onSelect={(k) => setActiveTab(k)}>
+            <Tab eventKey="all" title="All">
+              {renderCitationTable(filterCitations('all'))}
+            </Tab>
+            <Tab eventKey="paid" title="Paid">
+              {renderCitationTable(filterCitations('paid'), true)}
+            </Tab>
+            <Tab eventKey="unpaid" title="Unpaid">
+              {renderCitationTable(filterCitations('unpaid'))}
+            </Tab>
+            <Tab eventKey="delinquent" title="Delinquent">
+              {renderCitationTable(filterCitations('delinquent'))}
+            </Tab>
+            <Tab eventKey="for-case-filing" title="For Case Filing">
+              {renderCitationTable(filterCitations('for-case-filing'))}
+            </Tab>
+          </Tabs>
+          <Pagination className="mt-3">
+            {renderPaginationItems()}
+          </Pagination>
+        </>
+      )}
       <Footer />
     </Container>
   );
 
-  function renderCitationTable(filteredCitations) {
+  function renderCitationTable(filteredCitations, isPaidTab = false) {
     return (
       <Table striped bordered hover>
         <thead>
@@ -222,7 +257,7 @@ const Dashboard = () => {
             <th>Vehicle Color</th>
             <th>Apprehending Officer</th>
             <th>Commute Status</th>
-            <th>Payment Status</th>
+            {!isPaidTab && <th>Payment Status</th>}
             <th>Violations</th>
           </tr>
         </thead>
@@ -238,13 +273,13 @@ const Dashboard = () => {
                 <td>{citation.vehicleColor}</td>
                 <td>{citation.apprehendingOfficer}</td>
                 <td>{citation.commuteStatus ? 'Commuted' : <Button variant="warning" onClick={() => handleAmendClick(citation)}>Commute</Button>}</td>
-                <td>{citation.paymentStatus ? 'Paid' : <Button variant="warning" onClick={() => handleAmendClick(citation)}>Pay</Button>}</td>
+                {!isPaidTab && <td>{citation.paymentStatus ? 'Paid' : <Button variant="warning" onClick={() => handleAmendClick(citation)}>Pay</Button>}</td>}
                 <td>{violationCount(citation.violations)}</td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan="10" className="text-center">No records available</td>
+              <td colSpan={isPaidTab ? 9 : 10} className="text-center">No records available</td>
             </tr>
           )}
         </tbody>
