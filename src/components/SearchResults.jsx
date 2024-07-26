@@ -1,5 +1,5 @@
 // File path: src/components/SearchResults.jsx
-
+import PropTypes from 'prop-types';
 import { Table, Alert, Spinner, Button } from 'react-bootstrap';
 
 const SearchResults = ({ searchResults, error, handleShow, getRowClass, handleAmendClick, formatDate, violationCount }) => {
@@ -50,6 +50,16 @@ const SearchResults = ({ searchResults, error, handleShow, getRowClass, handleAm
       )}
     </div>
   );
+};
+
+SearchResults.propTypes = {
+  searchResults: PropTypes.array.isRequired,
+  error: PropTypes.string,
+  handleShow: PropTypes.func.isRequired,
+  getRowClass: PropTypes.func.isRequired,
+  handleAmendClick: PropTypes.func.isRequired,
+  formatDate: PropTypes.func.isRequired,
+  violationCount: PropTypes.func.isRequired,
 };
 
 export default SearchResults;

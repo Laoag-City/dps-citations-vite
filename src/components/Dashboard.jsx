@@ -235,9 +235,11 @@ const Dashboard = () => {
               {renderCitationTable(filterCitations('for-case-filing'))}
             </Tab>
           </Tabs>
-          <Pagination className="mt-3">
-            {renderPaginationItems()}
-          </Pagination>
+          {activeTab === 'all' && (
+            <Pagination className="mt-3">
+              {renderPaginationItems()}
+            </Pagination>
+          )}
         </>
       )}
       <Footer />
@@ -256,7 +258,7 @@ const Dashboard = () => {
             <th>Plate Number</th>
             <th>Vehicle Color</th>
             <th>Apprehending Officer</th>
-            <th>Commute Status</th>
+            {!isPaidTab && <th>Commute Status</th>}
             {!isPaidTab && <th>Payment Status</th>}
             <th>Violations</th>
           </tr>
@@ -272,14 +274,14 @@ const Dashboard = () => {
                 <td>{citation.plateNumber}</td>
                 <td>{citation.vehicleColor}</td>
                 <td>{citation.apprehendingOfficer}</td>
-                <td>{citation.commuteStatus ? 'Commuted' : <Button variant="warning" onClick={() => handleAmendClick(citation)}>Commute</Button>}</td>
+                {!isPaidTab && <td>{citation.commuteStatus ? 'Commuted' : <Button variant="warning" onClick={() => handleAmendClick(citation)}>Commute</Button>}</td>}
                 {!isPaidTab && <td>{citation.paymentStatus ? 'Paid' : <Button variant="warning" onClick={() => handleAmendClick(citation)}>Pay</Button>}</td>}
                 <td>{violationCount(citation.violations)}</td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan={isPaidTab ? 9 : 10} className="text-center">No records available</td>
+              <td colSpan={isPaidTab ? 8 : 10} className="text-center">No records available</td>
             </tr>
           )}
         </tbody>
