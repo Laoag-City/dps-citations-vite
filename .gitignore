@@ -23,3 +23,5 @@ dist-ssr
 *.sln
 *.sw?
 src/components/Dashboard-new.js
+src/components/PaymentUpdate.jsx
+src/components/PaymentUpdateModal

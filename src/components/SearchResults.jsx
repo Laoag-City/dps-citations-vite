@@ -2,7 +2,9 @@
 import PropTypes from 'prop-types';
 import { Table, Alert, Spinner, Button } from 'react-bootstrap';
 
-const SearchResults = ({ searchResults, error, handleShow, getRowClass, handleAmendClick, formatDate, violationCount }) => {
+
+const SearchResults = ({ searchResults, error, handleShow, handleClose, getRowClass, handleAmendClick, handlePaymentClick, formatDate, violationCount }) => {
+
   return (
     <div>
       <h3 className="text-right">Search Results</h3>
@@ -34,7 +36,7 @@ const SearchResults = ({ searchResults, error, handleShow, getRowClass, handleAm
                   <td>{citation.vehicleColor}</td>
                   <td>{citation.apprehendingOfficer}</td>
                   <td>{citation.commuteStatus ? 'Commuted' : <Button variant="warning" onClick={() => handleAmendClick(citation)}>Commute</Button>}</td>
-                  <td>{citation.paymentStatus ? 'Paid' : <Button variant="warning" onClick={() => handleAmendClick(citation)}>Pay</Button>}</td>
+                  <td>{citation.paymentStatus ? 'Paid' : <Button variant="warning" onClick={() => handlePaymentClick(citation)}>Pay</Button>}</td>
                   <td>{violationCount(citation.violations)}</td>
                 </tr>
               ))
@@ -56,8 +58,10 @@ SearchResults.propTypes = {
   searchResults: PropTypes.array.isRequired,
   error: PropTypes.string,
   handleShow: PropTypes.func.isRequired,
+  handleClose: PropTypes.func.isRequired,
   getRowClass: PropTypes.func.isRequired,
   handleAmendClick: PropTypes.func.isRequired,
+  handlePaymentClick: PropTypes.func.isRequired,
   formatDate: PropTypes.func.isRequired,
   violationCount: PropTypes.func.isRequired,
 };

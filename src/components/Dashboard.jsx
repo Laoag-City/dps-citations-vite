@@ -5,10 +5,11 @@ import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import { logout } from '../features/auth/authSlice';
 import { useNavigate } from 'react-router-dom';
-import { Alert, Button, Container, Modal, Spinner, Table, Pagination, Tabs, Tab } from 'react-bootstrap';
+import { Button, Container, Table, Pagination, Tabs, Tab } from 'react-bootstrap';
 import TopBar from './TopBar';
 import Footer from './Footer';
 import SearchResults from './SearchResults';
+import PaymentUpdate from './PaymentUpdate';
 
 const Dashboard = () => {
   const { token, user } = useSelector(state => state.auth);
@@ -22,6 +23,8 @@ const Dashboard = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState('unpaid');
+  const [showPaymentUpdate, setShowPaymentUpdate] = useState(false); // New state for PaymentUpdate visibility
+  const [paymentCitation, setPaymentCitation] = useState(null); // New state for the citation being paid
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -39,7 +42,7 @@ const Dashboard = () => {
             page: currentPage,
             limit: pageSize,
             search: searchQuery,
-            status, // Pass the status for filtering on the server side
+            status,
           },
         });
         setCitations(response.data.dpsCitations);
@@ -99,7 +102,7 @@ const Dashboard = () => {
 
   const handleSearch = async (query) => {
     setSearchQuery(query);
-    setCurrentPage(1); // Reset to first page on new search
+    setCurrentPage(1);
     try {
       const response = await axios.get('https://apps.laoagcity.gov.ph:3002/dpscitations', {
         headers: { Authorization: `Bearer ${token}` },
@@ -174,13 +177,18 @@ const Dashboard = () => {
   const getRowClass = (dateApprehended) => {
     const dayDifference = (new Date() - new Date(dateApprehended)) / (1000 * 60 * 60 * 24);
 
-    if (dayDifference > 7) return 'table-danger';
-    if (dayDifference > 3) return 'table-warning';
+    if (dayDifference > 30) return 'table-danger';
+    if (dayDifference > 60) return 'table-warning';
     return '';
   };
 
-  const handleAmendClick = (citation) => {
-    console.log('Amend action for citation:', citation);
+  const handleCommuteClick = (citation) => {
+    console.log('Commute action for citation:', citation);
+  };
+
+  const handlePaymentClick = (citation) => {
+    setPaymentCitation(citation);
+    setShowPaymentUpdate(true);
   };
 
   const filterCitations = (status) => {
@@ -188,11 +196,11 @@ const Dashboard = () => {
       case 'paid':
         return citations.filter(citation => citation.paymentStatus);
       case 'unpaid':
-        return citations.filter(citation => !citation.paymentStatus && (new Date() - new Date(citation.dateApprehended)) <= (3 * 24 * 60 * 60 * 1000));
+        return citations.filter(citation => !citation.paymentStatus);
       case 'delinquent':
-        return citations.filter(citation => !citation.paymentStatus && (new Date() - new Date(citation.dateApprehended)) > (7 * 24 * 60 * 60 * 1000));
-      case 'for-case-filing':
         return citations.filter(citation => !citation.paymentStatus && (new Date() - new Date(citation.dateApprehended)) > (30 * 24 * 60 * 60 * 1000));
+      case 'for-case-filing':
+        return citations.filter(citation => !citation.paymentStatus && (new Date() - new Date(citation.dateApprehended)) > (60 * 24 * 60 * 60 * 1000));
       default:
         return citations;
     }
@@ -211,16 +219,18 @@ const Dashboard = () => {
           searchResults={searchResults}
           error={error}
           handleShow={handleShow}
+          handleClose={handleClose}
           getRowClass={getRowClass}
-          handleAmendClick={handleAmendClick}
+          handleCommuteClick={handleCommuteClick}
+          handlePaymentClick={handlePaymentClick}
           formatDate={formatDate}
           violationCount={violationCount}
         />
       ) : (
         <>
-          <Tabs activeKey={activeTab} onSelect={(k) => setActiveTab(k)}>
+          <Tabs activeKey={activeTab} onSelect={(k) => { setActiveTab(k); setCurrentPage(1); }}>
             <Tab eventKey="all" title="All">
-              {renderCitationTable(filterCitations('all'))}
+              {renderCitationTable(filterCitations('all'), true)}
             </Tab>
             <Tab eventKey="paid" title="Paid">
               {renderCitationTable(filterCitations('paid'), true)}
@@ -235,13 +245,16 @@ const Dashboard = () => {
               {renderCitationTable(filterCitations('for-case-filing'))}
             </Tab>
           </Tabs>
-          {activeTab === 'all' && (
-            <Pagination className="mt-3">
-              {renderPaginationItems()}
-            </Pagination>
-          )}
+          <Pagination className="mt-3">
+            {renderPaginationItems()}
+          </Pagination>
         </>
       )}
+      <PaymentUpdate
+        show={showPaymentUpdate}
+        onHide={() => setShowPaymentUpdate(false)}
+        citation={paymentCitation}
+      />
       <Footer />
     </Container>
   );
@@ -258,25 +271,27 @@ const Dashboard = () => {
             <th>Plate Number</th>
             <th>Vehicle Color</th>
             <th>Apprehending Officer</th>
+            <th>Violations</th>
+            <th>Amount</th>
             {!isPaidTab && <th>Commute Status</th>}
             {!isPaidTab && <th>Payment Status</th>}
-            <th>Violations</th>
           </tr>
         </thead>
         <tbody>
           {filteredCitations.length > 0 ? (
             filteredCitations.map((citation) => (
               <tr key={citation._id} className={getRowClass(citation.dateApprehended)}>
-                <td onClick={() => handleShow(citation)}>{citation.ticketNumber}</td>
+                <td>{citation.ticketNumber}</td>
                 <td>{citation.licenseNumber}</td>
                 <td>{formatDate(citation.dateApprehended)}</td>
                 <td>{citation.streetApprehended}</td>
                 <td>{citation.plateNumber}</td>
                 <td>{citation.vehicleColor}</td>
                 <td>{citation.apprehendingOfficer}</td>
-                {!isPaidTab && <td>{citation.commuteStatus ? 'Commuted' : <Button variant="warning" onClick={() => handleAmendClick(citation)}>Commute</Button>}</td>}
-                {!isPaidTab && <td>{citation.paymentStatus ? 'Paid' : <Button variant="warning" onClick={() => handleAmendClick(citation)}>Pay</Button>}</td>}
                 <td>{violationCount(citation.violations)}</td>
+                <td>{sumAmounts(citation.violations)}</td>
+                {!isPaidTab && <td>{citation.commuteStatus ? 'Commuted' : <Button variant="warning" onClick={() => handleCommuteClick(citation)}>Commute</Button>}</td>}
+                {!isPaidTab && <td>{citation.paymentStatus ? 'Paid' : <Button variant="warning" onClick={() => handlePaymentClick(citation)}>Pay</Button>}</td>}
               </tr>
             ))
           ) : (
