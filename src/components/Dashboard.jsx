@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button, Container, Table, Pagination, Tabs, Tab } from 'react-bootstrap';
 import TopBar from './TopBar';
 import Footer from './Footer';
-import SearchResults from './SearchResults';
+import SearchResults from './SearchResultsPage';
 
 const Dashboard = () => {
   const { token, user } = useSelector(state => state.auth);
