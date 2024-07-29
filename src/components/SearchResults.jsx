@@ -1,4 +1,3 @@
-// File path: src/components/SearchResults.jsx
 import PropTypes from 'prop-types';
 import { Table, Alert, Spinner, Button } from 'react-bootstrap';
 

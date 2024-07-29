@@ -1,5 +1,3 @@
-// File path: src/components/Dashboard.jsx
-
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
@@ -9,7 +7,7 @@ import { Button, Container, Table, Pagination, Tabs, Tab } from 'react-bootstrap
 import TopBar from './TopBar';
 import Footer from './Footer';
 import SearchResults from './SearchResults';
-import PaymentUpdate from './PaymentUpdate';
+import PaymentForm from './PaymentForm';
 
 const Dashboard = () => {
   const { token, user } = useSelector(state => state.auth);
@@ -23,8 +21,8 @@ const Dashboard = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState('unpaid');
-  const [showPaymentUpdate, setShowPaymentUpdate] = useState(false); // New state for PaymentUpdate visibility
-  const [paymentCitation, setPaymentCitation] = useState(null); // New state for the citation being paid
+  const [showPaymentForm, setShowPaymentForm] = useState(false);
+  const [paymentCitation, setPaymentCitation] = useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -188,7 +186,14 @@ const Dashboard = () => {
 
   const handlePaymentClick = (citation) => {
     setPaymentCitation(citation);
-    setShowPaymentUpdate(true);
+    setShowPaymentForm(true);
+  };
+
+  const handlePaymentUpdate = (updatedCitation) => {
+    // Here you can make an API call to update the citation in the backend
+    // For now, we just log the updated data
+    console.log('Updated Citation:', updatedCitation);
+    setShowPaymentForm(false);
   };
 
   const filterCitations = (status) => {
@@ -250,11 +255,13 @@ const Dashboard = () => {
           </Pagination>
         </>
       )}
-      <PaymentUpdate
-        show={showPaymentUpdate}
-        onHide={() => setShowPaymentUpdate(false)}
-        citation={paymentCitation}
-      />
+      {showPaymentForm && (
+        <PaymentForm
+          citation={paymentCitation}
+          onUpdate={handlePaymentUpdate}
+          onCancel={() => setShowPaymentForm(false)}
+        />
+      )}
       <Footer />
     </Container>
   );

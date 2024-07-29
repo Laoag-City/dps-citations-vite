@@ -215,15 +215,15 @@ function DPSCitationRecordForm() {
             </Form.Group>
           </Col>
           <Col>
-            <Form.Group controlId="lastName">
-              <Form.Label>Last Name</Form.Label>
-              <Form.Control type="text" name="lastName" value={formData.lastName} onChange={handleChange} />
-            </Form.Group>
-          </Col>
-          <Col>
             <Form.Group controlId="middleName">
               <Form.Label>Middle Name</Form.Label>
               <Form.Control type="text" name="middleName" value={formData.middleName} onChange={handleChange} />
+            </Form.Group>
+          </Col>
+          <Col>
+            <Form.Group controlId="lastName">
+              <Form.Label>Last Name</Form.Label>
+              <Form.Control type="text" name="lastName" value={formData.lastName} onChange={handleChange} />
             </Form.Group>
           </Col>
         </Row>
