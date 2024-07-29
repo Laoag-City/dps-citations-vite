@@ -34,7 +34,7 @@ const SearchResults = ({ searchResults, error, handleShow, handleClose, getRowCl
                   <td>{citation.plateNumber}</td>
                   <td>{citation.vehicleColor}</td>
                   <td>{citation.apprehendingOfficer}</td>
-                  <td>{citation.commuteStatus ? 'Commuted' : <Button variant="warning" onClick={() => handleAmendClick(citation)}>Commute</Button>}</td>
+                  <td>{citation.commuteStatus ? 'Commuted' : <Button variant="warning" onClick={() => handleCommuteClick(citation)}>Commute</Button>}</td>
                   <td>{citation.paymentStatus ? 'Paid' : <Button variant="warning" onClick={() => handlePaymentClick(citation)}>Pay</Button>}</td>
                   <td>{violationCount(citation.violations)}</td>
                 </tr>
@@ -59,7 +59,7 @@ SearchResults.propTypes = {
   handleShow: PropTypes.func.isRequired,
   handleClose: PropTypes.func.isRequired,
   getRowClass: PropTypes.func.isRequired,
-  handleAmendClick: PropTypes.func.isRequired,
+  handleCommuteClick: PropTypes.func.isRequired,
   handlePaymentClick: PropTypes.func.isRequired,
   formatDate: PropTypes.func.isRequired,
   violationCount: PropTypes.func.isRequired,

@@ -1,3 +1,5 @@
+// File path: src/components/Dashboard.jsx
+
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';

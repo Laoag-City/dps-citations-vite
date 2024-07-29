@@ -1,10 +1,15 @@
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { Container, Spinner, Alert } from 'react-bootstrap';
 import axios from 'axios';
 import PaymentForm from './PaymentForm';
-import { Container, Spinner, Alert } from 'react-bootstrap';
+import TopBar from './TopBar';
+import Footer from './Footer';
 
 const PaymentUpdatePage = ({ token }) => {
+  const { user } = useSelector(state => state.auth);
   const { citationId } = useParams();
   const navigate = useNavigate();
   const [citation, setCitation] = useState(null);
@@ -58,7 +63,8 @@ const PaymentUpdatePage = ({ token }) => {
 
   return (
     <Container className="mt-5">
-      <h3>Update Payment</h3>
+      <TopBar username={user.username} userrole={user.userrole} bg="light" expand="lg" data-bs-theme="light" />
+      <h3 className="text-center">Update Payment</h3>
       {citation && (
         <PaymentForm
           citation={citation}
@@ -66,8 +72,12 @@ const PaymentUpdatePage = ({ token }) => {
           onCancel={() => navigate('/dashboard')}
         />
       )}
+      <Footer />
     </Container>
   );
 };
 
+PaymentUpdatePage.propTypes = {
+  error: PropTypes.string
+};
 export default PaymentUpdatePage;
