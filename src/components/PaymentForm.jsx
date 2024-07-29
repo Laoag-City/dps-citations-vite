@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { Accordion, Form, Button, Row, Col, Card } from 'react-bootstrap';
+import { Accordion, Form, Button, Row, Col } from 'react-bootstrap';
 
 const PaymentForm = ({ citation, onUpdate, onCancel }) => {
   const [formData, setFormData] = useState({

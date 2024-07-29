@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { Table, Alert, Spinner, Button } from 'react-bootstrap';
 
 
-const SearchResults = ({ searchResults, error, handleShow, handleClose, getRowClass, handleAmendClick, handlePaymentClick, formatDate, violationCount }) => {
+const SearchResults = ({ searchResults, error, handleShow, getRowClass, handleCommuteClick, handlePaymentClick, formatDate, violationCount }) => {
 
   return (
     <div>
@@ -57,7 +57,6 @@ SearchResults.propTypes = {
   searchResults: PropTypes.array.isRequired,
   error: PropTypes.string,
   handleShow: PropTypes.func.isRequired,
-  handleClose: PropTypes.func.isRequired,
   getRowClass: PropTypes.func.isRequired,
   handleCommuteClick: PropTypes.func.isRequired,
   handlePaymentClick: PropTypes.func.isRequired,
