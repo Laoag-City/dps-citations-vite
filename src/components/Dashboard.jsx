@@ -7,7 +7,6 @@ import { Button, Container, Table, Pagination, Tabs, Tab } from 'react-bootstrap
 import TopBar from './TopBar';
 import Footer from './Footer';
 import SearchResults from './SearchResults';
-import PaymentForm from './PaymentForm';
 
 const Dashboard = () => {
   const { token, user } = useSelector(state => state.auth);
@@ -21,8 +20,6 @@ const Dashboard = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState('unpaid');
-  const [showPaymentForm, setShowPaymentForm] = useState(false);
-  const [paymentCitation, setPaymentCitation] = useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -185,15 +182,7 @@ const Dashboard = () => {
   };
 
   const handlePaymentClick = (citation) => {
-    setPaymentCitation(citation);
-    setShowPaymentForm(true);
-  };
-
-  const handlePaymentUpdate = (updatedCitation) => {
-    // Here you can make an API call to update the citation in the backend
-    // For now, we just log the updated data
-    console.log('Updated Citation:', updatedCitation);
-    setShowPaymentForm(false);
+    navigate(`/payment-update/${citation._id}`);
   };
 
   const filterCitations = (status) => {
@@ -254,13 +243,6 @@ const Dashboard = () => {
             {renderPaginationItems()}
           </Pagination>
         </>
-      )}
-      {showPaymentForm && (
-        <PaymentForm
-          citation={paymentCitation}
-          onUpdate={handlePaymentUpdate}
-          onCancel={() => setShowPaymentForm(false)}
-        />
       )}
       <Footer />
     </Container>

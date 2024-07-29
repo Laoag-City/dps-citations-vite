@@ -6,11 +6,13 @@ import NewDPSRecord from './components/NewDPSCitationRecord';
 import Reporting from './components/Reporting';
 import PrivateRoute from './components/PrivateRoute';
 //import Status from './components/Status';
-
 import './App.css';
 import './assets/bootstrap-darkly-theme.min.css';
+import PaymentUpdatePage from './components/PaymentUpdatePage';
+import { useSelector } from 'react-redux';
 
 function App() {
+  const { token } = useSelector(state => state.auth);
   return (
     <BrowserRouter>
       <Routes>
@@ -26,6 +28,11 @@ function App() {
         <Route path="/newdpscitation" element={
           <PrivateRoute>
             <NewDPSRecord />
+          </PrivateRoute>
+        } />
+        <Route path="/payment-update/:citationId" element={
+          <PrivateRoute>
+            <PaymentUpdatePage token={token} />
           </PrivateRoute>
         } />
         <Route path="/reporting" element={
