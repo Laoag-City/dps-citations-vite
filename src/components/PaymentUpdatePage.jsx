@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
-import PropTypes from 'prop-types';
+//import PropTypes from 'prop-types';
 import { Container, Spinner, Alert } from 'react-bootstrap';
 import axios from 'axios';
 import PaymentForm from './PaymentForm';
 import TopBar from './TopBar';
 import Footer from './Footer';
 
-const PaymentUpdatePage = ({ token }) => {
-  const { user } = useSelector(state => state.auth);
+const PaymentUpdatePage = () => {
+  const { token, user } = useSelector(state => state.auth);
   const { citationId } = useParams();
   const navigate = useNavigate();
   const [citation, setCitation] = useState(null);
@@ -20,6 +20,7 @@ const PaymentUpdatePage = ({ token }) => {
     const fetchCitation = async () => {
       try {
         const response = await axios.get(`https://apps.laoagcity.gov.ph:3002/dpscitations/${citationId}`, {
+          //const response = await axios.get(`http://localhost:3002/dpscitations/${citationId}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setCitation(response.data);
@@ -38,11 +39,22 @@ const PaymentUpdatePage = ({ token }) => {
     fetchCitation();
   }, [citationId, token, navigate]);
 
-  const handlePaymentUpdate = (updatedCitation) => {
-    // Here you can make an API call to update the citation in the backend
-    // For now, we just log the updated data
-    console.log('Updated Citation:', updatedCitation);
-    navigate('/dashboard'); // Navigate back to the dashboard after updating
+  const handlePaymentUpdate = async (updatedCitation) => {
+    try {
+      const response = await axios.put(`https://apps.laoagcity.gov.ph:3002/dpscitations/${citationId}`, updatedCitation, {
+        //const response = await axios.put(`http://localhost:3002/dpscitations/${citationId}`, updatedCitation, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      //console.log('Updated Citation:', response.data);
+      navigate('/dashboard'); // Navigate back to the dashboard after updating
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        setError('Unauthorized access. Please login again.');
+        navigate('/login');
+      } else {
+        setError('Failed to update citation. Please try again later.');
+      }
+    }
   };
 
   if (loading) {
@@ -77,7 +89,8 @@ const PaymentUpdatePage = ({ token }) => {
   );
 };
 
-PaymentUpdatePage.propTypes = {
-  error: PropTypes.string
+/* PaymentUpdatePage.propTypes = {
+  token: PropTypes.string.isRequired,
 };
+ */
 export default PaymentUpdatePage;

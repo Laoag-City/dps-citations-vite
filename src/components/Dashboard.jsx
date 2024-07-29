@@ -1,5 +1,5 @@
 // File path: src/components/Dashboard.jsx
-
+//TODO: use env or production endpoints
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
@@ -34,6 +34,7 @@ const Dashboard = () => {
     const fetchDPSCitationsData = async (status) => {
       try {
         const response = await axios.get('https://apps.laoagcity.gov.ph:3002/dpscitations', {
+          //const response = await axios.get('http://localhost:3002/dpscitations', {
           headers: { Authorization: `Bearer ${token}` },
           params: {
             page: currentPage,
@@ -88,7 +89,8 @@ const Dashboard = () => {
   const formatDate = (date) => date ? new Date(date).toLocaleDateString() : null;
 
   const sumAmounts = (amounts) => {
-    return amounts.map(item => item.amount).reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+    const total = amounts.map(item => item.amount).reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+    return parseFloat(total.toFixed(2));
   };
 
   const violationCount = (count) => { return count.length };
@@ -287,7 +289,7 @@ const Dashboard = () => {
             ))
           ) : (
             <tr>
-              <td colSpan={isPaidTab ? 8 : 10} className="text-center">No records available</td>
+              <td colSpan={isPaidTab ? 9 : 11} className="text-center">No records available</td>
             </tr>
           )}
         </tbody>

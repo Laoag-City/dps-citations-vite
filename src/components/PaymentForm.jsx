@@ -5,7 +5,9 @@ import { Accordion, Form, Button, Row, Col } from 'react-bootstrap';
 const PaymentForm = ({ citation, onUpdate, onCancel }) => {
   const [formData, setFormData] = useState({
     ...citation,
+    paymentStatus: citation.paymentStatus || true,
     paymentORNumber: citation.paymentORNumber || '',
+    amountPaid: citation.amountPaid || '',
     paymentDate: citation.paymentDate ? new Date(citation.paymentDate).toISOString().split('T')[0] : '',
     paymentRemarks: citation.paymentRemarks || '',
   });
@@ -18,6 +20,11 @@ const PaymentForm = ({ citation, onUpdate, onCancel }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     onUpdate(formData);
+  };
+  const sumAmounts = (amounts) => {
+    const total = amounts.map(item => item.amount)
+      .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+    return parseFloat(total.toFixed(2));
   };
 
   return (
@@ -145,7 +152,8 @@ const PaymentForm = ({ citation, onUpdate, onCancel }) => {
           </Accordion.Body>
         </Accordion.Item>
         <Accordion.Item eventKey="1">
-          <Accordion.Header>Payment Information</Accordion.Header>
+          {/*           <Accordion.Header>Payment Information ({citation.paymentStatus ? 'Paid' : 'Unpaid'})</Accordion.Header>
+ */}          <Accordion.Header>Payment Information - Amount Due is: Php{sumAmounts(citation.violations)}</Accordion.Header>
           <Accordion.Body>
             <Form.Group className="mb-3" controlId="formPaymentORNumber">
               <Form.Label>Payment OR Number</Form.Label>
@@ -153,6 +161,15 @@ const PaymentForm = ({ citation, onUpdate, onCancel }) => {
                 type="text"
                 name="paymentORNumber"
                 value={formData.paymentORNumber}
+                onChange={handleChange}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="formPaymentORNumber">
+              <Form.Label>Amount Paid</Form.Label>
+              <Form.Control
+                type="number"
+                name="amountPaid"
+                value={formData.amountPaid}
                 onChange={handleChange}
               />
             </Form.Group>
@@ -203,9 +220,12 @@ PaymentForm.propTypes = {
     plateNumber: PropTypes.string.isRequired,
     vehicleColor: PropTypes.string.isRequired,
     apprehendingOfficer: PropTypes.string.isRequired,
+    paymentStatus: PropTypes.bool,
     paymentORNumber: PropTypes.string,
     paymentDate: PropTypes.string,
+    amountPaid: PropTypes.number,
     paymentRemarks: PropTypes.string,
+    violations: PropTypes.array
   }).isRequired,
   onUpdate: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
