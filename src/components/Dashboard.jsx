@@ -211,7 +211,7 @@ const Dashboard = () => {
   return (
     <Container className="align-items-center">
       <TopBar username={user.username} userrole={user.userrole} bg="light" expand="lg" data-bs-theme="light" onSearch={handleSearch} />
-      <h3 className="text-right">DPS Citation List</h3>
+      <h3 className="text-center">DPS Citation List</h3>
       {searchResults ? (
         <SearchResults
           searchResults={searchResults}
@@ -264,7 +264,7 @@ const Dashboard = () => {
             <th>Plate Number</th>
             <th>Vehicle Color</th>
             <th>Apprehending Officer</th>
-            <th>Violations</th>
+            {/*             <th>Violations</th>*/}
             <th>Amount</th>
             {!isPaidTab && <th>Commute Status</th>}
             {!isPaidTab && <th>Payment Status</th>}
@@ -281,19 +281,19 @@ const Dashboard = () => {
                 <td>{citation.plateNumber}</td>
                 <td>{citation.vehicleColor}</td>
                 <td>{citation.apprehendingOfficer}</td>
-                <td>{violationCount(citation.violations)}</td>
+                {/*                 <td>{violationCount(citation.violations)}</td>*/}
                 <td>{sumAmounts(citation.violations)}</td>
-                {!isPaidTab && <td>{citation.commuteStatus ? 'Commuted' : <Button variant="warning" onClick={() => handleCommuteClick(citation)}>Commute</Button>}</td>}
+                {!isPaidTab && <td>{user.username === 'dpshead' ? < Button variant="warning" onClick={() => handleCommuteClick(citation)}>Commute</Button> : citation.commuteStatus ? 'Commuted' : 'Not Commuted'}</td>}
                 {!isPaidTab && <td>{citation.paymentStatus ? 'Paid' : <Button variant="warning" onClick={() => handlePaymentClick(citation)}>Pay</Button>}</td>}
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan={isPaidTab ? 9 : 11} className="text-center">No records available</td>
+              <td colSpan={isPaidTab ? 8 : 10} className="text-center">No records available</td>
             </tr>
           )}
         </tbody>
-      </Table>
+      </Table >
     );
   }
 };

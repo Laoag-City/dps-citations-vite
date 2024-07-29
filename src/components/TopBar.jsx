@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Navbar, Container, Nav, Form, Button } from 'react-bootstrap';
+import { Button, Container, Form, Nav, Navbar, NavDropdown } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
 import { logout } from '../features/auth/authSlice';
@@ -62,7 +62,13 @@ const TopBar = ({ username, userrole, onSearch }) => {
               {/* <Navbar.Text className="me-auto">Hello {username}</Navbar.Text> */}
               {userrole === "dpsstaff" && <Nav.Link as={Link} to="/newdpscitation">New DPS Citation</Nav.Link>}
               {userrole === "dpsstaff" && <Nav.Link as={Link} to="/reporting">Reporting</Nav.Link>}
-              {/*<Nav.Link as={Link} to="/reporting">Reporting</Nav.Link>*/}
+              <NavDropdown title="Account" id="basic-nav-dropdown">
+                <NavDropdown.Item href="#action/3.1">Profile</NavDropdown.Item>
+                <NavDropdown.Item href="#action/3.2">Edit Apprehenders</NavDropdown.Item>
+                <NavDropdown.Item href="#action/3.3">Edit Violations</NavDropdown.Item>
+                <NavDropdown.Divider />
+                <NavDropdown.Item href="#action/3.4">Account Settings</NavDropdown.Item>
+              </NavDropdown>
             </Nav>
             <Form className="d-flex" onSubmit={handleSearch}>
               <Form.Control
@@ -77,6 +83,7 @@ const TopBar = ({ username, userrole, onSearch }) => {
             </Form>
             <span className="mx-2"></span>
             <Button variant="primary" onClick={handleLogout}>Logout</Button>
+
           </Navbar.Collapse>
         </Container>
       </Navbar>

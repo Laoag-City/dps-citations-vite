@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { Container, Form, Button, Col, Row } from 'react-bootstrap';
+import { Card, Container, Form, Button, Col, Row } from 'react-bootstrap';
 import axios from 'axios';
 import TopBar from './TopBar';
 import Footer from './Footer';
@@ -117,6 +117,7 @@ function DPSCitationRecordForm() {
     plateNumber: '',
     vehicleColor: '',
     apprehendingOfficer: '',
+    apprehendingUnitOf: '',
     commuteStatus: false,
     commuteDate: null,
     paymentStatus: false,
@@ -197,134 +198,163 @@ function DPSCitationRecordForm() {
   return (
     <Container className="align-items-center">
       <TopBar username={user.username} userrole={user.userrole} bg="light" expand="lg" data-bs-theme="dark" />
-      <h3 className="text-right">New DPS Citation Record</h3>
+      <h3 className="text-center">New DPS Citation Record</h3>
       <Form onSubmit={handleSubmit}>
-        <Row>
-          <Col>
-            <Form.Group controlId="ticketNumber">
-              <Form.Label>Ticket Number</Form.Label>
-              <Form.Control type="text" name="ticketNumber" value={formData.ticketNumber} onChange={handleChange} />
-            </Form.Group>
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <Form.Group controlId="firstName">
-              <Form.Label>First Name</Form.Label>
-              <Form.Control type="text" name="firstName" value={formData.firstName} onChange={handleChange} />
-            </Form.Group>
-          </Col>
-          <Col>
-            <Form.Group controlId="middleName">
-              <Form.Label>Middle Name</Form.Label>
-              <Form.Control type="text" name="middleName" value={formData.middleName} onChange={handleChange} />
-            </Form.Group>
-          </Col>
-          <Col>
-            <Form.Group controlId="lastName">
-              <Form.Label>Last Name</Form.Label>
-              <Form.Control type="text" name="lastName" value={formData.lastName} onChange={handleChange} />
-            </Form.Group>
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <Form.Group controlId="homeAddress">
-              <Form.Label>Home Address</Form.Label>
-              <Form.Control type="text" name="homeAddress" value={formData.homeAddress} onChange={handleChange} />
-            </Form.Group>
-          </Col>
-          <Col>
-            <Form.Group controlId="licenseNumber">
-              <Form.Label>License Number</Form.Label>
-              <Form.Control type="text" name="licenseNumber" value={formData.licenseNumber} onChange={handleChange} required />
-            </Form.Group>
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <Form.Group controlId="dateApprehended">
-              <Form.Label>Date Apprehended</Form.Label>
-              <Form.Control type="datetime-local" name="dateApprehended" value={formData.dateApprehended} onChange={handleChange} required />
-            </Form.Group>
-          </Col>
-          <Col>
-            <Form.Group controlId="timeApprehended">
-              <Form.Label>Time Apprehended</Form.Label>
-              <Form.Control type="datetime-local" name="timeApprehended" value={formData.timeApprehended} onChange={handleChange} />
-            </Form.Group>
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <Form.Group controlId="streetApprehended">
-              <Form.Label>Street Apprehended</Form.Label>
-              <Form.Control type="text" name="streetApprehended" value={formData.streetApprehended} onChange={handleChange} />
-            </Form.Group>
-          </Col>
-          <Col>
-            <Form.Group controlId="plateNumber">
-              <Form.Label>Plate Number</Form.Label>
-              <Form.Control type="text" name="plateNumber" value={formData.plateNumber} onChange={handleChange} />
-            </Form.Group>
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <Form.Group controlId="vehicleColor">
-              <Form.Label>Vehicle Color</Form.Label>
-              <Form.Control type="text" name="vehicleColor" value={formData.vehicleColor} onChange={handleChange} />
-            </Form.Group>
-          </Col>
-          <Col>
-            <Form.Group controlId="apprehendingOfficer">
-              <Form.Label>Apprehending Officer</Form.Label>
-              <Form.Control as="select" name="apprehendingOfficer" value={formData.apprehendingOfficer} onChange={handleChange}>
-                <option value="">Select apprehending officer</option>
-                {apprehendersList.map((officer, index) => (
-                  <option key={index} value={officer.name}>{officer.name}</option>
-                ))}
-              </Form.Control>
-            </Form.Group>
-          </Col>
-        </Row>
-        <h5>Violations</h5>
-        {formData.violations.map((violation, index) => (
-          <Row key={index}>
-            <Col>
-              <Form.Group controlId={`violation-${index}`}>
-                <Form.Label>Violation</Form.Label>
-                <Form.Control as="select" name="violation" value={violation.violation} onChange={(e) => handleViolationChange(index, e)}>
-                  <option value="">Select violation</option>
-                  {violationsList.map((violation, index) => (
-                    <option key={index} value={violation.violation}>{violation.violation}</option>
-                  ))}
-                </Form.Control>
-              </Form.Group>
-            </Col>
-            <Col>
-              <Form.Group controlId={`amount-${index}`}>
-                <Form.Label>Amount</Form.Label>
-                <Form.Control type="number" name="amount" value={violation.amount} onChange={(e) => handleViolationChange(index, e)} readOnly />
-              </Form.Group>
-            </Col>
-            <Col>
-              <Form.Group controlId={`remarks-${index}`}>
-                <Form.Label>Remarks</Form.Label>
-                <Form.Control type="text" name="remarks" value={violation.remarks} onChange={(e) => handleViolationChange(index, e)} />
-              </Form.Group>
-            </Col>
-            <Col>
-              <Button variant="danger" onClick={() => removeViolation(index)}>Remove</Button>
-            </Col>
-          </Row>
-        ))}
-        <Button variant="warning" onClick={addViolation}>Add Violation</Button>
-        <br />
-        <Button type="submit">Submit</Button>
-        <Button variant="secondary" onClick={backToHome}>
-          Back to Home
-        </Button>{' '}
+        {/*         <Card>
+          <Card.Body>
+            <Card.Title>Card Title</Card.Title>
+            <Card.Subtitle className="mb-2 text-muted">Card Subtitle</Card.Subtitle>
+            <Card.Text>
+              Some quick example text to build on the card title and make up the
+              bulk of the card's content.
+            </Card.Text>
+            <Card.Link href="#">Card Link</Card.Link>
+            <Card.Link href="#">Another Link</Card.Link>
+          </Card.Body>
+        </Card>
+ */}        <Card>
+          <Card.Body>
+            <Card.Title>Violator Information</Card.Title>
+            <Row>
+              <Col>
+                <Form.Group controlId="ticketNumber">
+                  <Form.Label>Ticket Number</Form.Label>
+                  <Form.Control type="text" name="ticketNumber" value={formData.ticketNumber} onChange={handleChange} />
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Form.Group controlId="firstName">
+                  <Form.Label>First Name</Form.Label>
+                  <Form.Control type="text" name="firstName" value={formData.firstName} onChange={handleChange} />
+                </Form.Group>
+              </Col>
+              <Col>
+                <Form.Group controlId="middleName">
+                  <Form.Label>Middle Name</Form.Label>
+                  <Form.Control type="text" name="middleName" value={formData.middleName} onChange={handleChange} />
+                </Form.Group>
+              </Col>
+              <Col>
+                <Form.Group controlId="lastName">
+                  <Form.Label>Last Name</Form.Label>
+                  <Form.Control type="text" name="lastName" value={formData.lastName} onChange={handleChange} />
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Form.Group controlId="homeAddress">
+                  <Form.Label>Home Address</Form.Label>
+                  <Form.Control type="text" name="homeAddress" value={formData.homeAddress} onChange={handleChange} />
+                </Form.Group>
+              </Col>
+              <Col>
+                <Form.Group controlId="licenseNumber">
+                  <Form.Label>License Number</Form.Label>
+                  <Form.Control type="text" name="licenseNumber" value={formData.licenseNumber} onChange={handleChange} required />
+                </Form.Group>
+              </Col>
+            </Row>
+          </Card.Body>
+        </Card>
+        <Card>
+          <Card.Body>
+            <Card.Title>Violator Information</Card.Title>
+            <Row>
+              <Col>
+                <Form.Group controlId="dateApprehended">
+                  <Form.Label>Date Apprehended</Form.Label>
+                  <Form.Control type="datetime-local" name="dateApprehended" value={formData.dateApprehended} onChange={handleChange} required />
+                </Form.Group>
+              </Col>
+              <Col>
+                <Form.Group controlId="timeApprehended">
+                  <Form.Label>Time Apprehended</Form.Label>
+                  <Form.Control type="datetime-local" name="timeApprehended" value={formData.timeApprehended} onChange={handleChange} />
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Form.Group controlId="streetApprehended">
+                  <Form.Label>Street Apprehended</Form.Label>
+                  <Form.Control type="text" name="streetApprehended" value={formData.streetApprehended} onChange={handleChange} />
+                </Form.Group>
+              </Col>
+              <Col>
+                <Form.Group controlId="plateNumber">
+                  <Form.Label>Plate Number</Form.Label>
+                  <Form.Control type="text" name="plateNumber" value={formData.plateNumber} onChange={handleChange} />
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Form.Group controlId="vehicleColor">
+                  <Form.Label>Vehicle Color</Form.Label>
+                  <Form.Control type="text" name="vehicleColor" value={formData.vehicleColor} onChange={handleChange} />
+                </Form.Group>
+              </Col>
+              <Col>
+                <Form.Group controlId="apprehendingOfficer">
+                  <Form.Label>Apprehending Officer</Form.Label>
+                  <Form.Control as="select" name="apprehendingOfficer" value={formData.apprehendingOfficer} onChange={handleChange}>
+                    <option value="">Select apprehending officer</option>
+                    {apprehendersList.map((officer, index) => (
+                      <option key={index} value={officer.name}>{officer.name}</option>
+                    ))}
+                  </Form.Control>
+                </Form.Group>
+              </Col>
+            </Row>
+          </Card.Body>
+        </Card>
+        <Card>
+          <Card.Body>
+            <Card.Title>Violations</Card.Title>
+            {formData.violations.map((violation, index) => (
+              <Row key={index}>
+                <Col>
+                  <Form.Group controlId={`violation-${index}`}>
+                    <Form.Label>Violation</Form.Label>
+                    <Form.Control as="select" name="violation" value={violation.violation} onChange={(e) => handleViolationChange(index, e)}>
+                      <option value="">Select violation</option>
+                      {violationsList.map((violation, index) => (
+                        <option key={index} value={violation.violation}>{violation.violation}</option>
+                      ))}
+                    </Form.Control>
+                  </Form.Group>
+                </Col>
+                <Col>
+                  <Form.Group controlId={`amount-${index}`}>
+                    <Form.Label>Amount</Form.Label>
+                    <Form.Control type="number" name="amount" value={violation.amount} onChange={(e) => handleViolationChange(index, e)} readOnly />
+                  </Form.Group>
+                </Col>
+                <Col>
+                  <Form.Group controlId={`remarks-${index}`}>
+                    <Form.Label>Remarks</Form.Label>
+                    <Form.Control type="text" name="remarks" value={violation.remarks} onChange={(e) => handleViolationChange(index, e)} />
+                  </Form.Group>
+                </Col>
+                <div className="text-end mt-3">
+                  <Col>
+                    <Button variant="danger" onClick={() => removeViolation(index)}>Remove</Button>
+                  </Col>
+                </div>
+              </Row>
+            ))}
+            <div className="text-end mt-3">
+              <Button variant="warning" onClick={addViolation}>Add Violation</Button>
+            </div>
+          </Card.Body>
+        </Card>
+        <div className="text-end mt-3">
+          <Button type="submit">Submit</Button><span className="mx-2"></span>
+          <Button variant="secondary" onClick={backToHome}>Back to Home</Button>
+        </div>
       </Form>
       <Footer />
     </Container>
