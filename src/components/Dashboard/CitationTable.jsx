@@ -1,13 +1,18 @@
 import PropTypes from 'prop-types';
-import { Table, Button } from 'react-bootstrap';
+import { useSelector, useDispatch } from 'react-redux';
+
+import { Table, Button, Alert } from 'react-bootstrap';
 import { formatDate } from '../../utils/dateUtils';
 import { sumAmounts, getRowClass } from '../../utils/citationUtils';
 import { useNavigate } from 'react-router-dom';
 
 const CitationTable = ({ citations, isPaidTab = false }) => {
+  // /console.log(userRole);
   const navigate = useNavigate();
+  const { token, user } = useSelector((state) => state.auth);
 
   const handleCommuteClick = (citation) => {
+    //navigate(`/commute-update/${citation._id}`);
     console.log('Commute action for citation:', citation);
   };
 
@@ -27,8 +32,8 @@ const CitationTable = ({ citations, isPaidTab = false }) => {
           <th>Vehicle Color</th>
           <th>Apprehending Officer</th>
           <th>Amount</th>
-          {!isPaidTab && <th>Commute Status</th>}
-          {!isPaidTab && <th>Payment Status</th>}
+          {!isPaidTab && <th>Commuted</th>}
+          {!isPaidTab && <th>Paid</th>}
         </tr>
       </thead>
       <tbody>
@@ -45,12 +50,14 @@ const CitationTable = ({ citations, isPaidTab = false }) => {
               <td>{sumAmounts(citation.violations)}</td>
               {!isPaidTab && (
                 <td>
-                  {citation.commuteStatus ? 'Commuted' : <Button variant="warning" onClick={() => handleCommuteClick(citation)}>Commute</Button>}
+                  {/*console.log(user.userrole + "," + citation.commuteStatus)*/}
+                  {user.userrole === 'dpshead' && (citation.commuteStatus || citation.commuteStatus === undefined) ? <Button variant="warning" onClick={() => handleCommuteClick(citation)}>Commute</Button> : 'No'}
                 </td>
               )}
               {!isPaidTab && (
                 <td>
-                  {citation.paymentStatus ? 'Paid' : <Button variant="warning" onClick={() => handlePaymentClick(citation)}>Pay</Button>}
+                  {/*console.log(user.userrole + "," + citation.PaymentStatus)*/}
+                  {user.userrole === 'dpsstaff' && (citation.paymentStatus || citation.paymentStatus === undefined) ? 'Yes' : <Button variant="warning" onClick={() => handlePaymentClick(citation)}>Pay</Button>}
                 </td>
               )}
             </tr>
@@ -63,7 +70,7 @@ const CitationTable = ({ citations, isPaidTab = false }) => {
           </tr>
         )}
       </tbody>
-    </Table>
+    </Table >
   );
 };
 
@@ -104,6 +111,7 @@ CitationTable.propTypes = {
     })
   ).isRequired,
   isPaidTab: PropTypes.bool,
+  userRole: PropTypes.string
 };
 
 export default CitationTable;

@@ -186,7 +186,7 @@ const Dashboard = () => {
           {/* was setCurrentPage(1)*/}
           <Tabs activeKey={activeTab} onSelect={(k) => { setActiveTab(k); setCurrentPage(currentPage); }}>
             <Tab eventKey="all" title="All">
-              <CitationTable citations={filterCitations('all')} isPaidTab={true} />
+              <CitationTable citations={filterCitations('all')} userRole={user.userrole} isPaidTab={true} />
             </Tab>
             <Tab eventKey="paid" title="Paid">
               <CitationTable citations={filterCitations('paid')} isPaidTab={true} />
