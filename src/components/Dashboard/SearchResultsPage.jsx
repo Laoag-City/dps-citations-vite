@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { Table, Alert, Spinner, Button } from 'react-bootstrap';
 
 
-const SearchResults = ({ searchResults, error, handleShow, getRowClass, handleCommuteClick, handlePaymentClick, formatDate, violationCount }) => {
+const SearchResults = ({ searchResults, error, handleShow, getRowClass, handleCommuteClick, handlePaymentClick, formatDate, violationCount, userRole }) => {
 
   return (
     <div>
@@ -34,8 +34,8 @@ const SearchResults = ({ searchResults, error, handleShow, getRowClass, handleCo
                   <td>{citation.plateNumber}</td>
                   <td>{citation.vehicleColor}</td>
                   <td>{citation.apprehendingOfficer}</td>
-                  <td>{citation.commuteStatus ? 'Commuted' : <Button variant="warning" onClick={() => handleCommuteClick(citation)}>Commute</Button>}</td>
-                  <td>{citation.paymentStatus ? 'Paid' : <Button variant="warning" onClick={() => handlePaymentClick(citation)}>Pay</Button>}</td>
+                  <td>{citation.commuteStatus ? 'Commuted' : citation.paymentStatus ? 'Not Commuted' : <Button variant="warning" onClick={() => handleCommuteClick(citation)}>Commute</Button>}</td>
+                  <td>{citation.paymentStatus ? 'Paid' : userRole === 'dpsstaff' ? <Button variant="warning" onClick={() => handlePaymentClick(citation)}>Pay</Button> : 'Unpaid'}</td>
                   <td>{violationCount(citation.violations)}</td>
                 </tr>
               ))
@@ -62,6 +62,7 @@ SearchResults.propTypes = {
   handlePaymentClick: PropTypes.func.isRequired,
   formatDate: PropTypes.func.isRequired,
   violationCount: PropTypes.func.isRequired,
+  userRole: PropTypes.string
 };
 
 export default SearchResults;

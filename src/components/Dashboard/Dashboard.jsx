@@ -179,10 +179,12 @@ const Dashboard = () => {
           handlePaymentClick={handlePaymentClick}
           formatDate={formatDate}
           violationCount={violationCount}
+          userRole={user.userrole}
         />
       ) : (
         <>
-          <Tabs activeKey={activeTab} onSelect={(k) => { setActiveTab(k); setCurrentPage(1); }}>
+          {/* was setCurrentPage(1)*/}
+          <Tabs activeKey={activeTab} onSelect={(k) => { setActiveTab(k); setCurrentPage(currentPage); }}>
             <Tab eventKey="all" title="All">
               <CitationTable citations={filterCitations('all')} isPaidTab={true} />
             </Tab>

@@ -1,9 +1,10 @@
+import PropTypes from 'prop-types';
 import { Pagination } from 'react-bootstrap';
 
 const CustomPagination = ({ currentPage, totalPages, handlePageChange }) => {
   const renderPaginationItems = () => {
     const items = [];
-    const pageNeighbors = 2;
+    const pageNeighbors = 4;
     const totalNumbers = pageNeighbors * 2 + 3;
     const totalBlocks = totalNumbers + 2;
 
@@ -52,6 +53,12 @@ const CustomPagination = ({ currentPage, totalPages, handlePageChange }) => {
   };
 
   return <Pagination className="mt-3">{renderPaginationItems()}</Pagination>;
+};
+
+CustomPagination.propTypes = {
+  currentPage: PropTypes.number.isRequired,
+  totalPages: PropTypes.number.isRequired,
+  handlePageChange: PropTypes.func.isRequired,
 };
 
 export default CustomPagination;
