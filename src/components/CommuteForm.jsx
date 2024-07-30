@@ -1,12 +1,14 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { Accordion, Form, Button, Row, Col } from 'react-bootstrap';
+import { sumAmounts } from '../utils/citationUtils';
 
 const CommuteForm = ({ citation, onUpdate, onCancel }) => {
+
   const [formData, setFormData] = useState({
     ...citation,
     commuteStatus: citation.commuteStatus || true,
-    commuteDate: citation.commuteDate ? new Date(citation.commuteDate).toISOString().split('T')[0] : '',
+    commuteDate: '',
     commutedViolation: citation.commutedViolation || '',
     commutedViolationRemark: citation.commutedViolationRemark || '',
   });
@@ -19,11 +21,6 @@ const CommuteForm = ({ citation, onUpdate, onCancel }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     onUpdate(formData);
-  };
-  const sumAmounts = (amounts) => {
-    const total = amounts.map(item => item.amount)
-      .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-    return parseFloat(total.toFixed(2));
   };
 
   return (
@@ -151,8 +148,8 @@ const CommuteForm = ({ citation, onUpdate, onCancel }) => {
           </Accordion.Body>
         </Accordion.Item>
         <Accordion.Item eventKey="1">
-          {/*           <Accordion.Header>Payment Information ({citation.paymentStatus ? 'Paid' : 'Unpaid'})</Accordion.Header>
- */}          <Accordion.Header>Commute Infor - Amount Due is: Php{sumAmounts(citation.violations)}</Accordion.Header>
+          {/*           <Accordion.Header>Payment Information ({citation.paymentStatus ? 'Paid' : 'Unpaid'})</Accordion.Header>*/}
+          <Accordion.Header>Commute Info - Amount Due is: Php{sumAmounts(citation.violations)}</Accordion.Header>
           <Accordion.Body>
             <Form.Group className="mb-3" controlId="formPaymentORNumber">
               <Form.Label>Payment OR Number</Form.Label>
@@ -173,11 +170,11 @@ const CommuteForm = ({ citation, onUpdate, onCancel }) => {
               />
             </Form.Group>
             <Form.Group className="mb-3" controlId="formPaymentDate">
-              <Form.Label>Payment Date</Form.Label>
+              <Form.Label>Commute Date</Form.Label>
               <Form.Control
                 type="date"
                 name="paymentDate"
-                value={formData.paymentDate}
+                value={formData.commuteDate}
                 onChange={handleChange}
               />
             </Form.Group>
@@ -194,7 +191,7 @@ const CommuteForm = ({ citation, onUpdate, onCancel }) => {
         </Accordion.Item>
         <div className="text-end mt-3">
           <Button variant="primary" type="submit">
-            Update Payment
+            Commute Citation
           </Button>
           <Button variant="secondary" onClick={onCancel} className="ms-2">
             Cancel
@@ -205,6 +202,7 @@ const CommuteForm = ({ citation, onUpdate, onCancel }) => {
   );
 };
 
+/*
 CommuteForm.propTypes = {
   citation: PropTypes.arrayOf(
     PropTypes.shape({
@@ -243,31 +241,56 @@ CommuteForm.propTypes = {
   ).isRequired,
   onUpdate: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
+};*/
+
+CommuteForm.propTypes = {
+  citation: PropTypes.shape({
+    ticketNumber: PropTypes.string.isRequired,
+    licenseNumber: PropTypes.string.isRequired,
+    firstName: PropTypes.string.isRequired,
+    lastName: PropTypes.string.isRequired,
+    middleName: PropTypes.string,
+    homeAddress: PropTypes.string.isRequired,
+    dateApprehended: PropTypes.string.isRequired,
+    timeApprehended: PropTypes.string.isRequired,
+    streetApprehended: PropTypes.string.isRequired,
+    plateNumber: PropTypes.string.isRequired,
+    vehicleColor: PropTypes.string.isRequired,
+    apprehendingOfficer: PropTypes.string.isRequired,
+    commuteStatus: PropTypes.bool,
+    commuteDate: PropTypes.string,
+    commutedViolation: PropTypes.string,
+    commutedViolationRemark: PropTypes.string,
+    violations: PropTypes.array
+  }).isRequired,
+  onUpdate: PropTypes.func.isRequired,
+  onCancel: PropTypes.func.isRequired,
 };
 
-/* PaymentForm.propTypes = {
-    citation: PropTypes.shape({
-        ticketNumber: PropTypes.string.isRequired,
-        licenseNumber: PropTypes.string.isRequired,
-        firstName: PropTypes.string.isRequired,
-        lastName: PropTypes.string.isRequired,
-        middleName: PropTypes.string,
-        homeAddress: PropTypes.string.isRequired,
-        dateApprehended: PropTypes.string.isRequired,
-        timeApprehended: PropTypes.string.isRequired,
-        streetApprehended: PropTypes.string.isRequired,
-        plateNumber: PropTypes.string.isRequired,
-        vehicleColor: PropTypes.string.isRequired,
-        apprehendingOfficer: PropTypes.string.isRequired,
-        paymentStatus: PropTypes.bool,
-        paymentORNumber: PropTypes.string,
-        paymentDate: PropTypes.string,
-        amountPaid: PropTypes.number,
-        paymentRemarks: PropTypes.string,
-        violations: PropTypes.array
-    }).isRequired,
-    onUpdate: PropTypes.func.isRequired,
-    onCancel: PropTypes.func.isRequired,
+
+/* CommuteForm.propTypes = {
+  citation: PropTypes.shape({
+    ticketNumber: PropTypes.string.isRequired,
+    licenseNumber: PropTypes.string.isRequired,
+    firstName: PropTypes.string.isRequired,
+    lastName: PropTypes.string.isRequired,
+    middleName: PropTypes.string,
+    homeAddress: PropTypes.string.isRequired,
+    dateApprehended: PropTypes.string.isRequired,
+    timeApprehended: PropTypes.string.isRequired,
+    streetApprehended: PropTypes.string.isRequired,
+    plateNumber: PropTypes.string.isRequired,
+    vehicleColor: PropTypes.string.isRequired,
+    apprehendingOfficer: PropTypes.string.isRequired,
+    paymentStatus: PropTypes.bool,
+    paymentORNumber: PropTypes.string,
+    paymentDate: PropTypes.string,
+    amountPaid: PropTypes.number,
+    paymentRemarks: PropTypes.string,
+    violations: PropTypes.array
+  }).isRequired,
+  onUpdate: PropTypes.func.isRequired,
+  onCancel: PropTypes.func.isRequired,
 };
  */
 export default CommuteForm;
