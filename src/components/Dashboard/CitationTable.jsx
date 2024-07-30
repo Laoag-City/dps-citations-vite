@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 
-import { Table, Button, Alert } from 'react-bootstrap';
+import { Table, Button } from 'react-bootstrap';
 import { formatDate } from '../../utils/dateUtils';
 import { sumAmounts, getRowClass } from '../../utils/citationUtils';
 import { useNavigate } from 'react-router-dom';
@@ -9,11 +9,11 @@ import { useNavigate } from 'react-router-dom';
 const CitationTable = ({ citations, isPaidTab = false }) => {
   // /console.log(userRole);
   const navigate = useNavigate();
-  const { token, user } = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.auth);
 
   const handleCommuteClick = (citation) => {
     navigate(`/commute-update/${citation._id}`);
-    console.log('Commute action for citation:', citation);
+    //console.log('Commute action for citation:', citation);
   };
 
   const handlePaymentClick = (citation) => {
