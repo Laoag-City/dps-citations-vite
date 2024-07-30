@@ -1,20 +1,23 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { Container, Tabs, Tab } from 'react-bootstrap';
-import TopBar from '../TopBar';
-import Footer from '../Footer';
-import SearchResults from '../SearchResultsPage';
-import CitationTable from './CitationTable';
-import CustomPagination from './Pagination';
+import axios from 'axios';
 import { logout } from '../../features/auth/authSlice';
+import { useNavigate } from 'react-router-dom';
+import { Container, Pagination, Tabs, Tab } from 'react-bootstrap';
+import TopBar from '../../components/TopBar';
+import Footer from '../../components/Footer';
+import SearchResults from './SearchResultsPage';
+import CitationTable from './CitationTable';
 import useFetchDPSCitations from '../../hooks/useFetchDPSCitations';
-import { getStatusFromTab } from '../../utils/citationUtils';
+import { formatDate } from '../../utils/dateUtils';
+import { getStatusFromTab, getRowClass } from '../../utils/citationUtils';
 
 const Dashboard = () => {
   const { token, user } = useSelector((state) => state.auth);
   const [citations, setCitations] = useState([]);
   const [searchResults, setSearchResults] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedCitation, setSelectedCitation] = useState(null);
   const [error, setError] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(15);
@@ -24,7 +27,7 @@ const Dashboard = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const fetchDPSCitations = useFetchDPSCitations();
+  const fetchCitations = useFetchDPSCitations(token, dispatch, navigate, setCitations, setTotalPages, setError);
 
   useEffect(() => {
     if (!token) {
@@ -33,13 +36,128 @@ const Dashboard = () => {
     }
 
     const status = getStatusFromTab(activeTab);
-    fetchDPSCitations({ token, currentPage, pageSize, searchQuery, status, setCitations, setTotalPages, setError, dispatch, navigate });
-  }, [token, navigate, dispatch, currentPage, pageSize, searchQuery, activeTab, fetchDPSCitations]);
+    fetchCitations(status, currentPage, pageSize, searchQuery);
+  }, [token, navigate, dispatch, currentPage, pageSize, searchQuery, activeTab, fetchCitations]);
+
+  const handleShow = (citation) => {
+    setSelectedCitation(citation);
+    setShowModal(true);
+  };
+
+  const handleClose = () => {
+    setShowModal(false);
+    setSelectedCitation(null);
+  };
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
 
   const handleSearch = async (query) => {
     setSearchQuery(query);
     setCurrentPage(1);
-    fetchDPSCitations({ token, currentPage: 1, pageSize, searchQuery: query, status: getStatusFromTab(activeTab), setCitations, setTotalPages, setError, dispatch, navigate });
+    try {
+      const response = await axios.get('https://apps.laoagcity.gov.ph:3002/dpscitations', {
+        headers: { Authorization: `Bearer ${token}` },
+        params: {
+          page: 1,
+          limit: pageSize,
+          search: query,
+        },
+      });
+      setSearchResults(response.data.dpsCitations);
+      setTotalPages(response.data.totalPages);
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        dispatch(logout());
+        navigate('/login');
+      } else {
+        setError('Failed to fetch data. Please try again later.');
+      }
+    }
+  };
+
+  const handleCommuteClick = (citation) => {
+    console.log('Commute action for citation:', citation);
+  };
+
+  const handlePaymentClick = (citation) => {
+    navigate(`/payment-update/${citation._id}`);
+  };
+
+  const violationCount = (count) => { return count.length };
+
+  const renderPaginationItems = () => {
+    const items = [];
+    const pageNeighbors = 2;
+    const totalNumbers = pageNeighbors * 2 + 3;
+    const totalBlocks = totalNumbers + 2;
+
+    if (totalPages > totalBlocks) {
+      const startPage = Math.max(2, currentPage - pageNeighbors);
+      const endPage = Math.min(totalPages - 1, currentPage + pageNeighbors);
+
+      items.push(
+        <Pagination.Item key={1} active={currentPage === 1} onClick={() => handlePageChange(1)}>
+          1
+        </Pagination.Item>
+      );
+
+      if (startPage > 2) {
+        items.push(<Pagination.Ellipsis key="start-ellipsis" />);
+      }
+
+      for (let page = startPage; page <= endPage; page++) {
+        items.push(
+          <Pagination.Item key={page} active={currentPage === page} onClick={() => handlePageChange(page)}>
+            {page}
+          </Pagination.Item>
+        );
+      }
+
+      if (endPage < totalPages - 1) {
+        items.push(<Pagination.Ellipsis key="end-ellipsis" />);
+      }
+
+      items.push(
+        <Pagination.Item key={totalPages} active={currentPage === totalPages} onClick={() => handlePageChange(totalPages)}>
+          {totalPages}
+        </Pagination.Item>
+      );
+    } else {
+      for (let page = 1; page <= totalPages; page++) {
+        items.push(
+          <Pagination.Item key={page} active={currentPage === page} onClick={() => handlePageChange(page)}>
+            {page}
+          </Pagination.Item>
+        );
+      }
+    }
+
+    return items;
+  };
+
+  const filterCitations = (status) => {
+    switch (status) {
+      case 'paid':
+        return citations.filter((citation) => citation.paymentStatus);
+      case 'unpaid':
+        return citations.filter((citation) => !citation.paymentStatus);
+      case 'delinquent':
+        return citations.filter(
+          (citation) =>
+            !citation.paymentStatus &&
+            new Date() - new Date(citation.dateApprehended) > 30 * 24 * 60 * 60 * 1000
+        );
+      case 'for-case-filing':
+        return citations.filter(
+          (citation) =>
+            !citation.paymentStatus &&
+            new Date() - new Date(citation.dateApprehended) > 60 * 24 * 60 * 60 * 1000
+        );
+      default:
+        return citations;
+    }
   };
 
   if (!token) {
@@ -51,27 +169,39 @@ const Dashboard = () => {
       <TopBar username={user.username} userrole={user.userrole} bg="light" expand="lg" data-bs-theme="light" onSearch={handleSearch} />
       <h3 className="text-center">DPS Citation List</h3>
       {searchResults ? (
-        <SearchResults searchResults={searchResults} error={error} />
+        <SearchResults
+          searchResults={searchResults}
+          error={error}
+          handleShow={handleShow}
+          handleClose={handleClose}
+          getRowClass={getRowClass}
+          handleCommuteClick={handleCommuteClick}
+          handlePaymentClick={handlePaymentClick}
+          formatDate={formatDate}
+          violationCount={violationCount}
+        />
       ) : (
         <>
           <Tabs activeKey={activeTab} onSelect={(k) => { setActiveTab(k); setCurrentPage(1); }}>
             <Tab eventKey="all" title="All">
-              <CitationTable citations={citations} isPaidTab />
+              <CitationTable citations={filterCitations('all')} isPaidTab={true} />
             </Tab>
             <Tab eventKey="paid" title="Paid">
-              <CitationTable citations={citations} isPaidTab />
+              <CitationTable citations={filterCitations('paid')} isPaidTab={true} />
             </Tab>
             <Tab eventKey="unpaid" title="Unpaid">
-              <CitationTable citations={citations} />
+              <CitationTable citations={filterCitations('unpaid')} />
             </Tab>
             <Tab eventKey="delinquent" title="Delinquent">
-              <CitationTable citations={citations} />
+              <CitationTable citations={filterCitations('delinquent')} />
             </Tab>
             <Tab eventKey="for-case-filing" title="For Case Filing">
-              <CitationTable citations={citations} />
+              <CitationTable citations={filterCitations('for-case-filing')} />
             </Tab>
           </Tabs>
-          <CustomPagination currentPage={currentPage} totalPages={totalPages} handlePageChange={setCurrentPage} />
+          <Pagination className="mt-3">
+            {renderPaginationItems()}
+          </Pagination>
         </>
       )}
       <Footer />

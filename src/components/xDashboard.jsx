@@ -186,7 +186,14 @@ const Dashboard = () => {
   };
 
   const handlePaymentClick = (citation) => {
-    navigate(`/payment-update/${citation._id}`);
+    navigate(`/payment-update/${citation._id}`); const handleCommuteClick = (citation) => {
+      console.log('Commute action for citation:', citation);
+    };
+
+    const handlePaymentClick = (citation) => {
+      navigate(`/payment-update/${citation._id}`);
+    };
+
   };
 
   const filterCitations = (status) => {

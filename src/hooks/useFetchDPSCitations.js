@@ -1,8 +1,9 @@
+import { useCallback } from 'react';
 import axios from 'axios';
 import { logout } from '../features/auth/authSlice';
 
-const useFetchDPSCitations = () => {
-  return async ({ token, currentPage, pageSize, searchQuery, status, setCitations, setTotalPages, setError, dispatch, navigate }) => {
+const useFetchDPSCitations = (token, dispatch, navigate, setCitations, setTotalPages, setError) => {
+  const fetchCitations = useCallback(async (status, currentPage, pageSize, searchQuery) => {
     try {
       const response = await axios.get('https://apps.laoagcity.gov.ph:3002/dpscitations', {
         headers: { Authorization: `Bearer ${token}` },
@@ -23,7 +24,9 @@ const useFetchDPSCitations = () => {
         setError('Failed to fetch data. Please try again later.');
       }
     }
-  };
+  }, [token, dispatch, navigate, setCitations, setTotalPages, setError]);
+
+  return fetchCitations;
 };
 
 export default useFetchDPSCitations;
