@@ -1,7 +1,8 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Home from './components/Home';
 import Login from './components/Login';
-import Dashboard from './components/Dashboard';
+import Dashboard from './components/Dashboard/Dashboard'
+//import Dashboard from './components/xDashboard';
 import NewDPSRecord from './components/NewDPSCitationRecord';
 import Reporting from './components/Reporting';
 import PrivateRoute from './components/PrivateRoute';
