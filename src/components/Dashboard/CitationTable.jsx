@@ -31,7 +31,7 @@ const CitationTable = ({ citations, isPaidTab = false }) => {
           <th>Plate Number</th>
           <th>Vehicle Color</th>
           <th>Apprehending Officer</th>
-          <th>Amount</th>
+          <th>Amount/Paid</th>
           {!isPaidTab && <th>Commuted</th>}
           {!isPaidTab && <th>Paid</th>}
         </tr>
@@ -47,17 +47,17 @@ const CitationTable = ({ citations, isPaidTab = false }) => {
               <td>{citation.plateNumber}</td>
               <td>{citation.vehicleColor}</td>
               <td>{citation.apprehendingOfficer}</td>
-              <td>{sumAmounts(citation.violations)}</td>
+              <td>{sumAmounts(citation.violations) + " " + citation.amountPaid}</td>
               {!isPaidTab && (
                 <td>
                   {/*console.log(user.userrole + "," + citation.commuteStatus)*/}
-                  {user.userrole === 'dpshead' && (citation.commuteStatus || citation.commuteStatus === undefined) ? <Button variant="warning" onClick={() => handleCommuteClick(citation)}>Commute</Button> : 'No'}
+                  {user.userrole === 'dpshead' && (!citation.commuteStatus || citation.commuteStatus === undefined) ? <Button variant="warning" onClick={() => handleCommuteClick(citation)}>Commute</Button> : 'No'}
                 </td>
               )}
               {!isPaidTab && (
                 <td>
                   {/*console.log(user.userrole + "," + citation.PaymentStatus)*/}
-                  {user.userrole === 'dpsstaff' && (citation.paymentStatus || citation.paymentStatus === undefined) ? 'Yes' : <Button variant="warning" onClick={() => handlePaymentClick(citation)}>Pay</Button>}
+                  {user.userrole === 'dpsstaff' && (!citation.paymentStatus || citation.paymentStatus === undefined) ? <Button variant="warning" onClick={() => handlePaymentClick(citation)}>Pay</Button> : 'No'}
                 </td>
               )}
             </tr>

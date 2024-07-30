@@ -39,7 +39,7 @@ const CommuteUpdatePage = () => {
     fetchCitation();
   }, [citationId, token, navigate]);
 
-  const handlePaymentUpdate = async (updatedCitation) => {
+  const handleCommuteUpdate = async (updatedCitation) => {
     try {
       const response = await axios.put(`https://apps.laoagcity.gov.ph:3002/dpscitations/${citationId}`, updatedCitation, {
         //const response = await axios.put(`http://localhost:3002/dpscitations/${citationId}`, updatedCitation, {
@@ -76,11 +76,11 @@ const CommuteUpdatePage = () => {
   return (
     <Container className="mt-5">
       <TopBar username={user.username} userrole={user.userrole} bg="light" expand="lg" data-bs-theme="light" />
-      <h3 className="text-center">Update Payment</h3>
+      <h3 className="text-center">Commute Citation</h3>
       {citation && (
         <PaymentForm
           citation={citation}
-          onUpdate={handlePaymentUpdate}
+          onUpdate={handleCommuteUpdate}
           onCancel={() => navigate('/dashboard')}
         />
       )}

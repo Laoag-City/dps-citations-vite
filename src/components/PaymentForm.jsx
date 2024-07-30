@@ -93,7 +93,7 @@ const PaymentForm = ({ citation, onUpdate, onCancel }) => {
             </Form.Group>
             <Row className="mb-3">
               <Form.Group as={Col} controlId="formDateApprehended">
-                <Form.Label>Date Apprehended</Form.Label>
+                <Form.Label>Date</Form.Label>
                 <Form.Control
                   type="date"
                   name="dateApprehended"
@@ -102,7 +102,7 @@ const PaymentForm = ({ citation, onUpdate, onCancel }) => {
                 />
               </Form.Group>
               <Form.Group as={Col} controlId="formTimeApprehended">
-                <Form.Label>Time Apprehended</Form.Label>
+                <Form.Label>Time</Form.Label>
                 <Form.Control
                   type="time"
                   name="timeApprehended"
@@ -112,7 +112,7 @@ const PaymentForm = ({ citation, onUpdate, onCancel }) => {
               </Form.Group>
             </Row>
             <Form.Group className="mb-3" controlId="formStreetApprehended">
-              <Form.Label>Street Apprehended</Form.Label>
+              <Form.Label>Street</Form.Label>
               <Form.Control
                 type="text"
                 name="streetApprehended"
@@ -152,8 +152,7 @@ const PaymentForm = ({ citation, onUpdate, onCancel }) => {
           </Accordion.Body>
         </Accordion.Item>
         <Accordion.Item eventKey="1">
-          {/*           <Accordion.Header>Payment Information ({citation.paymentStatus ? 'Paid' : 'Unpaid'})</Accordion.Header>
- */}          <Accordion.Header>Payment Information - Amount Due is: Php{sumAmounts(citation.violations)}</Accordion.Header>
+          <Accordion.Header>Payment Information - Amount Due is: Php{sumAmounts(citation.violations)}</Accordion.Header>
           <Accordion.Body>
             <Form.Group className="mb-3" controlId="formPaymentORNumber">
               <Form.Label>Payment OR Number</Form.Label>
