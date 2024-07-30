@@ -89,8 +89,4 @@ const PaymentUpdatePage = () => {
   );
 };
 
-/* PaymentUpdatePage.propTypes = {
-  token: PropTypes.string.isRequired,
-};
- */
 export default PaymentUpdatePage;

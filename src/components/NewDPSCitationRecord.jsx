@@ -307,6 +307,16 @@ function DPSCitationRecordForm() {
                     ))}
                   </Form.Control>
                 </Form.Group>
+                <Form.Group controlId="apprehendingUnitOf">
+                  <Form.Label>Apprehending Unit Of</Form.Label>
+                  <Form.Control as="select" name="apprehendingUnitOf" value={formData.apprehendingUnitOf} onChange={handleChange}>
+                    <option value="">Select unit</option>
+                    <option value="PNP">PNP</option>
+                    <option value="DPS">DPS</option>
+                    <option value="Traffic Aide">Traffic Aide</option>
+                    <option value="Barangay">Barangay</option>
+                  </Form.Control>
+                </Form.Group>
               </Col>
             </Row>
           </Card.Body>

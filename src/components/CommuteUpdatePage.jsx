@@ -4,7 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 //import PropTypes from 'prop-types';
 import { Container, Spinner, Alert } from 'react-bootstrap';
 import axios from 'axios';
-import PaymentForm from './CommuteFormForm';
+import CommuteForm from './CommuteForm';
 import TopBar from './TopBar';
 import Footer from './Footer';
 
@@ -78,7 +78,7 @@ const CommuteUpdatePage = () => {
       <TopBar username={user.username} userrole={user.userrole} bg="light" expand="lg" data-bs-theme="light" />
       <h3 className="text-center">Commute Citation</h3>
       {citation && (
-        <PaymentForm
+        <CommuteForm
           citation={citation}
           onUpdate={handleCommuteUpdate}
           onCancel={() => navigate('/dashboard')}

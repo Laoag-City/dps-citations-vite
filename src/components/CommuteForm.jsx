@@ -5,11 +5,10 @@ import { Accordion, Form, Button, Row, Col } from 'react-bootstrap';
 const CommuteForm = ({ citation, onUpdate, onCancel }) => {
   const [formData, setFormData] = useState({
     ...citation,
-    paymentStatus: citation.commuteStatus || true,
-    paymentORNumber: citation.paymentORNumber || '',
-    amountPaid: citation.amountPaid || '',
-    paymentDate: citation.paymentDate ? new Date(citation.paymentDate).toISOString().split('T')[0] : '',
-    paymentRemarks: citation.paymentRemarks || '',
+    commuteStatus: citation.commuteStatus || true,
+    commuteDate: citation.commuteDate ? new Date(citation.commuteDate).toISOString().split('T')[0] : '',
+    commutedViolation: citation.commutedViolation || '',
+    commutedViolationRemark: citation.commutedViolationRemark || '',
   });
 
   const handleChange = (e) => {

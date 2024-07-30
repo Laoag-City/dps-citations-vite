@@ -76,15 +76,16 @@ const Dashboard = () => {
       }
     }
   };
-
-  const handleCommuteClick = (citation) => {
-    console.log('Commute action for citation:', citation);
-  };
-
-  const handlePaymentClick = (citation) => {
-    navigate(`/payment-update/${citation._id}`);
-  };
-
+  /*
+    const handleCommuteClick = (citation) => {
+      console.log('Commute action for citation:', citation);
+      navigate(`/commute-update/${citation._id}`);
+    };
+  
+    const handlePaymentClick = (citation) => {
+      navigate(`/payment-update/${citation._id}`);
+    };
+  */
   const violationCount = (count) => { return count.length };
 
   const renderPaginationItems = () => {

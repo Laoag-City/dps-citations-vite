@@ -12,7 +12,7 @@ const CitationTable = ({ citations, isPaidTab = false }) => {
   const { token, user } = useSelector((state) => state.auth);
 
   const handleCommuteClick = (citation) => {
-    //navigate(`/commute-update/${citation._id}`);
+    navigate(`/commute-update/${citation._id}`);
     console.log('Commute action for citation:', citation);
   };
 

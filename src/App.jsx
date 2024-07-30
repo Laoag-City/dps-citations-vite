@@ -10,6 +10,7 @@ import PrivateRoute from './components/PrivateRoute';
 import './App.css';
 import './assets/bootstrap-darkly-theme.min.css';
 import PaymentUpdatePage from './components/PaymentUpdatePage';
+import CommuteUpdatePage from './components/CommuteUpdatePage';
 import { useSelector } from 'react-redux';
 
 function App() {
@@ -34,6 +35,11 @@ function App() {
         <Route path="/payment-update/:citationId" element={
           <PrivateRoute>
             <PaymentUpdatePage token={token} />
+          </PrivateRoute>
+        } />
+        <Route path="/commute-update/:citationId" element={
+          <PrivateRoute>
+            <CommuteUpdatePage token={token} />
           </PrivateRoute>
         } />
         <Route path="/reporting" element={

@@ -62,14 +62,6 @@ const TopBar = ({ username, userrole, onSearch }) => {
               {/* <Navbar.Text className="me-auto">Hello {username}</Navbar.Text> */}
               {userrole === "dpsstaff" && <Nav.Link as={Link} to="/newdpscitation">New DPS Citation</Nav.Link>}
               {userrole === "dpsstaff" && <Nav.Link as={Link} to="/reporting">Reporting</Nav.Link>}
-              <NavDropdown title="Account" id="basic-nav-dropdown">
-                {/*TODO:Conditional rendering*/}
-                <NavDropdown.Item href="#action/3.2">Edit Apprehenders</NavDropdown.Item>
-                <NavDropdown.Item href="#action/3.3">Edit Violations</NavDropdown.Item>
-                <NavDropdown.Divider />
-                <NavDropdown.Item href="#action/3.4">Account Settings</NavDropdown.Item>
-                <Nav.Link className="mr-auto" variant="primary" onClick={handleLogout}>Logout</Nav.Link>
-              </NavDropdown>
               <Form className="d-flex" onSubmit={handleSearch}>
                 <Form.Control
                   type="search"
@@ -81,6 +73,14 @@ const TopBar = ({ username, userrole, onSearch }) => {
                 />
                 <Button variant="outline-success" type="submit">Search</Button>
               </Form>
+              <NavDropdown title="Account" id="basic-nav-dropdown">
+                {/*TODO:Conditional rendering*/}
+                <NavDropdown.Item href="#action/3.2">Edit Apprehenders</NavDropdown.Item>
+                <NavDropdown.Item href="#action/3.3">Edit Violations</NavDropdown.Item>
+                <NavDropdown.Divider />
+                <NavDropdown.Item href="#action/3.4">Account Settings</NavDropdown.Item>
+                <Nav.Link className="mr-auto" variant="primary" onClick={handleLogout}>Logout</Nav.Link>
+              </NavDropdown>
 
             </Nav>
 

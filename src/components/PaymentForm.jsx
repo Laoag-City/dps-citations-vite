@@ -1,13 +1,16 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { Accordion, Form, Button, Row, Col } from 'react-bootstrap';
+import { sumAmounts } from '../utils/citationUtils';
 
 const PaymentForm = ({ citation, onUpdate, onCancel }) => {
+  //const initialAmountPaid = sumAmounts(citation.violations);
+
   const [formData, setFormData] = useState({
     ...citation,
     paymentStatus: citation.paymentStatus || true,
     paymentORNumber: citation.paymentORNumber || '',
-    amountPaid: citation.amountPaid || '',
+    amountPaid: citation.amountPaid || sumAmounts(citation.violations),
     paymentDate: citation.paymentDate ? new Date(citation.paymentDate).toISOString().split('T')[0] : '',
     paymentRemarks: citation.paymentRemarks || '',
   });
@@ -21,12 +24,13 @@ const PaymentForm = ({ citation, onUpdate, onCancel }) => {
     e.preventDefault();
     onUpdate(formData);
   };
-  const sumAmounts = (amounts) => {
-    const total = amounts.map(item => item.amount)
-      .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-    return parseFloat(total.toFixed(2));
-  };
 
+  /*   const sumAmounts = (amounts) => {
+      const total = amounts.map(item => item.amount)
+        .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+      return parseFloat(total.toFixed(2));
+    };
+   */
   return (
     <Form onSubmit={handleSubmit}>
       <Accordion defaultActiveKey="1">
