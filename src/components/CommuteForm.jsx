@@ -8,9 +8,9 @@ const CommuteForm = ({ citation, onUpdate, onCancel }) => {
   const [formData, setFormData] = useState({
     ...citation,
     commuteStatus: citation.commuteStatus || true,
-    commuteDate: citation.commuteDate ? new Date(citation.commuteDate).toISOString().split('T')[0] : '',
     commutedViolation: citation.commutedViolation || '',
     commutedViolationAmount: citation.commutedViolationAmount || '',
+    commuteDate: citation.commuteDate ? new Date(citation.commuteDate).toISOString().split('T')[0] : '',
     commutedViolationRemark: citation.commutedViolationRemark || '',
   });
 
