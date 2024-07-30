@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
-//import PropTypes from 'prop-types';
 import { Container, Spinner, Alert } from 'react-bootstrap';
 import axios from 'axios';
 import CommuteForm from './CommuteForm';
@@ -45,7 +44,7 @@ const CommuteUpdatePage = () => {
         //const response = await axios.put(`http://localhost:3002/dpscitations/${citationId}`, updatedCitation, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      //console.log('Commuted Citation:', response.data);
+      console.log('Commuted Citation:', response.data);
       navigate('/dashboard'); // Navigate back to the dashboard after updating
     } catch (error) {
       if (error.response && error.response.status === 401) {

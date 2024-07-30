@@ -10,6 +10,7 @@ const CommuteForm = ({ citation, onUpdate, onCancel }) => {
     commuteStatus: citation.commuteStatus || true,
     commuteDate: citation.commuteDate ? new Date(citation.commuteDate).toISOString().split('T')[0] : '',
     commutedViolation: citation.commutedViolation || '',
+    commutedViolationAmount: citation.commutedViolationAmount || '',
     commutedViolationRemark: citation.commutedViolationRemark || '',
   });
 
@@ -148,11 +149,10 @@ const CommuteForm = ({ citation, onUpdate, onCancel }) => {
           </Accordion.Body>
         </Accordion.Item>
         <Accordion.Item eventKey="1">
-          {/*           <Accordion.Header>Payment Information ({citation.paymentStatus ? 'Paid' : 'Unpaid'})</Accordion.Header>*/}
           <Accordion.Header>Commute Info - Amount Due is: Php{sumAmounts(citation.violations)}</Accordion.Header>
           <Accordion.Body>
             <Form.Group className="mb-3" controlId="formPaymentORNumber">
-              <Form.Label>Payment OR Number</Form.Label>
+              <Form.Label>Select Violation</Form.Label>
               <Form.Control
                 type="text"
                 name="paymentORNumber"
@@ -161,7 +161,7 @@ const CommuteForm = ({ citation, onUpdate, onCancel }) => {
               />
             </Form.Group>
             <Form.Group className="mb-3" controlId="formPaymentORNumber">
-              <Form.Label>Amount Paid</Form.Label>
+              <Form.Label>Commuted Amount</Form.Label>
               <Form.Control
                 type="number"
                 name="amountPaid"
@@ -179,11 +179,11 @@ const CommuteForm = ({ citation, onUpdate, onCancel }) => {
               />
             </Form.Group>
             <Form.Group className="mb-3" controlId="formPaymentRemarks">
-              <Form.Label>Payment Remarks</Form.Label>
+              <Form.Label>Commute Remarks</Form.Label>
               <Form.Control
                 type="text"
                 name="paymentRemarks"
-                value={formData.paymentRemarks}
+                value={formData.commutedViolationRemark}
                 onChange={handleChange}
               />
             </Form.Group>
@@ -260,8 +260,15 @@ CommuteForm.propTypes = {
     commuteStatus: PropTypes.bool,
     commuteDate: PropTypes.string,
     commutedViolation: PropTypes.string,
+    commutedViolationAmount: PropTypes.number,
     commutedViolationRemark: PropTypes.string,
-    violations: PropTypes.array
+    violations: PropTypes.arrayOf(
+      PropTypes.shape({
+        violation: PropTypes.string.isRequired,
+        amount: PropTypes.number.isRequired,
+        remarks: PropTypes.string
+      })
+    ).isRequired
   }).isRequired,
   onUpdate: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,

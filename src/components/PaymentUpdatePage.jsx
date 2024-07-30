@@ -45,7 +45,7 @@ const PaymentUpdatePage = () => {
         //const response = await axios.put(`http://localhost:3002/dpscitations/${citationId}`, updatedCitation, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      //console.log('Updated Citation:', response.data);
+      console.log('Updated Citation:', response.data);
       navigate('/dashboard'); // Navigate back to the dashboard after updating
     } catch (error) {
       if (error.response && error.response.status === 401) {
