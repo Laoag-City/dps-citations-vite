@@ -1,6 +1,7 @@
+import PropTypes from 'prop-types';
 import { Table, Button } from 'react-bootstrap';
-import { formatDate, getRowClass } from '../../utils/dateUtils';
-import { sumAmounts } from '../../utils/citationUtils';
+import { formatDate } from '../../utils/dateUtils';
+import { sumAmounts, getRowClass } from '../../utils/citationUtils';
 import { useNavigate } from 'react-router-dom';
 
 const CitationTable = ({ citations, isPaidTab = false }) => {
@@ -64,6 +65,45 @@ const CitationTable = ({ citations, isPaidTab = false }) => {
       </tbody>
     </Table>
   );
+};
+
+CitationTable.propTypes = {
+  citations: PropTypes.arrayOf(
+    PropTypes.shape({
+      _id: PropTypes.string.isRequired,
+      ticketNumber: PropTypes.string.isRequired,
+      firstName: PropTypes.string.isRequired,
+      lastName: PropTypes.string.isRequired,
+      middleName: PropTypes.string,
+      homeAddress: PropTypes.string,
+      licenseNumber: PropTypes.string.isRequired,
+      dateApprehended: PropTypes.string.isRequired,
+      timeApprehended: PropTypes.string,
+      streetApprehended: PropTypes.string,
+      plateNumber: PropTypes.string,
+      vehicleColor: PropTypes.string,
+      apprehendingOfficer: PropTypes.string,
+      apprehendingUnitOf: PropTypes.string,
+      commuteStatus: PropTypes.bool,
+      commuteDate: PropTypes.string,
+      commutedViolation: PropTypes.string,
+      commutedViolationAmount: PropTypes.number,
+      commutedViolationRemark: PropTypes.string,
+      paymentStatus: PropTypes.bool,
+      paymentORNumber: PropTypes.string,
+      amountPaid: PropTypes.number,
+      paymentDate: PropTypes.string,
+      paymentRemarks: PropTypes.string,
+      violations: PropTypes.arrayOf(
+        PropTypes.shape({
+          violation: PropTypes.string.isRequired,
+          amount: PropTypes.number.isRequired,
+          remarks: PropTypes.string
+        })
+      ).isRequired
+    })
+  ).isRequired,
+  isPaidTab: PropTypes.bool,
 };
 
 export default CitationTable;
