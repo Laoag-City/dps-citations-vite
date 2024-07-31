@@ -5,6 +5,7 @@ import useFetch from '../hooks/useFetch';
 import useUpdate from '../hooks/useUpdate';
 //import PaymentForm from './PaymentForm';
 import CommuteForm from './CommuteForm';
+import useFetchViolations from '../hooks/useFetchViolations';
 import TopBar from './TopBar';
 import Footer from './Footer';
 
@@ -15,6 +16,7 @@ const CommuteUpdatePage = () => {
   const fetchUrl = `https://apps.laoagcity.gov.ph:3002/dpscitations/${citationId}`;
   const updateUrl = `https://apps.laoagcity.gov.ph:3002/dpscitations/${citationId}`;
 
+  const { violationsList, error: violationsError } = useFetchViolations(token);
   const { data: citation, loading, error: fetchError } = useFetch(fetchUrl, token);
   const { updateData, error: updateError } = useUpdate(updateUrl, token);
 
@@ -45,6 +47,7 @@ const CommuteUpdatePage = () => {
       {citation && (
         <CommuteForm
           citation={citation}
+          violationsList={violationsList}
           onUpdate={handleCommuteUpdate}
           onCancel={() => navigate('/dashboard')}
         />

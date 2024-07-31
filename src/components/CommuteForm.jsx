@@ -3,14 +3,7 @@ import { useState } from 'react';
 import { Accordion, Form, Button, Row, Col } from 'react-bootstrap';
 import { sumAmounts } from '../utils/citationUtils';
 
-const CommuteForm = ({ citation, onUpdate, onCancel }) => {
-  {/*    paymentStatus: citation.paymentStatus || true,
-    paymentORNumber: citation.paymentORNumber || '',
-    amountPaid: citation.amountPaid || sumAmounts(citation.violations),
-    paymentDate: citation.paymentDate ? new Date(citation.paymentDate).toISOString().split('T')[0] : '',
-    paymentRemarks: citation.paymentRemarks || '',
-     */}
-
+const CommuteForm = ({ citation, violationsList, onUpdate, onCancel }) => {
   const [formData, setFormData] = useState({
     ...citation,
     commuteStatus: citation.commuteStatus || true,
@@ -18,7 +11,6 @@ const CommuteForm = ({ citation, onUpdate, onCancel }) => {
     commutedViolationAmount: citation.commutedViolationAmount || '',
     commuteDate: citation.commuteDate ? new Date(citation.commuteDate).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
     commutedViolationRemark: citation.commutedViolationRemark || '',
-
   });
 
   const handleChange = (e) => {
@@ -29,6 +21,16 @@ const CommuteForm = ({ citation, onUpdate, onCancel }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     onUpdate(formData);
+  };
+
+  const handleViolationChange = (event) => {
+    const { value } = event.target;
+    const selectedViolation = violationsList.find(v => v.violation === value);
+    setFormData(prevState => ({
+      ...prevState,
+      commutedViolation: value,
+      commutedViolationAmount: selectedViolation ? selectedViolation.amount : ''
+    }));
   };
 
   return (
@@ -158,25 +160,25 @@ const CommuteForm = ({ citation, onUpdate, onCancel }) => {
         <Accordion.Item eventKey="1">
           <Accordion.Header>Commute Citation - Amount Due is: Php{sumAmounts(citation.violations)}</Accordion.Header>
           <Accordion.Body>
-            <Form.Group className="mb-3" controlId="formPaymentORNumber">
-              <Form.Label>Change Violation to:</Form.Label>
-              <Form.Control
-                type="text"
-                name="paymentORNumber"
-                value={formData.commutedViolation}
-                onChange={handleChange}
-              />
+            <Form.Group controlId="commutedViolation">
+              <Form.Label>Change Violation To</Form.Label>
+              <Form.Control as="select" name="commutedViolation" value={formData.commutedViolation} onChange={handleViolationChange}>
+                <option value="">Select violation</option>
+                {violationsList.map((violation, index) => (
+                  <option key={index} value={violation.violation}>{violation.violation}</option>
+                ))}
+              </Form.Control>
             </Form.Group>
-            <Form.Group className="mb-3" controlId="formPaymentORNumber">
+            <Form.Group className="mb-3" controlId="formCommutedViolationAmount">
               <Form.Label>Amount</Form.Label>
               <Form.Control
                 type="number"
-                name="amountPaid"
+                name="commutedViolationAmount"
                 value={formData.commutedViolationAmount}
-                onChange={handleChange}
+                readOnly
               />
             </Form.Group>
-            <Form.Group className="mb-3" controlId="formPaymentDate">
+            <Form.Group className="mb-3" controlId="formCommuteDate">
               <Form.Label>Citation Commutation Date</Form.Label>
               <Form.Control
                 type="date"
@@ -185,11 +187,11 @@ const CommuteForm = ({ citation, onUpdate, onCancel }) => {
                 onChange={handleChange}
               />
             </Form.Group>
-            <Form.Group className="mb-3" controlId="formPaymentRemarks">
+            <Form.Group className="mb-3" controlId="formCommutedViolationRemark">
               <Form.Label>Commutation Remarks</Form.Label>
               <Form.Control
                 type="text"
-                name="paymentRemarks"
+                name="commutedViolationRemark"
                 value={formData.commutedViolationRemark}
                 onChange={handleChange}
               />
@@ -204,8 +206,8 @@ const CommuteForm = ({ citation, onUpdate, onCancel }) => {
             Cancel
           </Button>
         </div>
-      </Accordion >
-    </Form >
+      </Accordion>
+    </Form>
   );
 };
 
@@ -230,6 +232,7 @@ CommuteForm.propTypes = {
     commutedViolationRemark: PropTypes.string,
     violations: PropTypes.array
   }).isRequired,
+  violationsList: PropTypes.array,
   onUpdate: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
 };

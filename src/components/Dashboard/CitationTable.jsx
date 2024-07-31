@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import { Table, Button } from 'react-bootstrap';
@@ -8,6 +9,8 @@ import { Link, useNavigate } from 'react-router-dom';
 
 const CitationTable = ({ citations, isPaidTab = false }) => {
   // /console.log(userRole);
+  const [sortField, setSortField] = useState('dateApprehended');
+  const [sortOrder, setSortOrder] = useState('asc')
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
 
@@ -19,20 +22,25 @@ const CitationTable = ({ citations, isPaidTab = false }) => {
   const handlePaymentClick = (citation) => {
     navigate(`/payment-update/${citation._id}`);
   };
+  const handleSortChange = (field) => {
+    const order = (sortField === field && sortOrder === 'asc') ? 'desc' : 'asc';
+    setSortField(field);
+    setSortOrder(order);
+  };
 
   return (
     <Table striped bordered hover>
       <thead>
         <tr>
-          <th>Ticket Number</th>
-          <th>License Number</th>
-          <th>Date Apprehended</th>
-          <th>Street Apprehended</th>
-          <th>Plate Number</th>
-          <th>Vehicle Color</th>
-          <th>Apprehending Officer</th>
+          <th onClick={() => handleSortChange('ticketNumber')}>Ticket Number</th>
+          <th onClick={() => handleSortChange('licenseNumber')}>License Number</th>
+          <th onClick={() => handleSortChange('dateApprehended')}>Date Apprehended</th>
+          <th onClick={() => handleSortChange('streetApprehended')}>Street Apprehended</th>
+          <th onClick={() => handleSortChange('plateNumber')}>Plate Number</th>
+          <th onClick={() => handleSortChange('vehicleColor')}>Vehicle Color</th>
+          <th onClick={() => handleSortChange('apprehendingOfficer')}>Apprehending Officer</th>
           <th>Amount/Paid</th>
-          {!isPaidTab && <th>Commuted</th>}
+          {!isPaidTab && <th onClick={() => handleSortChange('commuteStatus')}>Commuted</th>}
           {!isPaidTab && <th>Paid</th>}
           <th>Print</th>
         </tr>
@@ -51,13 +59,11 @@ const CitationTable = ({ citations, isPaidTab = false }) => {
               <td>{sumAmounts(citation.violations) + " : " + citation.amountPaid}</td>
               {!isPaidTab && (
                 <td>
-                  {/*console.log(user.userrole + "," + citation.commuteStatus)*/}
                   {user.userrole === 'dpshead' && (!citation.commuteStatus || citation.commuteStatus === undefined) ? <Button variant="warning" onClick={() => handleCommuteClick(citation)}>Commute</Button> : 'No'}
                 </td>
               )}
               {!isPaidTab && (
                 <td>
-                  {/*console.log(user.userrole + "," + citation.PaymentStatus)*/}
                   {user.userrole === 'dpsstaff' && (!citation.paymentStatus || citation.paymentStatus === undefined) ? <Button variant="warning" onClick={() => handlePaymentClick(citation)}>Pay</Button> : 'No'}
                 </td>
               )}

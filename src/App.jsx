@@ -2,7 +2,8 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Home from './components/Home';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard/Dashboard'
-import NewDPSRecord from './components/NewDPSCitationRecord';
+//import NewDPSRecord from './components/NewDPSCitationRecord';
+import DPSCitationRecordForm from './components/DPSCitationRecordForm';
 import Reporting from './components/Reporting';
 import PrivateRoute from './components/PrivateRoute';
 import './App.css';
@@ -26,11 +27,18 @@ function App() {
             <Dashboard />
           </PrivateRoute>
         } />
-        <Route path="/newdpscitation" element={
+        {/*         <Route path="/newdpscitation" element={
           <PrivateRoute>
             <NewDPSRecord />
           </PrivateRoute>
         } />
+ */}
+        <Route path="/newdpscitation" element={
+          <PrivateRoute>
+            <DPSCitationRecordForm />
+          </PrivateRoute>
+        } />
+
         <Route path="/payment-update/:citationId" element={
           <PrivateRoute>
             <PaymentUpdatePage token={token} />

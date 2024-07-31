@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { Table, Alert, Spinner, Button } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
 
 const SearchResults = ({ searchResults, error, handleShow, getRowClass, handleCommuteClick, handlePaymentClick, formatDate, violationCount, userRole }) => {
@@ -21,6 +22,7 @@ const SearchResults = ({ searchResults, error, handleShow, getRowClass, handleCo
               <th>Commute Status</th>
               <th>Payment Status</th>
               <th>Violations</th>
+              <th>Print</th>
             </tr>
           </thead>
           <tbody>
@@ -34,9 +36,16 @@ const SearchResults = ({ searchResults, error, handleShow, getRowClass, handleCo
                   <td>{citation.plateNumber}</td>
                   <td>{citation.vehicleColor}</td>
                   <td>{citation.apprehendingOfficer}</td>
-                  <td>{citation.commuteStatus ? 'Commuted' : citation.paymentStatus ? 'Not Commuted' : <Button variant="warning" onClick={() => handleCommuteClick(citation)}>Commute</Button>}</td>
-                  <td>{citation.paymentStatus ? 'Paid' : userRole === 'dpsstaff' ? <Button variant="warning" onClick={() => handlePaymentClick(citation)}>Pay</Button> : 'Unpaid'}</td>
+                  <td>
+                    {userRole === 'dpshead' && (!citation.commuteStatus || citation.commuteStatus === undefined) ? <Button variant="warning" onClick={() => handleCommuteClick(citation)}>Commute</Button> : 'No'}
+                    {/*citation.commuteStatus ? 'Commuted' : citation.paymentStatus ? 'Not Commuted' : <Button variant="warning" onClick={() => handleCommuteClick(citation)}>Commute</Button>*/}
+                  </td>
+                  <td>
+                    {userRole === 'dpsstaff' && (!citation.paymentStatus || citation.paymentStatus === undefined) ? <Button variant="warning" onClick={() => handlePaymentClick(citation)}>Pay</Button> : 'No'}
+                    {/*citation.paymentStatus ? 'Paid' : userRole === 'dpsstaff' ? <Button variant="warning" onClick={() => handlePaymentClick(citation)}>Pay</Button> : 'Unpaid'*/}
+                  </td>
                   <td>{violationCount(citation.violations)}</td>
+                  <td><Link>Print</Link></td>
                 </tr>
               ))
             ) : (

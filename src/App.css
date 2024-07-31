@@ -1,5 +1,5 @@
 .background-image-container {
-    background-image: url('./assets/laoaglogo.png');
+    background-image: url('/laoaglogo.png');
     background-size: cover;
     background-position: center;
     min-height: 70vh;
@@ -7,7 +7,7 @@
 }
 
 .unscaled-logo-container {
-    background-image: url('./assets/oscp.svg');
+    background-image: url('/oscp.svg');
     display: block;
     margin: 0 auto;
     background-size: 30vh;
