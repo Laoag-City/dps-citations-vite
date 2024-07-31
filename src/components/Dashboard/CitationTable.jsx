@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { Table, Button } from 'react-bootstrap';
 import { formatDate } from '../../utils/dateUtils';
 import { sumAmounts, getRowClass } from '../../utils/citationUtils';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const CitationTable = ({ citations, isPaidTab = false }) => {
   // /console.log(userRole);
@@ -34,6 +34,7 @@ const CitationTable = ({ citations, isPaidTab = false }) => {
           <th>Amount/Paid</th>
           {!isPaidTab && <th>Commuted</th>}
           {!isPaidTab && <th>Paid</th>}
+          <th>Print</th>
         </tr>
       </thead>
       <tbody>
@@ -47,7 +48,7 @@ const CitationTable = ({ citations, isPaidTab = false }) => {
               <td>{citation.plateNumber}</td>
               <td>{citation.vehicleColor}</td>
               <td>{citation.apprehendingOfficer}</td>
-              <td>{sumAmounts(citation.violations) + " " + citation.amountPaid}</td>
+              <td>{sumAmounts(citation.violations) + " : " + citation.amountPaid}</td>
               {!isPaidTab && (
                 <td>
                   {/*console.log(user.userrole + "," + citation.commuteStatus)*/}
@@ -60,11 +61,12 @@ const CitationTable = ({ citations, isPaidTab = false }) => {
                   {user.userrole === 'dpsstaff' && (!citation.paymentStatus || citation.paymentStatus === undefined) ? <Button variant="warning" onClick={() => handlePaymentClick(citation)}>Pay</Button> : 'No'}
                 </td>
               )}
+              <td><Link>Print</Link></td>
             </tr>
           ))
         ) : (
           <tr>
-            <td colSpan={isPaidTab ? 8 : 10} className="text-center">
+            <td colSpan={isPaidTab ? 9 : 11} className="text-center">
               No records available
             </td>
           </tr>

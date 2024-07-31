@@ -76,16 +76,7 @@ const Dashboard = () => {
       }
     }
   };
-  /*
-    const handleCommuteClick = (citation) => {
-      console.log('Commute action for citation:', citation);
-      navigate(`/commute-update/${citation._id}`);
-    };
-  
-    const handlePaymentClick = (citation) => {
-      navigate(`/payment-update/${citation._id}`);
-    };
-  */
+
   const violationCount = (count) => { return count.length };
 
   const renderPaginationItems = () => {
@@ -170,14 +161,24 @@ const Dashboard = () => {
       <TopBar username={user.username} userrole={user.userrole} bg="light" expand="lg" data-bs-theme="light" onSearch={handleSearch} />
       <h3 className="text-center">DPS Citation List</h3>
       {searchResults ? (
+        /*         <SearchResults
+                  searchResults={searchResults}
+                  error={error}
+                  handleShow={handleShow}
+                  handleClose={handleClose}
+                  getRowClass={getRowClass}
+                  handleCommuteClick={handleCommuteClick}
+                  handlePaymentClick={handlePaymentClick}
+                  formatDate={formatDate}
+                  violationCount={violationCount}
+                  userRole={user.userrole}
+                />*/
         <SearchResults
           searchResults={searchResults}
           error={error}
           handleShow={handleShow}
           handleClose={handleClose}
           getRowClass={getRowClass}
-          handleCommuteClick={handleCommuteClick}
-          handlePaymentClick={handlePaymentClick}
           formatDate={formatDate}
           violationCount={violationCount}
           userRole={user.userrole}
