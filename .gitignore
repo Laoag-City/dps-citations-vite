@@ -25,3 +25,5 @@ dist-ssr
 src/components/Dashboard-new.js
 src/components/PaymentUpdate.jsx
 src/components/PaymentUpdateModal
+src/components/xCommuteForm.jsx
+src/components/xCommuteUpdatePage.jsx
