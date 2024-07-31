@@ -49,7 +49,7 @@ const TopBar = ({ username, userrole, onSearch }) => {
         <Container>
           <Navbar.Brand href="/">
             <img
-              src="/laoaglogo.png"
+              src="/dps_official_seal.webp"
               width="40"
               height="40"
               className="d-inline-block align-center"

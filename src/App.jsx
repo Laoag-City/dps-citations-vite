@@ -2,13 +2,12 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Home from './components/Home';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard/Dashboard'
-//import Dashboard from './components/xDashboard';
 import NewDPSRecord from './components/NewDPSCitationRecord';
 import Reporting from './components/Reporting';
 import PrivateRoute from './components/PrivateRoute';
-//import Status from './components/Status';
 import './App.css';
 import './assets/bootstrap-darkly-theme.min.css';
+//import './assets/bootstrap.min.css';
 import PaymentUpdatePage from './components/PaymentUpdatePage';
 import CommuteUpdatePage from './components/CommuteUpdatePage';
 import { useSelector } from 'react-redux';
