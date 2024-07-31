@@ -22,7 +22,7 @@ const TopBar = ({ username, userrole, onSearch }) => {
 
   if (!username) {
     return (
-      <Navbar bg="dark" variant="dark" expand="lg">
+      <Navbar data-bs-theme="dark" bg="light" text="dark" expand="lg">
         <Container>
           <Navbar.Brand href="/">
             <img
@@ -33,19 +33,19 @@ const TopBar = ({ username, userrole, onSearch }) => {
               alt="React Bootstrap logo"
             />
           </Navbar.Brand>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
               <Nav.Link href="/">Home</Nav.Link>
               <Nav.Link href="/login">Login</Nav.Link>
             </Nav>
+            <Navbar.Toggle aria-controls="basic-navbar-nav" />
           </Navbar.Collapse>
         </Container>
       </Navbar>
     );
   } else {
     return (
-      <Navbar bg="dark" variant="dark" expand="lg">
+      <Navbar data-bs-theme="light" bg="light" expand="lg">
         <Container>
           <Navbar.Brand href="/">
             <img
@@ -57,7 +57,7 @@ const TopBar = ({ username, userrole, onSearch }) => {
             />
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
+          <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end" >
             <Nav className="flex mr-auto">
               {/* <Navbar.Text className="me-auto">Hello {username}</Navbar.Text> */}
               {userrole === "dpsstaff" && <Nav.Link as={Link} to="/newdpscitation">New DPS Citation</Nav.Link>}
@@ -73,15 +73,17 @@ const TopBar = ({ username, userrole, onSearch }) => {
                 />
                 <Button variant="outline-success" type="submit">Search</Button>
               </Form>
-              <NavDropdown title="Account" id="basic-nav-dropdown">
+              <Navbar.Toggle aria-controls="basic-navbar-nav" />
+              <NavDropdown title="Account" data-bs-theme="dark" id="basic-nav-dropdown">
                 {/*TODO:Conditional rendering*/}
                 <NavDropdown.Item href="#action/3.2">Hello, {username}</NavDropdown.Item>
                 <NavDropdown.Item href="#action/3.2">Edit Apprehenders</NavDropdown.Item>
                 <NavDropdown.Item href="#action/3.3">Edit Violations</NavDropdown.Item>
                 <NavDropdown.Divider />
                 <NavDropdown.Item href="#action/3.4">Account Settings</NavDropdown.Item>
-                <Nav.Link className="mr-auto" variant="primary" onClick={handleLogout}>Logout</Nav.Link>
-              </NavDropdown>
+                <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
+                {/*                 <Nav.Link className="mr-auto" data-bs-theme="light" onClick={handleLogout}>Logout</Nav.Link>
+ */}              </NavDropdown>
 
             </Nav>
 

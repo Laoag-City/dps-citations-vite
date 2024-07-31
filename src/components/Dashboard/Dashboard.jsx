@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import { logout } from '../../features/auth/authSlice';
 import { useNavigate } from 'react-router-dom';
-import { Container, Pagination, Tabs, Tab } from 'react-bootstrap';
+import { Card, Container, Pagination, Tabs, Tab } from 'react-bootstrap';
 import TopBar from '../../components/TopBar';
 import Footer from '../../components/Footer';
 import SearchResults from './SearchResultsPage';
@@ -159,55 +159,47 @@ const Dashboard = () => {
   return (
     <Container className="align-items-center">
       <TopBar username={user.username} userrole={user.userrole} bg="light" expand="lg" data-bs-theme="light" onSearch={handleSearch} />
-      <h3 className="text-center">DPS Citation List</h3>
-      {searchResults ? (
-        /*         <SearchResults
-                  searchResults={searchResults}
-                  error={error}
-                  handleShow={handleShow}
-                  handleClose={handleClose}
-                  getRowClass={getRowClass}
-                  handleCommuteClick={handleCommuteClick}
-                  handlePaymentClick={handlePaymentClick}
-                  formatDate={formatDate}
-                  violationCount={violationCount}
-                  userRole={user.userrole}
-                />*/
-        <SearchResults
-          searchResults={searchResults}
-          error={error}
-          handleShow={handleShow}
-          handleClose={handleClose}
-          getRowClass={getRowClass}
-          formatDate={formatDate}
-          violationCount={violationCount}
-          userRole={user.userrole}
-        />
-      ) : (
-        <>
-          {/* was setCurrentPage(1)*/}
-          <Tabs activeKey={activeTab} onSelect={(k) => { setActiveTab(k); setCurrentPage(currentPage); }}>
-            <Tab eventKey="all" title="All">
-              <CitationTable citations={filterCitations('all')} userRole={user.userrole} isPaidTab={true} />
-            </Tab>
-            <Tab eventKey="paid" title="Paid">
-              <CitationTable citations={filterCitations('paid')} isPaidTab={true} />
-            </Tab>
-            <Tab eventKey="unpaid" title="Unpaid">
-              <CitationTable citations={filterCitations('unpaid')} />
-            </Tab>
-            <Tab eventKey="delinquent" title="Delinquent">
-              <CitationTable citations={filterCitations('delinquent')} />
-            </Tab>
-            <Tab eventKey="for-case-filing" title="For Case Filing">
-              <CitationTable citations={filterCitations('for-case-filing')} />
-            </Tab>
-          </Tabs>
-          <Pagination className="mt-3">
-            {renderPaginationItems()}
-          </Pagination>
-        </>
-      )}
+      <Card>
+        <Card.Body>
+          <Card.Title className='text-center'>DPS Citations Dashboard</Card.Title>
+          {searchResults ? (
+            <SearchResults
+              searchResults={searchResults}
+              error={error}
+              handleShow={handleShow}
+              handleClose={handleClose}
+              getRowClass={getRowClass}
+              formatDate={formatDate}
+              violationCount={violationCount}
+              userRole={user.userrole}
+            />
+          ) : (
+            <>
+              {/* was setCurrentPage(1)*/}
+              <Tabs activeKey={activeTab} onSelect={(k) => { setActiveTab(k); setCurrentPage(currentPage); }}>
+                <Tab eventKey="all" title="All">
+                  <CitationTable citations={filterCitations('all')} userRole={user.userrole} isPaidTab={true} />
+                </Tab>
+                <Tab eventKey="paid" title="Paid">
+                  <CitationTable citations={filterCitations('paid')} isPaidTab={true} />
+                </Tab>
+                <Tab eventKey="unpaid" title="Unpaid">
+                  <CitationTable citations={filterCitations('unpaid')} />
+                </Tab>
+                <Tab eventKey="delinquent" title="Delinquent">
+                  <CitationTable citations={filterCitations('delinquent')} />
+                </Tab>
+                <Tab eventKey="for-case-filing" title="For Case Filing">
+                  <CitationTable citations={filterCitations('for-case-filing')} />
+                </Tab>
+              </Tabs>
+              <Pagination className="mt-3">
+                {renderPaginationItems()}
+              </Pagination>
+            </>
+          )}
+        </Card.Body>
+      </Card>
       <Footer />
     </Container>
   );

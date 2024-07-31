@@ -2,7 +2,7 @@ import { Container } from 'react-bootstrap';
 
 const Footer = () => {
   return (
-    <footer className="bg-dark text-white mt-3">
+    <footer className="bg-dark text-light mt-3">
       <Container className="py-3 text-center">
         <img
           src="/baroalaoag.png"
@@ -11,7 +11,7 @@ const Footer = () => {
           alt="Baro a Laoag Logo"
         />
         <img
-          src="/bagongpilipinashires.png"
+          src="/bagongpilipinaslores.webp"
           height="60"
           className="d-inline-block"
           alt="Baro a Laoag Logo"

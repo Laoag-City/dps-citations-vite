@@ -1,9 +1,29 @@
 import PropTypes from 'prop-types';
+import { useState, useRef } from 'react';
 import { Table, Alert, Spinner, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import { useReactToPrint } from 'react-to-print';
+import CitationPrint from './CitationPrint';
+import './CitationTable.css'; // Import the CSS file for print styles
+import './CitationPrint.css';
 
 
 const SearchResults = ({ searchResults, error, handleShow, getRowClass, handleCommuteClick, handlePaymentClick, formatDate, violationCount, userRole }) => {
+  const [selectedCitation, setSelectedCitation] = useState(null);
+  const printRef = useRef();
+
+  const handlePrint = useReactToPrint({
+    content: () => printRef.current,
+    documentTitle: 'Citation Details',
+    onAfterPrint: () => setSelectedCitation(null)
+  });
+
+  const handlePrintClick = (citation) => {
+    setSelectedCitation(citation);
+    setTimeout(() => {
+      handlePrint();
+    }, 0);
+  };
 
   return (
     <div>
@@ -45,7 +65,7 @@ const SearchResults = ({ searchResults, error, handleShow, getRowClass, handleCo
                     {/*citation.paymentStatus ? 'Paid' : userRole === 'dpsstaff' ? <Button variant="warning" onClick={() => handlePaymentClick(citation)}>Pay</Button> : 'Unpaid'*/}
                   </td>
                   <td>{violationCount(citation.violations)}</td>
-                  <td><Link>Print</Link></td>
+                  <td><Link onClick={() => handlePrintClick(citation)}>Print</Link></td>
                 </tr>
               ))
             ) : (
@@ -57,6 +77,13 @@ const SearchResults = ({ searchResults, error, handleShow, getRowClass, handleCo
         </Table>
       ) : (
         error ? <Alert variant="danger" className="mt-3">{error}</Alert> : <Spinner animation="border" role="status"><span className="visually-hidden">Loading...</span></Spinner>
+      )}
+      {/* Hidden section for printing */}
+      {selectedCitation && (
+        /*<div style={{ display: 'none' }}>*/
+        <div style={{ display: 'none' }}>
+          <CitationPrint citation={selectedCitation} ref={printRef} />
+        </div>
       )}
     </div>
   );

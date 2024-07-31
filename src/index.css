@@ -1,5 +1,63 @@
-h1,
-h2,
-h3 {
-  font-weight: normal;
+/* General styles for all media */
+@media all {
+  .page-break {
+    display: none;
+  }
+}
+
+/* Print styles */
+@media print {
+
+  html,
+  body {
+    height: initial !important;
+    overflow: initial !important;
+    -webkit-print-color-adjust: exact;
+    color: white;
+    /* Text color */
+    background-color: black;
+    /* Background color */
+  }
+
+  /* Styling for the specific div */
+  .print-style {
+    color: white;
+    /* Text color */
+    background-color: black;
+    /* Background color */
+  }
+
+  .page-break {
+    margin-top: 1rem;
+    display: block;
+    page-break-before: auto;
+  }
+
+  .citation-print {
+    font-family: Arial, sans-serif;
+  }
+
+  h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+
+  p {
+    font-size: 14px;
+    margin: 5px 0;
+  }
+
+  ul {
+    padding-left: 20px;
+  }
+
+  ul li {
+    font-size: 14px;
+  }
+}
+
+/* Page margin settings */
+@page {
+  size: auto;
+  margin: 20mm;
 }
