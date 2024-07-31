@@ -3,16 +3,22 @@ import { useState } from 'react';
 import { Accordion, Form, Button, Row, Col } from 'react-bootstrap';
 import { sumAmounts } from '../utils/citationUtils';
 
-const PaymentForm = ({ citation, onUpdate, onCancel }) => {
-  //const initialAmountPaid = sumAmounts(citation.violations);
+const CommuteForm = ({ citation, onUpdate, onCancel }) => {
+  {/*    paymentStatus: citation.paymentStatus || true,
+    paymentORNumber: citation.paymentORNumber || '',
+    amountPaid: citation.amountPaid || sumAmounts(citation.violations),
+    paymentDate: citation.paymentDate ? new Date(citation.paymentDate).toISOString().split('T')[0] : '',
+    paymentRemarks: citation.paymentRemarks || '',
+     */}
 
   const [formData, setFormData] = useState({
     ...citation,
-    paymentStatus: citation.paymentStatus || true,
-    paymentORNumber: citation.paymentORNumber || '',
-    amountPaid: citation.amountPaid || sumAmounts(citation.violations),
-    paymentDate: citation.paymentDate ? new Date(citation.paymentDate).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
-    paymentRemarks: citation.paymentRemarks || '',
+    commuteStatus: citation.commuteStatus || true,
+    commutedViolation: citation.commutedViolation || '',
+    commutedViolationAmount: citation.commutedViolationAmount || '',
+    commuteDate: citation.commuteDate ? new Date(citation.commuteDate).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+    commutedViolationRemark: citation.commutedViolationRemark || '',
+
   });
 
   const handleChange = (e) => {
@@ -25,12 +31,6 @@ const PaymentForm = ({ citation, onUpdate, onCancel }) => {
     onUpdate(formData);
   };
 
-  /*   const sumAmounts = (amounts) => {
-      const total = amounts.map(item => item.amount)
-        .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-      return parseFloat(total.toFixed(2));
-    };
-   */
   return (
     <Form onSubmit={handleSubmit}>
       <Accordion defaultActiveKey="1">
@@ -156,41 +156,41 @@ const PaymentForm = ({ citation, onUpdate, onCancel }) => {
           </Accordion.Body>
         </Accordion.Item>
         <Accordion.Item eventKey="1">
-          <Accordion.Header>Payment Information - Amount Due is: Php{sumAmounts(citation.violations)}</Accordion.Header>
+          <Accordion.Header>Commute Citation - Amount Due is: Php{sumAmounts(citation.violations)}</Accordion.Header>
           <Accordion.Body>
             <Form.Group className="mb-3" controlId="formPaymentORNumber">
-              <Form.Label>Payment OR Number</Form.Label>
+              <Form.Label>Change Violation to:</Form.Label>
               <Form.Control
                 type="text"
                 name="paymentORNumber"
-                value={formData.paymentORNumber}
+                value={formData.commutedViolation}
                 onChange={handleChange}
               />
             </Form.Group>
             <Form.Group className="mb-3" controlId="formPaymentORNumber">
-              <Form.Label>Amount Paid</Form.Label>
+              <Form.Label>Amount</Form.Label>
               <Form.Control
                 type="number"
                 name="amountPaid"
-                value={formData.amountPaid}
+                value={formData.commutedViolationAmount}
                 onChange={handleChange}
               />
             </Form.Group>
             <Form.Group className="mb-3" controlId="formPaymentDate">
-              <Form.Label>Payment Date</Form.Label>
+              <Form.Label>Citation Commutation Date</Form.Label>
               <Form.Control
                 type="date"
-                name="paymentDate"
-                value={formData.paymentDate}
+                name="commuteDate"
+                value={formData.commuteDate}
                 onChange={handleChange}
               />
             </Form.Group>
             <Form.Group className="mb-3" controlId="formPaymentRemarks">
-              <Form.Label>Payment Remarks</Form.Label>
+              <Form.Label>Commutation Remarks</Form.Label>
               <Form.Control
                 type="text"
                 name="paymentRemarks"
-                value={formData.paymentRemarks}
+                value={formData.commutedViolationRemark}
                 onChange={handleChange}
               />
             </Form.Group>
@@ -198,7 +198,7 @@ const PaymentForm = ({ citation, onUpdate, onCancel }) => {
         </Accordion.Item>
         <div className="text-end mt-3">
           <Button variant="primary" type="submit">
-            Update Payment
+            Commute
           </Button>
           <Button variant="secondary" onClick={onCancel} className="ms-2">
             Cancel
@@ -209,7 +209,7 @@ const PaymentForm = ({ citation, onUpdate, onCancel }) => {
   );
 };
 
-PaymentForm.propTypes = {
+CommuteForm.propTypes = {
   citation: PropTypes.shape({
     ticketNumber: PropTypes.string.isRequired,
     licenseNumber: PropTypes.string.isRequired,
@@ -223,15 +223,15 @@ PaymentForm.propTypes = {
     plateNumber: PropTypes.string.isRequired,
     vehicleColor: PropTypes.string.isRequired,
     apprehendingOfficer: PropTypes.string.isRequired,
-    paymentStatus: PropTypes.bool,
-    paymentORNumber: PropTypes.string,
-    paymentDate: PropTypes.string,
-    amountPaid: PropTypes.number,
-    paymentRemarks: PropTypes.string,
+    commuteStatus: PropTypes.bool,
+    commuteDate: PropTypes.string,
+    commutedViolation: PropTypes.string,
+    commutedViolationAmount: PropTypes.number,
+    commutedViolationRemark: PropTypes.string,
     violations: PropTypes.array
   }).isRequired,
   onUpdate: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
 };
 
-export default PaymentForm;
+export default CommuteForm;
