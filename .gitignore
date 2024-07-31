@@ -27,3 +27,5 @@ src/components/PaymentUpdate.jsx
 src/components/PaymentUpdateModal
 src/components/xCommuteForm.jsx
 src/components/xCommuteUpdatePage.jsx
+src/components/xDashboard.jsx
+src/xSearchResultsPage.jsx
