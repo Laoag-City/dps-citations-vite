@@ -75,6 +75,7 @@ const TopBar = ({ username, userrole, onSearch }) => {
               </Form>
               <NavDropdown title="Account" id="basic-nav-dropdown">
                 {/*TODO:Conditional rendering*/}
+                <NavDropdown.Item href="#action/3.2">Hello, {username}</NavDropdown.Item>
                 <NavDropdown.Item href="#action/3.2">Edit Apprehenders</NavDropdown.Item>
                 <NavDropdown.Item href="#action/3.3">Edit Violations</NavDropdown.Item>
                 <NavDropdown.Divider />
