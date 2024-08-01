@@ -42,7 +42,7 @@ const CitationTable = ({ citations, isPaidTab = false }) => {
 
   const handlePrint = useReactToPrint({
     content: () => printRef.current,
-    documentTitle: 'Citation Details',
+    documentTitle: 'DPS Laoag City Citation Record Printout',
     onAfterPrint: () => setSelectedCitation(null)
   });
 
