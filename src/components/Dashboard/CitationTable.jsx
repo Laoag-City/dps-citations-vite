@@ -66,7 +66,7 @@ const CitationTable = ({ citations, isPaidTab = false }) => {
             <th onClick={() => handleSortChange('vehicleColor')}>Vehicle Color</th>
             <th onClick={() => handleSortChange('apprehendingOfficer')}>Apprehending Officer</th>
             <th>Amount/Paid</th>
-            {!isPaidTab && <th onClick={() => handleSortChange('commuteStatus')}>Commuted</th>}
+            {!isPaidTab && <th onClick={() => handleSortChange('commuteStatus')}>Commute</th>}
             {!isPaidTab && <th>Paid</th>}
             <th>Print</th>
           </tr>
