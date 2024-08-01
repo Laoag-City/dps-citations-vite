@@ -54,10 +54,10 @@ const CitationPrint = React.forwardRef(({ citation }, ref) => {
         <p><strong>Amount Paid: </strong> Php{citation.amountPaid}</p>
         <p><strong>Payment Date: </strong> {formatDate(citation.paymentDate)}</p>
         <p><strong>Payment Remarks: </strong> {citation.paymentRemarks}</p>
-        <p><strong>Amount Due/ Amount Paid: </strong> {sumAmounts(citation.violations) + " : " + citation.amountPaid}</p>
+        <p><strong>Amount Due </strong> {citation.commuteStatus ? citation.commutedViolationAmount : sumAmounts(citation.violations)}</p>
+        <p><strong>Amount Paid: </strong> {citation.amountPaid}</p>
       </div>
       <hr />
-      <br />
       <br />
       <br />
     </div>

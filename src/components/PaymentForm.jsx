@@ -10,7 +10,7 @@ const PaymentForm = ({ citation, onUpdate, onCancel }) => {
     ...citation,
     paymentStatus: citation.paymentStatus || true,
     paymentORNumber: citation.paymentORNumber || '',
-    amountPaid: citation.amountPaid || sumAmounts(citation.violations),
+    amountPaid: citation.commuteStatus ? citation.commutedViolationAmount : citation.amountPaid || sumAmounts(citation.violations),
     paymentDate: citation.paymentDate ? new Date(citation.paymentDate).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
     paymentRemarks: citation.paymentRemarks || '',
   });
@@ -211,27 +211,36 @@ const PaymentForm = ({ citation, onUpdate, onCancel }) => {
 
 PaymentForm.propTypes = {
   citation: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
     ticketNumber: PropTypes.string.isRequired,
     licenseNumber: PropTypes.string.isRequired,
-    firstName: PropTypes.string.isRequired,
-    lastName: PropTypes.string.isRequired,
-    middleName: PropTypes.string,
-    homeAddress: PropTypes.string.isRequired,
     dateApprehended: PropTypes.string.isRequired,
-    timeApprehended: PropTypes.string.isRequired,
-    streetApprehended: PropTypes.string.isRequired,
-    plateNumber: PropTypes.string.isRequired,
-    vehicleColor: PropTypes.string.isRequired,
-    apprehendingOfficer: PropTypes.string.isRequired,
+    streetApprehended: PropTypes.string,
+    plateNumber: PropTypes.string,
+    vehicleColor: PropTypes.string,
+    apprehendingOfficer: PropTypes.string,
+    apprehendingUnitOf: PropTypes.string,
+    commuteStatus: PropTypes.bool,
+    commuteDate: PropTypes.string,
+    commutedViolation: PropTypes.string,
+    commutedViolationAmount: PropTypes.number,
+    commutedViolationRemark: PropTypes.string,
+    amountPaid: PropTypes.number,
     paymentStatus: PropTypes.bool,
     paymentORNumber: PropTypes.string,
     paymentDate: PropTypes.string,
-    amountPaid: PropTypes.number,
     paymentRemarks: PropTypes.string,
-    violations: PropTypes.array
+    violations: PropTypes.arrayOf(
+      PropTypes.shape({
+        violation: PropTypes.string.isRequired,
+        amount: PropTypes.number.isRequired
+      })
+    ).isRequired
   }).isRequired,
   onUpdate: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
+
 };
+
 
 export default PaymentForm;
