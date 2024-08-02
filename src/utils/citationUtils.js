@@ -25,3 +25,17 @@ export const getRowClass = (dateApprehended) => {
   if (dayDifference > 60) return 'table-warning';
   return '';
 };
+
+/* export function toCamelCase(inputstr) {
+  return inputstr.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function(match, index) {
+      if (+match === 0) return ""; // or if (/\s+/.test(match)) for white spaces
+      return index === 0 ? match.toLowerCase() : match.toUpperCase();
+  });
+} */
+  export function toPascalCase(inputstr) {
+    return inputstr
+      .toLowerCase()
+      .replace(/(?:^|\s+)(.)/g, function(match, chr) {
+        return chr.toUpperCase();
+      });
+  }

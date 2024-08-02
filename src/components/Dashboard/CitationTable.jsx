@@ -59,6 +59,7 @@ const CitationTable = ({ citations, isPaidTab = false }) => {
         <thead>
           <tr>
             <th onClick={() => handleSortChange('ticketNumber')}>Ticket Number</th>
+            <th onClick={() => handleSortChange('lastname')}>Name</th>
             <th onClick={() => handleSortChange('licenseNumber')}>License Number</th>
             <th onClick={() => handleSortChange('dateApprehended')}>Date Apprehended</th>
             <th onClick={() => handleSortChange('streetApprehended')}>Street Apprehended</th>
@@ -76,6 +77,7 @@ const CitationTable = ({ citations, isPaidTab = false }) => {
             citations.map((citation) => (
               <tr key={citation._id} className={getRowClass(citation.dateApprehended)}>
                 <td>{citation.ticketNumber}</td>
+                <td>{citation.lastName === 'N/A' || citation.lastName === 'n/a' || citation.lastName === 'NA' ? 'N/A' : citation.lastName + ', ' + citation.firstName + " " + citation.middleName[0] + '.'} </td>
                 <td>{citation.licenseNumber}</td>
                 <td>{formatDate(citation.dateApprehended)}</td>
                 <td>{citation.streetApprehended}</td>
@@ -98,7 +100,7 @@ const CitationTable = ({ citations, isPaidTab = false }) => {
             ))
           ) : (
             <tr>
-              <td colSpan={isPaidTab ? 9 : 11} className="text-center">
+              <td colSpan={isPaidTab ? 10 : 12} className="text-center">
                 No records available
               </td>
             </tr>

@@ -1,10 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { formatDate } from '../../utils/dateUtils';
-import { sumAmounts } from '../../utils/citationUtils';
+import { sumAmounts, toPascalCase } from '../../utils/citationUtils';
 //import './CitationPrint.css'; // Import the CSS file for print styles
 
 const CitationPrint = React.forwardRef(({ citation }, ref) => {
+  let fullName = citation.lastName === 'N/A' || citation.lastName === 'n/a' || citation.lastName === 'NA' ? 'N/A' : toPascalCase(citation.lastName) + ', ' + toPascalCase(citation.firstName) + " " + citation.middleName[0].toUpperCase() + '.'
+  //const fullNamePascalCase = toPascalCase(fullName);
   return (
     <div ref={ref} className="text-dark bg-white p-4">
       <div className="text-center mb-4">
@@ -22,6 +24,9 @@ const CitationPrint = React.forwardRef(({ citation }, ref) => {
       <div className='mb-2'>
         <p><strong>ID: </strong>{citation._id}</p>
         <p><strong>Ticket Number: </strong> {citation.ticketNumber}</p>
+        {/*         <p><strong>Name: </strong>{citation.lastName === 'N/A' || citation.lastName === 'n/a' || citation.lastName === 'NA' ? 'N/A' : citation.lastName + ', ' + citation.firstName + " " + citation.middleName[0] + '.'}</p>
+ */}
+        <p><strong>Name: </strong>{fullName}</p>
         <p><strong>License Number: </strong> {citation.licenseNumber}</p>
         <p><strong>Date Apprehended: </strong> {formatDate(citation.dateApprehended)}</p>
         <p><strong>Street Apprehended: </strong> {citation.streetApprehended}</p>
@@ -69,6 +74,9 @@ CitationPrint.propTypes = {
   citation: PropTypes.shape({
     _id: PropTypes.string.isRequired,
     ticketNumber: PropTypes.string.isRequired,
+    firstName: PropTypes.string.isRequired,
+    lastName: PropTypes.string.isRequired,
+    middleName: PropTypes.string,
     licenseNumber: PropTypes.string.isRequired,
     dateApprehended: PropTypes.string.isRequired,
     streetApprehended: PropTypes.string,
