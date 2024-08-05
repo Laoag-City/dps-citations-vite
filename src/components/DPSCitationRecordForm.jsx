@@ -1,4 +1,5 @@
 // src/pages/DPSCitationRecordForm.js
+//TODO: more comprehensive error handling (e.g. api error)
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
@@ -220,7 +221,7 @@ function DPSCitationRecordForm() {
                     ))}
                   </Form.Control>
                 </Form.Group> */}
-                <Form.Group controlId="apprehendingOfficer">
+                <Form.Group controlId="apprehendingOfficerId">
                   <Form.Label>Apprehending Officer</Form.Label>
                   <Form.Control as="select" name="apprehendingOfficerId" value={formData.apprehendingOfficerId} onChange={handleApprehenderChange}>
                     <option value="">Select apprehending officer</option>
@@ -231,7 +232,7 @@ function DPSCitationRecordForm() {
                 </Form.Group>
                 <Form.Group controlId="apprehendingUnitOf">
                   <Form.Label>Unit</Form.Label>
-                  <Form.Control as="select" name="apprehendingUnitOf" value={formData.apprehendingUnitOf} onChange={handleUnitChange}>
+                  <Form.Control as="select" name="apprehendingUnitOf" value={formData.apprehendingOfficerId} onChange={handleUnitChange}>
                     <option value="">Select unit</option>
                     <option value="PNP">PNP</option>
                     <option value="DPS">DPS</option>
