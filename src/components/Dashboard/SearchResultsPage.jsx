@@ -33,6 +33,7 @@ const SearchResults = ({ searchResults, error, handleShow, getRowClass, handleCo
           <thead>
             <tr>
               <th>Ticket Number</th>
+              <th>Name</th>
               <th>License Number</th>
               <th>Date Apprehended</th>
               <th>Street Apprehended</th>
@@ -50,6 +51,7 @@ const SearchResults = ({ searchResults, error, handleShow, getRowClass, handleCo
               searchResults.map((citation) => (
                 <tr key={citation._id} className={getRowClass(citation.dateApprehended)}>
                   <td onClick={() => handleShow(citation)}>{citation.ticketNumber}</td>
+                  <td>{citation.lastName === 'N/A' || citation.lastName === 'n/a' || citation.lastName === 'NA' ? 'N/A' : citation.lastName + ', ' + citation.firstName + " " + citation.middleName[0] + '.'}</td>
                   <td>{citation.licenseNumber}</td>
                   <td>{formatDate(citation.dateApprehended)}</td>
                   <td>{citation.streetApprehended}</td>

@@ -84,6 +84,7 @@ CitationPrint.propTypes = {
     vehicleColor: PropTypes.string,
     apprehendingOfficer: PropTypes.string,
     apprehendingUnitOf: PropTypes.string,
+    apprehendingOfficerId: PropTypes.string,
     commuteStatus: PropTypes.bool,
     commuteDate: PropTypes.string,
     commutedViolation: PropTypes.string,

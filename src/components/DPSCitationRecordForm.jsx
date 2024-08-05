@@ -24,6 +24,7 @@ function DPSCitationRecordForm() {
     vehicleColor: '',
     apprehendingOfficer: '',
     apprehendingUnitOf: '',
+    apprehendingOfficerId: '',
     commuteStatus: false,
     commuteDate: null,
     paymentStatus: false,
@@ -74,6 +75,32 @@ function DPSCitationRecordForm() {
     }));
   };
 
+  const handleApprehenderChange = (event) => {
+    const { name, value } = event.target;
+    setFormData(prevState => ({
+      ...prevState,
+      apprehendingOfficerId: value,
+    }));
+  };
+
+  const handleUnitChange = (event) => {
+    const { name, value } = event.target;
+    setFormData(prevState => ({
+      ...prevState,
+      apprehendingUnitOf: value
+    }));
+  };
+
+  /*   const handleApprehenderChange = (event) => {
+      const { name, value } = event.target;
+      const selectedApprehender = apprehendersList.find(apprehender => apprehender._id === value);
+      setFormData(prevState => ({
+        ...prevState,
+        apprehendingOfficerId: value,
+        apprehendingUnitOf: selectedApprehender ? selectedApprehender.unit : ''
+      }));
+    };
+   */
   const addViolation = () => {
     setFormData(prevState => ({
       ...prevState,
@@ -155,25 +182,17 @@ function DPSCitationRecordForm() {
         </Card>
         <Card>
           <Card.Body>
-            <Card.Title>Violator Information</Card.Title>
+            <Card.Title>Violation Data</Card.Title>
             <Row>
               <Col>
                 <Form.Group controlId="dateApprehended">
-                  <Form.Label>Date Apprehended</Form.Label>
+                  <Form.Label>Date/Time Apprehended</Form.Label>
                   <Form.Control type="datetime-local" name="dateApprehended" value={formData.dateApprehended} onChange={handleChange} required />
                 </Form.Group>
               </Col>
               <Col>
-                <Form.Group controlId="timeApprehended">
-                  <Form.Label>Time Apprehended</Form.Label>
-                  <Form.Control type="datetime-local" name="timeApprehended" value={formData.timeApprehended} onChange={handleChange} />
-                </Form.Group>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
                 <Form.Group controlId="streetApprehended">
-                  <Form.Label>Street Apprehended</Form.Label>
+                  <Form.Label>Street</Form.Label>
                   <Form.Control type="text" name="streetApprehended" value={formData.streetApprehended} onChange={handleChange} />
                 </Form.Group>
               </Col>
@@ -183,27 +202,36 @@ function DPSCitationRecordForm() {
                   <Form.Control type="text" name="plateNumber" value={formData.plateNumber} onChange={handleChange} />
                 </Form.Group>
               </Col>
-            </Row>
-            <Row>
               <Col>
                 <Form.Group controlId="vehicleColor">
                   <Form.Label>Vehicle Color</Form.Label>
                   <Form.Control type="text" name="vehicleColor" value={formData.vehicleColor} onChange={handleChange} />
                 </Form.Group>
               </Col>
-              <Col>
-                <Form.Group controlId="apprehendingOfficer">
+            </Row>
+            <Row>
+              <Col className='mb-1'>
+                {/*<Form.Group controlId="apprehendingOfficer">
                   <Form.Label>Apprehending Officer</Form.Label>
-                  <Form.Control as="select" name="apprehendingOfficer" value={formData.apprehendingOfficer} onChange={handleChange}>
+                  <Form.Control as="select" name="apprehendingOfficerId" value={formData.apprehendingOfficerId} onChange={handleApprehenderChange}>
                     <option value="">Select apprehending officer</option>
                     {apprehendersList.map((officer, index) => (
-                      <option key={index} value={officer.name}>{officer.name}</option>
+                      <option key={index} value={officer._id}>{officer.lastName}, {officer.firstName}: {officer.unit}</option>
+                    ))}
+                  </Form.Control>
+                </Form.Group> */}
+                <Form.Group controlId="apprehendingOfficer">
+                  <Form.Label>Apprehending Officer</Form.Label>
+                  <Form.Control as="select" name="apprehendingOfficerId" value={formData.apprehendingOfficerId} onChange={handleApprehenderChange}>
+                    <option value="">Select apprehending officer</option>
+                    {apprehendersList.map((officer, index) => (
+                      <option key={index} value={officer._id}>{officer.lastName}, {officer.firstName}: {officer.unit}</option>
                     ))}
                   </Form.Control>
                 </Form.Group>
                 <Form.Group controlId="apprehendingUnitOf">
-                  <Form.Label>Apprehending Unit Of</Form.Label>
-                  <Form.Control as="select" name="apprehendingUnitOf" value={formData.apprehendingUnitOf} onChange={handleChange}>
+                  <Form.Label>Unit</Form.Label>
+                  <Form.Control as="select" name="apprehendingUnitOf" value={formData.apprehendingUnitOf} onChange={handleUnitChange}>
                     <option value="">Select unit</option>
                     <option value="PNP">PNP</option>
                     <option value="DPS">DPS</option>
@@ -212,6 +240,7 @@ function DPSCitationRecordForm() {
                   </Form.Control>
                 </Form.Group>
               </Col>
+              <Col md="auto" xs lg="2"></Col>
             </Row>
           </Card.Body>
         </Card>
