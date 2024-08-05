@@ -1,5 +1,4 @@
 // src/pages/DPSCitationRecordForm.js
-//TODO: more comprehensive error handling (e.g. api error)
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
@@ -78,9 +77,11 @@ function DPSCitationRecordForm() {
 
   const handleApprehenderChange = (event) => {
     const { name, value } = event.target;
+    const selectedApprehender = apprehendersList.find(apprehender => apprehender._id === value);
     setFormData(prevState => ({
       ...prevState,
       apprehendingOfficerId: value,
+      apprehendingOfficer: selectedApprehender ? `${selectedApprehender.firstName} ${selectedApprehender.lastName}` : ''
     }));
   };
 
@@ -92,16 +93,6 @@ function DPSCitationRecordForm() {
     }));
   };
 
-  /*   const handleApprehenderChange = (event) => {
-      const { name, value } = event.target;
-      const selectedApprehender = apprehendersList.find(apprehender => apprehender._id === value);
-      setFormData(prevState => ({
-        ...prevState,
-        apprehendingOfficerId: value,
-        apprehendingUnitOf: selectedApprehender ? selectedApprehender.unit : ''
-      }));
-    };
-   */
   const addViolation = () => {
     setFormData(prevState => ({
       ...prevState,
@@ -212,16 +203,7 @@ function DPSCitationRecordForm() {
             </Row>
             <Row>
               <Col className='mb-1'>
-                {/*<Form.Group controlId="apprehendingOfficer">
-                  <Form.Label>Apprehending Officer</Form.Label>
-                  <Form.Control as="select" name="apprehendingOfficerId" value={formData.apprehendingOfficerId} onChange={handleApprehenderChange}>
-                    <option value="">Select apprehending officer</option>
-                    {apprehendersList.map((officer, index) => (
-                      <option key={index} value={officer._id}>{officer.lastName}, {officer.firstName}: {officer.unit}</option>
-                    ))}
-                  </Form.Control>
-                </Form.Group> */}
-                <Form.Group controlId="apprehendingOfficerId">
+                <Form.Group controlId="apprehendingOfficer">
                   <Form.Label>Apprehending Officer</Form.Label>
                   <Form.Control as="select" name="apprehendingOfficerId" value={formData.apprehendingOfficerId} onChange={handleApprehenderChange}>
                     <option value="">Select apprehending officer</option>
@@ -232,7 +214,7 @@ function DPSCitationRecordForm() {
                 </Form.Group>
                 <Form.Group controlId="apprehendingUnitOf">
                   <Form.Label>Unit</Form.Label>
-                  <Form.Control as="select" name="apprehendingUnitOf" value={formData.apprehendingOfficerId} onChange={handleUnitChange}>
+                  <Form.Control as="select" name="apprehendingUnitOf" value={formData.apprehendingUnitOf} onChange={handleUnitChange}>
                     <option value="">Select unit</option>
                     <option value="PNP">PNP</option>
                     <option value="DPS">DPS</option>
