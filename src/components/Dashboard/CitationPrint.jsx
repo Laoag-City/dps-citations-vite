@@ -84,7 +84,10 @@ CitationPrint.propTypes = {
     vehicleColor: PropTypes.string,
     apprehendingOfficer: PropTypes.string,
     apprehendingUnitOf: PropTypes.string,
-    apprehendingOfficerId: PropTypes.string,
+    apprehendingOfficerId: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.object // Updated to support ObjectId
+    ]),
     commuteStatus: PropTypes.bool,
     commuteDate: PropTypes.string,
     commutedViolation: PropTypes.string,
