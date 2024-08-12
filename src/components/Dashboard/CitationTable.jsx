@@ -3,12 +3,13 @@
 import PropTypes from 'prop-types';
 import { useState, useRef } from 'react';
 import { useSelector } from 'react-redux';
-import { Table, Button, Modal, Form } from 'react-bootstrap';
+import { Table, Button, Card, Modal, Form } from 'react-bootstrap';
 import { formatDate } from '../../utils/dateUtils';
 import { sumAmounts, getRowClass } from '../../utils/citationUtils';
 import { Link, useNavigate } from 'react-router-dom';
 import { useReactToPrint } from 'react-to-print';
 import useUpdate from '../../hooks/useUpdate';
+import useFetchApprehenders from '../../hooks/useFetchApprehenders';
 import CitationPrint from './CitationPrint';
 import './CitationTable.css';
 import './CitationPrint.css';
@@ -24,7 +25,8 @@ const CitationTable = ({ citations, isPaidTab = false }) => {
   const printRef = useRef();
 
   const updateUrl = selectedCitation ? `https://apps.laoagcity.gov.ph:3002/dpscitations/${selectedCitation._id}` : '';
-  const { updateData, error } = useUpdate(updateUrl, token);
+  const { updateData, updateError } = useUpdate(updateUrl, token);
+  const { apprehendersList, error: apprehendersError } = useFetchApprehenders(token);
 
   const handleCommuteClick = (citation) => {
     navigate(`/commute-update/${citation._id}`);
@@ -113,7 +115,7 @@ const CitationTable = ({ citations, isPaidTab = false }) => {
                 )}
                 {!isPaidTab && (
                   <td>
-                    {user.userrole === 'dpsstaff' && (!citation.paymentStatus || citation.paymentStatus === undefined) ? <Button variant="warning" onClick={() => handlePaymentClick(citation)}>Paid</Button> : 'No'}
+                    {user.userrole === 'dpsstaff' && (!citation.paymentStatus || citation.paymentStatus === undefined) ? <Button variant="warning" onClick={() => handlePaymentClick(citation)}>Pay</Button> : 'No'}
                   </td>
                 )}
                 <td>
@@ -141,118 +143,117 @@ const CitationTable = ({ citations, isPaidTab = false }) => {
         <Modal.Header closeButton>
           <Modal.Title>Edit Citation</Modal.Title>
         </Modal.Header>
+        <Card>
+          <Card.Body>
+            <Card.Title>Ticket: {editData.ticketNumber} </Card.Title>
+            <Card.Text>
+            </Card.Text>
+            <Form>
+              <Form.Group controlId="formLastName">
+                <Form.Label>Last Name</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="lastName"
+                  value={editData.lastName}
+                  onChange={handleEditChange}
+                />
+              </Form.Group>
+              <Form.Group controlId="formFirstName">
+                <Form.Label>First Name</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="firstName"
+                  value={editData.firstName}
+                  onChange={handleEditChange}
+                />
+              </Form.Group>
+              <Form.Group controlId="formLicenseNumber">
+                <Form.Label>License Number</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="licenseNumber"
+                  value={editData.licenseNumber}
+                  onChange={handleEditChange}
+                  readOnly
+                />
+              </Form.Group>
+              <Form.Group controlId="formDateApprehended">
+                <Form.Label>Date</Form.Label>
+                <Form.Control
+                  type="date"
+                  name="dateApprehended"
+                  value={editData.dateApprehended}
+                  onChange={handleEditChange}
+                  readOnly
+                />
+              </Form.Group>
+              <Form.Group controlId="formStreetApprehended">
+                <Form.Label>Street</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="streetApprehended"
+                  value={editData.streetApprehended}
+                  onChange={handleEditChange}
+                  readOnly
+                />
+              </Form.Group>
+              <Form.Group controlId="formPlateNumber">
+                <Form.Label>Plate Number</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="plateNumber"
+                  value={editData.plateNumber}
+                  onChange={handleEditChange}
+                />
+              </Form.Group>
+              <Form.Group controlId="formVehicleColor">
+                <Form.Label>Vehicle Color</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="vehicleColor"
+                  value={editData.vehicleColor}
+                  onChange={handleEditChange}
+                />
+              </Form.Group>
+              <Form.Group controlId="formApprehendingOfficer">
+                <Form.Label>Apprehending Officer</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="apprehendingOfficer"
+                  value={editData.apprehendingOfficer}
+                  onChange={handleEditChange}
+                />
+              </Form.Group>
+              <Form.Group controlId="formApprehendingOfficerId">
+                <Form.Label>Apprehending Officer ID</Form.Label>
+                <Form.Control
+                  as="select"
+                  name="apprehendingOfficerId"
+                  value={editData.apprehendingOfficerId}
+                  onChange={handleEditChange}
+                >
+                  <option value="">Select Apprehender</option>
+                  {apprehendersList.map((apprehender) => (
+                    <option key={apprehender.id} value={apprehender.firstname}>
+                      {apprehender.name}
+                    </option>
+                  ))}
+                </Form.Control>
+              </Form.Group>
+            </Form>
+            {/*<Button variant="primary">Go somewhere</Button> */}
+          </Card.Body>
+        </Card>
         <Modal.Body>
-          <Form>
-            <Form.Group controlId="formTicketNumber">
-              <Form.Label>Ticket Number</Form.Label>
-              <Form.Control
-                type="text"
-                name="ticketNumber"
-                value={editData.ticketNumber}
-                onChange={handleEditChange}
-              />
-            </Form.Group>
-            <Form.Group controlId="formLastName">
-              <Form.Label>Last Name</Form.Label>
-              <Form.Control
-                type="text"
-                name="lastName"
-                value={editData.lastName}
-                onChange={handleEditChange}
-              />
-            </Form.Group>
-            <Form.Group controlId="formFirstName">
-              <Form.Label>First Name</Form.Label>
-              <Form.Control
-                type="text"
-                name="firstName"
-                value={editData.firstName}
-                onChange={handleEditChange}
-              />
-            </Form.Group>
-            <Form.Group controlId="formLicenseNumber">
-              <Form.Label>License Number</Form.Label>
-              <Form.Control
-                type="text"
-                name="licenseNumber"
-                value={editData.licenseNumber}
-                onChange={handleEditChange}
-              />
-            </Form.Group>
-            <Form.Group controlId="formDateApprehended">
-              <Form.Label>Date Apprehended</Form.Label>
-              <Form.Control
-                type="date"
-                name="dateApprehended"
-                value={editData.dateApprehended}
-                onChange={handleEditChange}
-              />
-            </Form.Group>
-            <Form.Group controlId="formStreetApprehended">
-              <Form.Label>Street Apprehended</Form.Label>
-              <Form.Control
-                type="text"
-                name="streetApprehended"
-                value={editData.streetApprehended}
-                onChange={handleEditChange}
-              />
-            </Form.Group>
-            <Form.Group controlId="formPlateNumber">
-              <Form.Label>Plate Number</Form.Label>
-              <Form.Control
-                type="text"
-                name="plateNumber"
-                value={editData.plateNumber}
-                onChange={handleEditChange}
-              />
-            </Form.Group>
-            <Form.Group controlId="formVehicleColor">
-              <Form.Label>Vehicle Color</Form.Label>
-              <Form.Control
-                type="text"
-                name="vehicleColor"
-                value={editData.vehicleColor}
-                onChange={handleEditChange}
-              />
-            </Form.Group>
-            <Form.Group controlId="formApprehendingOfficer">
-              <Form.Label>Apprehending Officer</Form.Label>
-              <Form.Control
-                type="text"
-                name="apprehendingOfficer"
-                value={editData.apprehendingOfficer}
-                onChange={handleEditChange}
-              />
-            </Form.Group>
-            <Form.Group controlId="formAmountPaid">
-              <Form.Label>Amount Paid</Form.Label>
-              <Form.Control
-                type="number"
-                name="amountPaid"
-                value={editData.amountPaid}
-                onChange={handleEditChange}
-              />
-            </Form.Group>
-            <Form.Group controlId="formPaymentStatus">
-              <Form.Label>Payment Status</Form.Label>
-              <Form.Control
-                as="select"
-                name="paymentStatus"
-                value={editData.paymentStatus}
-                onChange={handleEditChange}
-              >
-                <option value={true}>Paid</option>
-                <option value={false}>Not Paid</option>
-              </Form.Control>
-            </Form.Group>
-          </Form>
-          {error && <p className="text-danger">{error}</p>}
+          {/*error && <p className="text-danger">{error}</p>*/}
+          {updateError && <p className="text-danger">{updateError}</p>}
+          {apprehendersError && <p className="text-danger">{apprehendersError}</p>}
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowEditModal(false)}>Close</Button>
           <Button variant="primary" onClick={handleEditSave}>Save changes</Button>
         </Modal.Footer>
-      </Modal>
+      </Modal >
     </>
   );
 };
