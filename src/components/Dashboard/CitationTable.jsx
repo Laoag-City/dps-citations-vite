@@ -76,6 +76,17 @@ const CitationTable = ({ citations, isPaidTab = false }) => {
     setEditData({ ...editData, [name]: value });
   };
 
+  const handleApprehenderChange = (e) => {
+    const selectedApprehenderId = e.target.value;
+    const selectedApprehender = apprehendersList.find(apprehender => apprehender._id === selectedApprehenderId);
+
+    setEditData({
+      ...editData,
+      apprehendingOfficerId: selectedApprehender._id,
+      apprehendingOfficer: `${selectedApprehender.firstName} ${selectedApprehender.lastName}`,
+    });
+  };
+
   return (
     <>
       <Table striped bordered hover>
@@ -146,8 +157,6 @@ const CitationTable = ({ citations, isPaidTab = false }) => {
         <Card>
           <Card.Body>
             <Card.Title>Ticket: {editData.ticketNumber} </Card.Title>
-            <Card.Text>
-            </Card.Text>
             <Form>
               <Form.Group controlId="formLastName">
                 <Form.Label>Last Name</Form.Label>
@@ -222,6 +231,7 @@ const CitationTable = ({ citations, isPaidTab = false }) => {
                   name="apprehendingOfficer"
                   value={editData.apprehendingOfficer}
                   onChange={handleEditChange}
+                  readOnly
                 />
               </Form.Group>
               <Form.Group controlId="formApprehendingOfficerId">
@@ -230,22 +240,20 @@ const CitationTable = ({ citations, isPaidTab = false }) => {
                   as="select"
                   name="apprehendingOfficerId"
                   value={editData.apprehendingOfficerId}
-                  onChange={handleEditChange}
+                  onChange={handleApprehenderChange}
                 >
                   <option value="">Select Apprehender</option>
                   {apprehendersList.map((apprehender) => (
-                    <option key={apprehender.id} value={apprehender.firstname}>
-                      {apprehender.name}
+                    <option key={apprehender._id} value={apprehender._id}>
+                      {`${apprehender.firstName} ${apprehender.lastName} (${apprehender.designation})`}
                     </option>
                   ))}
                 </Form.Control>
               </Form.Group>
             </Form>
-            {/*<Button variant="primary">Go somewhere</Button> */}
           </Card.Body>
         </Card>
         <Modal.Body>
-          {/*error && <p className="text-danger">{error}</p>*/}
           {updateError && <p className="text-danger">{updateError}</p>}
           {apprehendersError && <p className="text-danger">{apprehendersError}</p>}
         </Modal.Body>
@@ -253,7 +261,7 @@ const CitationTable = ({ citations, isPaidTab = false }) => {
           <Button variant="secondary" onClick={() => setShowEditModal(false)}>Close</Button>
           <Button variant="primary" onClick={handleEditSave}>Save changes</Button>
         </Modal.Footer>
-      </Modal >
+      </Modal>
     </>
   );
 };
