@@ -156,7 +156,7 @@ const CitationTable = ({ citations, isPaidTab = false }) => {
         </Modal.Header>
         <Card>
           <Card.Body>
-            <Card.Title>Ticket: {editData.ticketNumber} </Card.Title>
+            <Card.Title>Ticket: {editData.ticketNumber}, {formatDate(editData.dateApprehended)} </Card.Title>
             <Form>
               <Form.Group controlId="formLastName">
                 <Form.Label>Last Name</Form.Label>
@@ -193,7 +193,6 @@ const CitationTable = ({ citations, isPaidTab = false }) => {
                   name="dateApprehended"
                   value={editData.dateApprehended}
                   onChange={handleEditChange}
-                  readOnly
                 />
               </Form.Group>
               <Form.Group controlId="formStreetApprehended">
@@ -223,7 +222,7 @@ const CitationTable = ({ citations, isPaidTab = false }) => {
                   value={editData.vehicleColor}
                   onChange={handleEditChange}
                 />
-              </Form.Group>
+              </Form.Group>{/*
               <Form.Group controlId="formApprehendingOfficer">
                 <Form.Label>Apprehending Officer</Form.Label>
                 <Form.Control
@@ -233,7 +232,7 @@ const CitationTable = ({ citations, isPaidTab = false }) => {
                   onChange={handleEditChange}
                   readOnly
                 />
-              </Form.Group>
+              </Form.Group>*/}
               <Form.Group controlId="formApprehendingOfficerId">
                 <Form.Label>Apprehending Officer ID</Form.Label>
                 <Form.Control
