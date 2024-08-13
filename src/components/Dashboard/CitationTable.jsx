@@ -186,7 +186,7 @@ const CitationTable = ({ citations, isPaidTab = false }) => {
                   readOnly
                 />
               </Form.Group>
-              <Form.Group controlId="formDateApprehended">
+              {/*<Form.Group controlId="formDateApprehended">
                 <Form.Label>Date</Form.Label>
                 <Form.Control
                   type="date"
@@ -194,7 +194,7 @@ const CitationTable = ({ citations, isPaidTab = false }) => {
                   value={editData.dateApprehended}
                   onChange={handleEditChange}
                 />
-              </Form.Group>
+              </Form.Group>*/}
               <Form.Group controlId="formStreetApprehended">
                 <Form.Label>Street</Form.Label>
                 <Form.Control
@@ -202,7 +202,6 @@ const CitationTable = ({ citations, isPaidTab = false }) => {
                   name="streetApprehended"
                   value={editData.streetApprehended}
                   onChange={handleEditChange}
-                  readOnly
                 />
               </Form.Group>
               <Form.Group controlId="formPlateNumber">
