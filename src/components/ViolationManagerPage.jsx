@@ -86,7 +86,7 @@ const ViolationManagerPage = () => {
         <Button type="submit" className="mt-3">
           {editIndex !== null ? 'Update Violation' : 'Add Violation'}
         </Button>
-        <Link onClick={() => navigate("/")}>Back to Dashboard</Link>
+        <Link onClick={() => navigate(-1)}>Back to Dashboard</Link>
       </Form>
       <h3 className="mt-4">Existing Violations</h3>
       <Table striped bordered hover>

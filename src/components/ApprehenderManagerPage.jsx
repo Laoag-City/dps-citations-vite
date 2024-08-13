@@ -4,7 +4,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import useFetchApprehenders from '../hooks/useFetchApprehenders';
 
-const ApprehenderManager = () => {
+const ApprehenderManagerPage = () => {
   const { apprehendersList, setApprehendersList, error: apprehendersError } = useFetchApprehenders(localStorage.getItem('token'));
   const [formData, setFormData] = useState({ title: '', firstName: '', lastName: '', midName: '', designation: '', unit: '' });
   const [editIndex, setEditIndex] = useState(null);
@@ -126,7 +126,7 @@ const ApprehenderManager = () => {
         <Button type="submit" className="mt-3">
           {editIndex !== null ? 'Update Apprehender' : 'Add Apprehender'}
         </Button>
-        <Link onClick={() => navigate("/")}>Back to Dashboard</Link>
+        <Link onClick={() => navigate(-1)}>Back to Dashboard</Link>
       </Form>
       <h3 className="mt-4">Existing Apprehenders</h3>
       <Table striped bordered hover>
@@ -168,4 +168,4 @@ const ApprehenderManager = () => {
   );
 };
 
-export default ApprehenderManager;
+export default ApprehenderManagerPage;

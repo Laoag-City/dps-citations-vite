@@ -12,6 +12,7 @@ import './assets/bootstrap-darkly-theme.min.css';
 import PaymentUpdatePage from './components/PaymentUpdatePage';
 import CommuteUpdatePage from './components/CommuteUpdatePage';
 import ViolationManagerPage from './components/ViolationManagerPage';
+import ApprehenderManagerPage from './components/ApprehenderManagerPage';
 import { useSelector } from 'react-redux';
 
 function App() {
@@ -43,6 +44,11 @@ function App() {
         <Route path="/violations" element={
           <PrivateRoute>
             <ViolationManagerPage />
+          </PrivateRoute>
+        } />
+        <Route path="/apprehenders" element={
+          <PrivateRoute>
+            <ApprehenderManagerPage />
           </PrivateRoute>
         } />
         <Route path="/payment-update/:citationId" element={
