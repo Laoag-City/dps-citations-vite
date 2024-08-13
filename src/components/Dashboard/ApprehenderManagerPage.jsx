@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Container, Form, Button, Table } from 'react-bootstrap';
+import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import useFetchApprehenders from '../hooks/useFetchApprehenders';
 
@@ -8,6 +9,7 @@ const ApprehenderManager = () => {
   const [formData, setFormData] = useState({ title: '', firstName: '', lastName: '', midName: '', designation: '', unit: '' });
   const [editIndex, setEditIndex] = useState(null);
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -124,6 +126,7 @@ const ApprehenderManager = () => {
         <Button type="submit" className="mt-3">
           {editIndex !== null ? 'Update Apprehender' : 'Add Apprehender'}
         </Button>
+        <Link onClick={() => navigate("/")}>Back to Dashboard</Link>
       </Form>
       <h3 className="mt-4">Existing Apprehenders</h3>
       <Table striped bordered hover>
