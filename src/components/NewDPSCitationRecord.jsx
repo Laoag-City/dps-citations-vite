@@ -1,11 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { Card, Container, Form, Button, Col, Row } from 'react-bootstrap';
 import axios from 'axios';
+import useFetchApprehenders from '../hooks/useFetchApprehenders';
+import useFetchViolations from '../hooks/useFetchViolations';
 import TopBar from './TopBar';
 import Footer from './Footer';
-
 /* const violationsList = [
 { violation: 'arrogant driver', amount: 150 },
 { violation: 'jaywalking', amount: 150 },
@@ -62,48 +63,9 @@ import Footer from './Footer';
 ];
 */
 function DPSCitationRecordForm() {
-  const [violationsList, setViolationsList] = useState([]);
-  const [apprehendersList, setApprehendersList] = useState([]);
-  const [error, setError] = useState('');
-  const currentTime = new Date().toISOString().slice(0, 16); // ISO string for datetime-local input
-
-  useEffect(() => {
-    const fetchViolationsData = async () => {
-      try {
-        const response = await axios.get('https://apps.laoagcity.gov.ph:3002/violations', {
-        });
-        setViolationsList(response.data);
-        // Log fetched data
-        //console.log("Fetched violationsList: ", response.data); 
-      } catch (error) {
-        if (error.response && error.response.status === 401) {
-          setError('Unauthorized access please authenticate')
-        } else {
-          setError('Failed to fetch data. Please try again later.');
-        }
-      }
-    };
-
-    const fetchApprehendersData = async () => {
-      try {
-        const response = await axios.get('https://apps.laoagcity.gov.ph:3002/apprehenders', {
-        });
-        setApprehendersList(response.data);
-        // Log fetched data
-        //console.log("Fetched apprehendersList: ", response.data); 
-      } catch (error) {
-        if (error.response && error.response.status === 401) {
-          setError('Unauthorized access please authenticate')
-        } else {
-          setError('Failed to fetch data. Please try again later.');
-        }
-      }
-    };
-
-    fetchApprehendersData();
-    fetchViolationsData();
-  }, []);
-
+  const { token, user } = useSelector((state) => state.auth);
+  const { apprehendersList, error: apprehendersError } = useFetchApprehenders(token);
+  const { violationsList, error: violationsError } = useFetchViolations(token);
   const [formData, setFormData] = useState({
     ticketNumber: '',
     firstName: '',
@@ -112,7 +74,7 @@ function DPSCitationRecordForm() {
     homeAddress: '',
     licenseNumber: '',
     dateApprehended: '',
-    timeApprehended: currentTime,
+    timeApprehended: new Date().toISOString().slice(0, 16), // ISO string for datetime-local input
     streetApprehended: '',
     plateNumber: '',
     vehicleColor: '',
@@ -122,17 +84,16 @@ function DPSCitationRecordForm() {
     commuteDate: null,
     paymentStatus: false,
     paymentDate: null,
-    violations: []
+    violations: [],
   });
 
   const navigate = useNavigate();
-  const { token, user } = useSelector(state => state.auth);
 
   const config = {
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    }
+      Authorization: `Bearer ${token}`,
+    },
   };
 
   const backToHome = () => {
@@ -141,9 +102,9 @@ function DPSCitationRecordForm() {
 
   const handleChange = (event) => {
     const { name, value, type, checked } = event.target;
-    setFormData(prevState => ({
+    setFormData((prevState) => ({
       ...prevState,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === 'checkbox' ? checked : value,
     }));
   };
 
@@ -151,47 +112,48 @@ function DPSCitationRecordForm() {
     const { name, value } = event.target;
     const updatedViolations = formData.violations.map((violation, vIndex) => {
       if (index === vIndex) {
-        const selectedViolation = violationsList.find(v => v.violation === value);
+        const selectedViolation = violationsList.find((v) => v.violation === value);
         return {
           ...violation,
           [name]: value,
-          amount: selectedViolation ? selectedViolation.amount : ''
+          amount: selectedViolation ? selectedViolation.amount : '',
         };
       }
       return violation;
     });
-    setFormData(prevState => ({
+    setFormData((prevState) => ({
       ...prevState,
-      violations: updatedViolations
+      violations: updatedViolations,
     }));
   };
 
   const addViolation = () => {
-    setFormData(prevState => ({
+    setFormData((prevState) => ({
       ...prevState,
-      violations: [...prevState.violations, { violation: '', amount: '', remarks: '' }]
+      violations: [...prevState.violations, { violation: '', amount: '', remarks: '' }],
     }));
   };
 
   const removeViolation = (index) => {
-    setFormData(prevState => ({
+    setFormData((prevState) => ({
       ...prevState,
-      violations: prevState.violations.filter((_, vIndex) => vIndex !== index)
+      violations: prevState.violations.filter((_, vIndex) => vIndex !== index),
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
     try {
-      const response = await axios.post('https://apps.laoagcity.gov.ph:3002/dpscitations', JSON.stringify(formData), config);
-      console.log("Response data: ", response.data);
+      const response = await axios.post(
+        'https://apps.laoagcity.gov.ph:3002/dpscitations',
+        JSON.stringify(formData),
+        config
+      );
       alert('New DPS Record accepted');
-      navigate("/");
+      navigate('/');
     } catch (error) {
-      console.error('Error submitting form:', error);
       alert('DPS New Record error.');
-      navigate("/");
+      navigate('/');
     }
   };
 
@@ -199,20 +161,10 @@ function DPSCitationRecordForm() {
     <Container className="align-items-center">
       <TopBar username={user.username} userrole={user.userrole} bg="light" expand="lg" data-bs-theme="dark" />
       <h3 className="text-center">New DPS Citation Record</h3>
+      {apprehendersError && <p className="text-danger">{apprehendersError}</p>}
+      {violationsError && <p className="text-danger">{violationsError}</p>}
       <Form onSubmit={handleSubmit}>
-        {/*         <Card>
-          <Card.Body>
-            <Card.Title>Card Title</Card.Title>
-            <Card.Subtitle className="mb-2 text-muted">Card Subtitle</Card.Subtitle>
-            <Card.Text>
-              Some quick example text to build on the card title and make up the
-              bulk of the card's content.
-            </Card.Text>
-            <Card.Link href="#">Card Link</Card.Link>
-            <Card.Link href="#">Another Link</Card.Link>
-          </Card.Body>
-        </Card>
- */}        <Card>
+        <Card>
           <Card.Body>
             <Card.Title>Violator Information</Card.Title>
             <Row>
@@ -261,18 +213,29 @@ function DPSCitationRecordForm() {
         </Card>
         <Card>
           <Card.Body>
-            <Card.Title>Violator Information</Card.Title>
+            <Card.Title>Apprehension Information</Card.Title>
             <Row>
               <Col>
                 <Form.Group controlId="dateApprehended">
                   <Form.Label>Date Apprehended</Form.Label>
-                  <Form.Control type="datetime-local" name="dateApprehended" value={formData.dateApprehended} onChange={handleChange} required />
+                  <Form.Control
+                    type="datetime-local"
+                    name="dateApprehended"
+                    value={formData.dateApprehended}
+                    onChange={handleChange}
+                    required
+                  />
                 </Form.Group>
               </Col>
               <Col>
                 <Form.Group controlId="timeApprehended">
                   <Form.Label>Time Apprehended</Form.Label>
-                  <Form.Control type="datetime-local" name="timeApprehended" value={formData.timeApprehended} onChange={handleChange} />
+                  <Form.Control
+                    type="datetime-local"
+                    name="timeApprehended"
+                    value={formData.timeApprehended}
+                    onChange={handleChange}
+                  />
                 </Form.Group>
               </Col>
             </Row>
@@ -300,10 +263,17 @@ function DPSCitationRecordForm() {
               <Col>
                 <Form.Group controlId="apprehendingOfficer">
                   <Form.Label>Apprehending Officer</Form.Label>
-                  <Form.Control as="select" name="apprehendingOfficer" value={formData.apprehendingOfficer} onChange={handleChange}>
+                  <Form.Control
+                    as="select"
+                    name="apprehendingOfficer"
+                    value={formData.apprehendingOfficer}
+                    onChange={handleChange}
+                  >
                     <option value="">Select apprehending officer</option>
-                    {apprehendersList.map((officer, index) => (
-                      <option key={index} value={officer.name}>{officer.name}</option>
+                    {apprehendersList.map((officer) => (
+                      <option key={officer._id} value={officer.firstName + ' ' + officer.lastName}>
+                        {officer.firstName} {officer.lastName} ({officer.designation})
+                      </option>
                     ))}
                   </Form.Control>
                 </Form.Group>
@@ -329,10 +299,17 @@ function DPSCitationRecordForm() {
                 <Col>
                   <Form.Group controlId={`violation-${index}`}>
                     <Form.Label>Violation</Form.Label>
-                    <Form.Control as="select" name="violation" value={violation.violation} onChange={(e) => handleViolationChange(index, e)}>
+                    <Form.Control
+                      as="select"
+                      name="violation"
+                      value={violation.violation}
+                      onChange={(e) => handleViolationChange(index, e)}
+                    >
                       <option value="">Select violation</option>
-                      {violationsList.map((violation, index) => (
-                        <option key={index} value={violation.violation}>{violation.violation}</option>
+                      {violationsList.map((violation) => (
+                        <option key={violation.violation} value={violation.violation}>
+                          {violation.violation}
+                        </option>
                       ))}
                     </Form.Control>
                   </Form.Group>
@@ -340,7 +317,7 @@ function DPSCitationRecordForm() {
                 <Col>
                   <Form.Group controlId={`amount-${index}`}>
                     <Form.Label>Amount</Form.Label>
-                    <Form.Control type="number" name="amount" value={violation.amount} onChange={(e) => handleViolationChange(index, e)} readOnly />
+                    <Form.Control type="number" name="amount" value={violation.amount} readOnly />
                   </Form.Group>
                 </Col>
                 <Col>
@@ -349,21 +326,26 @@ function DPSCitationRecordForm() {
                     <Form.Control type="text" name="remarks" value={violation.remarks} onChange={(e) => handleViolationChange(index, e)} />
                   </Form.Group>
                 </Col>
-                <div className="text-end mt-3">
-                  <Col>
-                    <Button variant="danger" onClick={() => removeViolation(index)}>Remove</Button>
-                  </Col>
-                </div>
+                <Col className="text-end mt-3">
+                  <Button variant="danger" onClick={() => removeViolation(index)}>
+                    Remove
+                  </Button>
+                </Col>
               </Row>
             ))}
             <div className="text-end mt-3">
-              <Button variant="warning" onClick={addViolation}>Add Violation</Button>
+              <Button variant="warning" onClick={addViolation}>
+                Add Violation
+              </Button>
             </div>
           </Card.Body>
         </Card>
         <div className="text-end mt-3">
-          <Button type="submit">Submit</Button><span className="mx-2"></span>
-          <Button variant="secondary" onClick={backToHome}>Back to Home</Button>
+          <Button type="submit">Submit</Button>
+          <span className="mx-2"></span>
+          <Button variant="secondary" onClick={backToHome}>
+            Back to Home
+          </Button>
         </div>
       </Form>
       <Footer />
