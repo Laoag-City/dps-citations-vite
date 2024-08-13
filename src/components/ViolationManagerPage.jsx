@@ -9,6 +9,7 @@ const ViolationManagerPage = () => {
   const [formData, setFormData] = useState({ violation: '', amount: '' });
   const [editIndex, setEditIndex] = useState(null);
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -32,7 +33,7 @@ const ViolationManagerPage = () => {
         // Normally, you would send a PUT request here if the API supports it
       } else {
         // Create new violation
-        const response = await axios.post('https://apps.laoagcity.gov.ph:3002/violations', formData, {
+        const response = await axios.post('https://apps.laoagcity.gov.ph:3002/dpscitations', formData, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`, // Ensure proper authentication
           },
@@ -85,6 +86,7 @@ const ViolationManagerPage = () => {
         <Button type="submit" className="mt-3">
           {editIndex !== null ? 'Update Violation' : 'Add Violation'}
         </Button>
+        <Link onClick={() => navigate("/")}>Back to Dashboard</Link>
       </Form>
       <h3 className="mt-4">Existing Violations</h3>
       <Table striped bordered hover>
