@@ -156,7 +156,7 @@ const CitationTable = ({ citations, isPaidTab = false }) => {
         </Modal.Header>
         <Card>
           <Card.Body>
-            <Card.Title>Ticket: {editData.ticketNumber}, {formatDate(editData.dateApprehended)} </Card.Title>
+            <Card.Title>Ticket: {editData.ticketNumber}, {formatDate(editData.dateApprehended, 'yyyy-MM-dd HH:mm:ss')} </Card.Title>
             <Form>
               <Form.Group controlId="formLastName">
                 <Form.Label>Last Name</Form.Label>
@@ -233,7 +233,7 @@ const CitationTable = ({ citations, isPaidTab = false }) => {
                 />
               </Form.Group>*/}
               <Form.Group controlId="formApprehendingOfficerId">
-                <Form.Label>Apprehending Officer ID</Form.Label>
+                <Form.Label>Apprehending Officer</Form.Label>
                 <Form.Control
                   as="select"
                   name="apprehendingOfficerId"
