@@ -1,15 +1,24 @@
 import { useState } from 'react';
 import { Container, Form, Button, Table } from 'react-bootstrap';
 import { useNavigate, Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import axios from 'axios';
 import useFetchViolations from '../hooks/useFetchViolations';
 
 const ViolationManagerPage = () => {
-  const { violationsList, setViolationsList, error: violationsError } = useFetchViolations(localStorage.getItem('token'));
+  const { token, user } = useSelector(state => state.auth);
+  const { violationsList, setViolationsList, error: violationsError } = useFetchViolations(token);
   const [formData, setFormData] = useState({ violation: '', amount: '' });
   const [editIndex, setEditIndex] = useState(null);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -33,11 +42,7 @@ const ViolationManagerPage = () => {
         // Normally, you would send a PUT request here if the API supports it
       } else {
         // Create new violation
-        const response = await axios.post('https://apps.laoagcity.gov.ph:3002/dpscitations', formData, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`, // Ensure proper authentication
-          },
-        });
+        const response = await axios.post('https://apps.laoagcity.gov.ph:3002/violations', formData, config,);
         setViolationsList([...violationsList, response.data]);
       }
       setFormData({ violation: '', amount: '' });
@@ -56,7 +61,7 @@ const ViolationManagerPage = () => {
     const updatedViolations = violationsList.filter((_, i) => i !== index);
     setViolationsList(updatedViolations);
     // Normally, you would send a DELETE request here if the API supports it
-    alert("Not implemented")
+    setError('Not implemented');
   };
 
   return (
@@ -86,7 +91,7 @@ const ViolationManagerPage = () => {
         <Button type="submit" className="mt-3">
           {editIndex !== null ? 'Update Violation' : 'Add Violation'}
         </Button>
-        <Link onClick={() => navigate(-1)}>Back to Dashboard</Link>
+        <Link onClick={() => navigate("/")}>Back to Dashboard</Link>
       </Form>
       <h3 className="mt-4">Existing Violations</h3>
       <Table striped bordered hover>
@@ -108,9 +113,9 @@ const ViolationManagerPage = () => {
                 <Button variant="warning" onClick={() => handleEdit(index)} className="me-2">
                   Edit
                 </Button>
-                <Button variant="danger" onClick={() => handleDelete(index)}>
+                {/*<Button variant="danger" onClick={() => handleDelete(index)}>
                   Delete
-                </Button>
+                </Button> */}
               </td>
             </tr>
           ))}
