@@ -5,8 +5,8 @@ import { useState, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { Table, Button, Card, Modal, Form } from 'react-bootstrap';
 import { formatDate } from '../../utils/dateUtils';
-import { sumAmounts, getRowClass } from '../../utils/citationUtils';
-import { Link, useNavigate, useCitationActions } from 'react-router-dom';
+import { sumAmounts, getRowClass, useCitationActions } from '../../utils/citationUtils';
+import { Link } from 'react-router-dom';
 import { useReactToPrint } from 'react-to-print';
 import useUpdate from '../../hooks/useUpdate';
 import useFetchApprehenders from '../../hooks/useFetchApprehenders';
@@ -20,7 +20,6 @@ const CitationTable = ({ citations, isPaidTab = false }) => {
   const [selectedCitation, setSelectedCitation] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [editData, setEditData] = useState({});
-  const navigate = useNavigate();
   const { token, user } = useSelector((state) => state.auth);
   const printRef = useRef();
 
@@ -29,15 +28,6 @@ const CitationTable = ({ citations, isPaidTab = false }) => {
   const { apprehendersList, error: apprehendersError } = useFetchApprehenders(token);
   const { handleCommuteClick, handlePaymentClick } = useCitationActions();
 
-  /*   
-    const handleCommuteClick = (citation) => {
-      navigate(`/commute-update/${citation._id}`);
-    };
-  
-    const handlePaymentClick = (citation) => {
-      navigate(`/payment-update/${citation._id}`);
-    };
-   */
   const handleSortChange = (field) => {
     const order = (sortField === field && sortOrder === 'asc') ? 'desc' : 'asc';
     setSortField(field);
@@ -123,12 +113,12 @@ const CitationTable = ({ citations, isPaidTab = false }) => {
                 <td>{sumAmounts(citation.violations) + " : " + citation.amountPaid}</td>
                 {!isPaidTab && (
                   <td>
-                    {user.userrole === 'dpshead' && (!citation.commuteStatus || citation.commuteStatus === undefined) ? <Button variant="warning" onClick={() => handleCommuteClick(citation)}>Commuted</Button> : 'No'}
+                    {user.userrole === 'dpshead' && (!citation.commuteStatus || citation.commuteStatus === undefined) ? <Button variant="warning" onClick={() => handleCommuteClick(citation._id)}>Commuted</Button> : 'No'}
                   </td>
                 )}
                 {!isPaidTab && (
                   <td>
-                    {user.userrole === 'dpsstaff' && (!citation.paymentStatus || citation.paymentStatus === undefined) ? <Button variant="warning" onClick={() => handlePaymentClick(citation)}>Pay</Button> : 'No'}
+                    {user.userrole === 'dpsstaff' && (!citation.paymentStatus || citation.paymentStatus === undefined) ? <Button variant="warning" onClick={() => handlePaymentClick(citation._id)}>Pay</Button> : 'No'}
                   </td>
                 )}
                 <td>

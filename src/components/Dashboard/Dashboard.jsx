@@ -20,7 +20,6 @@ const Dashboard = () => {
   const [selectedCitation, setSelectedCitation] = useState(null);
   const [error, setError] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  //  const [pageSize, setPageSize] = useState(15);
   const [pageSize] = useState(15);
   const [totalPages, setTotalPages] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
@@ -51,16 +50,6 @@ const Dashboard = () => {
     setSelectedCitation(null);
   };
 
-  /*
-    const handleCommuteClick = (citation) => {
-      navigate(`/commute-update/${citation._id}`);
-    };
-  
-  
-    const handlePaymentClick = (citation) => {
-      navigate(`/payment-update/${citation._id}`);
-    };
-   */
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
