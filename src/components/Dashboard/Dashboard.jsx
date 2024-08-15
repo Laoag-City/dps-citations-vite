@@ -10,7 +10,7 @@ import SearchResults from './SearchResultsPage';
 import CitationTable from './CitationTable';
 import useFetchDPSCitations from '../../hooks/useFetchDPSCitations';
 import { formatDate } from '../../utils/dateUtils';
-import { getStatusFromTab, getRowClass } from '../../utils/citationUtils';
+import { getStatusFromTab, getRowClass, useCitationActions } from '../../utils/citationUtils';
 
 const Dashboard = () => {
   const { token, user } = useSelector((state) => state.auth);
@@ -20,7 +20,8 @@ const Dashboard = () => {
   const [selectedCitation, setSelectedCitation] = useState(null);
   const [error, setError] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(15);
+  //  const [pageSize, setPageSize] = useState(15);
+  const [pageSize] = useState(15);
   const [totalPages, setTotalPages] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState('unpaid');
@@ -28,6 +29,7 @@ const Dashboard = () => {
   const navigate = useNavigate();
 
   const fetchCitations = useFetchDPSCitations(token, dispatch, navigate, setCitations, setTotalPages, setError);
+  const { handleCommuteClick, handlePaymentClick } = useCitationActions();
 
   useEffect(() => {
     if (!token) {
@@ -49,6 +51,16 @@ const Dashboard = () => {
     setSelectedCitation(null);
   };
 
+  /*
+    const handleCommuteClick = (citation) => {
+      navigate(`/commute-update/${citation._id}`);
+    };
+  
+  
+    const handlePaymentClick = (citation) => {
+      navigate(`/payment-update/${citation._id}`);
+    };
+   */
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
@@ -169,6 +181,8 @@ const Dashboard = () => {
               handleShow={handleShow}
               handleClose={handleClose}
               getRowClass={getRowClass}
+              handlePaymentClick={handlePaymentClick}
+              handleCommuteClick={handleCommuteClick}
               formatDate={formatDate}
               violationCount={violationCount}
               userRole={user.userrole}

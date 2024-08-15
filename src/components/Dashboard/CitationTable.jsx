@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { Table, Button, Card, Modal, Form } from 'react-bootstrap';
 import { formatDate } from '../../utils/dateUtils';
 import { sumAmounts, getRowClass } from '../../utils/citationUtils';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useCitationActions } from 'react-router-dom';
 import { useReactToPrint } from 'react-to-print';
 import useUpdate from '../../hooks/useUpdate';
 import useFetchApprehenders from '../../hooks/useFetchApprehenders';
@@ -27,15 +27,17 @@ const CitationTable = ({ citations, isPaidTab = false }) => {
   const updateUrl = selectedCitation ? `https://apps.laoagcity.gov.ph:3002/dpscitations/${selectedCitation._id}` : '';
   const { updateData, updateError } = useUpdate(updateUrl, token);
   const { apprehendersList, error: apprehendersError } = useFetchApprehenders(token);
+  const { handleCommuteClick, handlePaymentClick } = useCitationActions();
 
-  const handleCommuteClick = (citation) => {
-    navigate(`/commute-update/${citation._id}`);
-  };
-
-  const handlePaymentClick = (citation) => {
-    navigate(`/payment-update/${citation._id}`);
-  };
-
+  /*   
+    const handleCommuteClick = (citation) => {
+      navigate(`/commute-update/${citation._id}`);
+    };
+  
+    const handlePaymentClick = (citation) => {
+      navigate(`/payment-update/${citation._id}`);
+    };
+   */
   const handleSortChange = (field) => {
     const order = (sortField === field && sortOrder === 'asc') ? 'desc' : 'asc';
     setSortField(field);

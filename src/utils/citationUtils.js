@@ -1,3 +1,5 @@
+import { useNavigate } from 'react-router-dom';
+
 export const sumAmounts = (amounts) => {
   const total = amounts.map((item) => item.amount).reduce((acc, curr) => acc + curr, 0);
   return parseFloat(total.toFixed(2));
@@ -26,12 +28,23 @@ export const getRowClass = (dateApprehended) => {
   return '';
 };
 
-/* export function toCamelCase(inputstr) {
-  return inputstr.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function(match, index) {
-      if (+match === 0) return ""; // or if (/\s+/.test(match)) for white spaces
-      return index === 0 ? match.toLowerCase() : match.toUpperCase();
-  });
-} */
+export const useCitationActions = () => {
+  const navigate = useNavigate();
+
+  const handleCommuteClick = (citationId) => {
+    navigate(`/commute-update/${citationId}`);
+  };
+
+  const handlePaymentClick = (citationId) => {
+    navigate(`/payment-update/${citationId}`);
+  };
+
+  return {
+    handleCommuteClick,
+    handlePaymentClick,
+  };
+};
+
   export function toPascalCase(inputstr) {
     return inputstr
       .toLowerCase()
