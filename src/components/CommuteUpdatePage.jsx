@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Spinner, Alert } from 'react-bootstrap';
@@ -8,11 +9,21 @@ import CommuteForm from './CommuteForm';
 import useFetchViolations from '../hooks/useFetchViolations';
 import TopBar from './TopBar';
 import Footer from './Footer';
+import mongoose from 'mongoose';
 
 const CommuteUpdatePage = () => {
   const { token, user } = useSelector(state => state.auth);
   const navigate = useNavigate();
   const { citationId } = useParams();
+
+  // Validate the citationId
+  useEffect(() => {
+    if (!citationId || !mongoose.Types.ObjectId.isValid(citationId)) {
+      // Redirect to the previous page or dashboard if the citationId is invalid
+      navigate(-1); // Go back to the previous page
+    }
+  }, [citationId, navigate]);
+
   const fetchUrl = `https://apps.laoagcity.gov.ph:3002/dpscitations/${citationId}`;
   const updateUrl = `https://apps.laoagcity.gov.ph:3002/dpscitations/${citationId}`;
 
@@ -59,31 +70,4 @@ const CommuteUpdatePage = () => {
 
 export default CommuteUpdatePage;
 
-{/* for testing 
-import React, { useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import mongoose from 'mongoose'; // Assuming you're using MongoDB's ObjectId
-
-const PaymentUpdate = () => {
-  const { citationId } = useParams();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    // Validate the citationId format (assuming it's a MongoDB ObjectId)
-    if (!citationId || !mongoose.Types.ObjectId.isValid(citationId)) {
-      // Redirect to the previous page or a safe page if the citationId is invalid
-      navigate(-1); // Go back to the previous page
-    }
-  }, [citationId, navigate]);
-
-  // If citationId is valid, proceed with the component's logic
-  return (
-    <div>
-      <h1>Payment Update for Citation ID: {citationId}</h1>
-      {/* Your component logic here */}
-      </div >
-    );
-  };
-
-export default PaymentUpdate;
-*/}
+//for testing 
