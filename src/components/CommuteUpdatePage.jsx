@@ -58,3 +58,32 @@ const CommuteUpdatePage = () => {
 };
 
 export default CommuteUpdatePage;
+
+{/* for testing 
+import React, { useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import mongoose from 'mongoose'; // Assuming you're using MongoDB's ObjectId
+
+const PaymentUpdate = () => {
+  const { citationId } = useParams();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Validate the citationId format (assuming it's a MongoDB ObjectId)
+    if (!citationId || !mongoose.Types.ObjectId.isValid(citationId)) {
+      // Redirect to the previous page or a safe page if the citationId is invalid
+      navigate(-1); // Go back to the previous page
+    }
+  }, [citationId, navigate]);
+
+  // If citationId is valid, proceed with the component's logic
+  return (
+    <div>
+      <h1>Payment Update for Citation ID: {citationId}</h1>
+      {/* Your component logic here */}
+      </div >
+    );
+  };
+
+export default PaymentUpdate;
+*/}

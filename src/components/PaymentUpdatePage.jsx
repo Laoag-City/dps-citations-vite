@@ -55,62 +55,37 @@ const PaymentUpdatePage = () => {
 
 export default PaymentUpdatePage;
 
-/* import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+/* import { useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Spinner, Alert } from 'react-bootstrap';
-import axios from 'axios';
+import useFetch from '../hooks/useFetch';
+import useUpdate from '../hooks/useUpdate';
 import PaymentForm from './PaymentForm';
 import TopBar from './TopBar';
 import Footer from './Footer';
+import mongoose from 'mongoose'; // Assuming you're using MongoDB's ObjectId
 
 const PaymentUpdatePage = () => {
   const { token, user } = useSelector(state => state.auth);
-  const { citationId } = useParams();
   const navigate = useNavigate();
-  const [citation, setCitation] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const { citationId } = useParams();
 
+  // Validate the citationId
   useEffect(() => {
-    const fetchCitation = async () => {
-      try {
-        const response = await axios.get(`https://apps.laoagcity.gov.ph:3002/dpscitations/${citationId}`, {
-          //const response = await axios.get(`http://localhost:3002/dpscitations/${citationId}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setCitation(response.data);
-        setLoading(false);
-      } catch (error) {
-        if (error.response && error.response.status === 401) {
-          setError('Unauthorized access. Please login again.');
-          navigate('/login');
-        } else {
-          setError('Failed to fetch citation data. Please try again later.');
-        }
-        setLoading(false);
-      }
-    };
+    if (!citationId || !mongoose.Types.ObjectId.isValid(citationId)) {
+      // Redirect to the previous page or dashboard if the citationId is invalid
+      navigate(-1); // Go back to the previous page
+    }
+  }, [citationId, navigate]);
 
-    fetchCitation();
-  }, [citationId, token, navigate]);
+  const fetchUrl = `https://apps.laoagcity.gov.ph:3002/dpscitations/${citationId}`;
+  const updateUrl = `https://apps.laoagcity.gov.ph:3002/dpscitations/${citationId}`;
+
+  const { data: citation, loading, error: fetchError } = useFetch(fetchUrl, token);
+  const { updateData, error: updateError } = useUpdate(updateUrl, token);
 
   const handlePaymentUpdate = async (updatedCitation) => {
-    try {
-      const response = await axios.put(`https://apps.laoagcity.gov.ph:3002/dpscitations/${citationId}`, updatedCitation, {
-        //const response = await axios.put(`http://localhost:3002/dpscitations/${citationId}`, updatedCitation, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      console.log('Updated Citation:', response.data);
-      navigate('/dashboard'); // Navigate back to the dashboard after updating
-    } catch (error) {
-      if (error.response && error.response.status === 401) {
-        setError('Unauthorized access. Please login again.');
-        navigate('/login');
-      } else {
-        setError('Failed to update citation. Please try again later.');
-      }
-    }
+    await updateData(updatedCitation);
   };
 
   if (loading) {
@@ -121,10 +96,10 @@ const PaymentUpdatePage = () => {
     );
   }
 
-  if (error) {
+  if (fetchError || updateError) {
     return (
       <Container className="text-center mt-5">
-        <Alert variant="danger">{error}</Alert>
+        <Alert variant="danger">{fetchError || updateError}</Alert>
       </Container>
     );
   }
@@ -146,4 +121,5 @@ const PaymentUpdatePage = () => {
 };
 
 export default PaymentUpdatePage;
+
  */

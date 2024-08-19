@@ -113,7 +113,7 @@ const CitationTable = ({ citations, isPaidTab = false }) => {
                 <td>{sumAmounts(citation.violations) + " : " + citation.amountPaid}</td>
                 {!isPaidTab && (
                   <td>
-                    {user.userrole === 'dpshead' && (!citation.commuteStatus || citation.commuteStatus === undefined) ? <Button variant="warning" onClick={() => handleCommuteClick(citation._id)}>Commuted</Button> : 'No'}
+                    {user.userrole === 'dpshead' && (!citation.commuteStatus || citation.commuteStatus === undefined) ? <Button variant="warning" onClick={() => handleCommuteClick(citation._id)}>Commute</Button> : 'No'}
                   </td>
                 )}
                 {!isPaidTab && (
