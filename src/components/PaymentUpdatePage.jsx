@@ -29,7 +29,14 @@ const PaymentUpdatePage = () => {
   const { updateData, error: updateError } = useUpdate(updateUrl, token);
 
   const handlePaymentUpdate = async (updatedCitation) => {
-    await updateData(updatedCitation);
+    console.log(updatedCitation);
+    // Ensure that apprehendingOfficerId uses _id from citation
+    const updatedCitationWithOfficerId = {
+      ...updatedCitation,
+      apprehendingOfficerId: citation.apprehendingOfficerId._id, // Use _id for updating apprehendingOfficerId
+    };
+
+    await updateData(updatedCitationWithOfficerId);
   };
 
   if (loading) {

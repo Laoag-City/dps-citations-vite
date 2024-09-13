@@ -19,7 +19,7 @@ const useUpdate = (url, token) => {
         setError('Unauthorized access. Please login again.');
         navigate('/login');
       } else {
-        setError('Failed to update data. Please try again later.');
+        setError('Failed to update data. Please try again later.',error);
       }
       throw error;
     }
