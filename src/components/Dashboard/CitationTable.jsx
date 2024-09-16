@@ -93,7 +93,7 @@ const CitationTable = ({ citations, isPaidTab = false }) => {
             <th onClick={() => handleSortChange('vehicleColor')}>Vehicle Color</th>
             <th onClick={() => handleSortChange('apprehendingOfficer')}>Apprehending Officer</th>
             <th>Amount/Paid</th>
-            {!isPaidTab && <th onClick={() => handleSortChange('commuteStatus')}>Commute</th>}
+            {!isPaidTab && <th onClick={() => handleSortChange('commuteStatus')}>Commuted</th>}
             {!isPaidTab && <th>Paid</th>}
             <th>Print</th>
           </tr>
@@ -124,7 +124,7 @@ const CitationTable = ({ citations, isPaidTab = false }) => {
                 <td>
                   <Link onClick={() => handlePrintClick(citation)}>Print</Link>
                   <br />
-                  {user.userrole === 'dpsstaff' && (!citation.paymentStatus || citation.paymentStatus === undefined) ? <Link variant="warning" onClick={() => handleEditClick(citation)}>Edit</Link> : 'No'}
+                  {user.userrole === 'dpsstaff' && (!citation.paymentStatus || citation.paymentStatus === undefined) ? <Link variant="warning" onClick={() => handleEditClick(citation)}>Edit</Link> : ''}
                 </td>
               </tr>
             ))

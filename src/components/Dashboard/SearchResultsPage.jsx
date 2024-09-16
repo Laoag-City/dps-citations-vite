@@ -80,8 +80,8 @@ const SearchResults = ({ searchResults, error, handleShow, getRowClass, handleCo
               <th>Plate Number</th>
               <th>Vehicle Color</th>
               <th>Apprehending Officer</th>
-              <th>Commute Status</th>
-              <th>Payment Status</th>
+              <th>Commute</th>
+              <th>Payment</th>
               <th>Violations</th>
               <th>Print</th>
             </tr>
@@ -99,17 +99,17 @@ const SearchResults = ({ searchResults, error, handleShow, getRowClass, handleCo
                   <td>{citation.vehicleColor}</td>
                   <td>{citation.apprehendingOfficer}</td>
                   <td>
-                    {user.userrole === 'dpshead' && (!citation.commuteStatus || citation.commuteStatus === undefined) ? <Button variant="warning" onClick={() => handleCommuteClick(citation._id)}>Commute</Button> : 'No'}
+                    {user.userrole === 'dpshead' && (!citation.commuteStatus || citation.commuteStatus === undefined) ? <Button variant="warning" onClick={() => handleCommuteClick(citation._id)}>Commute</Button> : 'Not Commuted'}
                     {/*citation.commuteStatus ? 'Commuted' : citation.paymentStatus ? 'Not Commuted' : <Button variant="warning" onClick={() => handleCommuteClick(citation)}>Commute</Button>*/}
                   </td>
                   <td>
-                    {user.userrole === 'dpsstaff' && (!citation.paymentStatus || citation.paymentStatus === undefined) ? <Button variant="warning" onClick={() => handlePaymentClick(citation._id)}>Pay</Button> : 'No'}
+                    {user.userrole === 'dpsstaff' && (!citation.paymentStatus || citation.paymentStatus === undefined) ? <Button variant="warning" onClick={() => handlePaymentClick(citation._id)}>Pay</Button> : 'Paid'}
                     {/*citation.paymentStatus ? 'Paid' : userRole === 'dpsstaff' ? <Button variant="warning" onClick={() => handlePaymentClick(citation)}>Pay</Button> : 'Unpaid'*/}
                   </td>
                   <td>{violationCount(citation.violations)}</td>
                   <td><Link onClick={() => handlePrintClick(citation)}>Print</Link>
                     <br />
-                    {user.userrole === 'dpsstaff' && (!citation.paymentStatus || citation.paymentStatus === undefined) ? <Link variant="warning" onClick={() => handleEditClick(citation)}>Edit</Link> : 'No'}</td>
+                    {user.userrole === 'dpsstaff' && (!citation.paymentStatus || citation.paymentStatus === undefined) ? <Link variant="warning" onClick={() => handleEditClick(citation)}>Edit</Link> : ''}</td>
                 </tr>
               ))
             ) : (
