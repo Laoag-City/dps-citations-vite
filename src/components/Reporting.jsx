@@ -114,14 +114,6 @@ const Reporting = () => {
           onChange={(e) => setEndDate(e.target.value)}
           className="mb-2"
         />
-        <Form.Control
-          type="text"
-          placeholder="Search Citations"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="mb-2"
-        />
-
         {/* Dropdown for Payment Status */}
         <Form.Select
           value={paymentStatusFilter}
