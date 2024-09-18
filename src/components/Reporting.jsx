@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Container, Form, Button, Alert, Spinner, Table } from 'react-bootstrap';
 import axios from 'axios';
+import { utils, writeFile } from 'xlsx'; // Import XLSX utilities
 
 import TopBar from './TopBar';
 import Footer from './Footer';
@@ -9,7 +10,7 @@ import Footer from './Footer';
 const Reporting = () => {
   const [startDate, setStartDate] = useState('');
   const { token, user } = useSelector((state) => state.auth);
-  //const [searchQuery, setSearchQuery] = useState(''); // Search input for filtering citations
+  const [searchQuery, setSearchQuery] = useState(''); // Search input for filtering citations
   const [data, setData] = useState(null);  // Holds API response data
   const [endDate, setEndDate] = useState('');
   const [loading, setLoading] = useState(false);  // Loading state
@@ -55,6 +56,39 @@ const Reporting = () => {
     })
     : [];
 
+  // Function to download data as Excel file
+  const downloadAsExcel = () => {
+    const worksheet = utils.json_to_sheet(filteredCitations.map(citation => ({
+      TicketNumber: citation.ticketNumber,
+      FirstName: citation.firstName,
+      MiddleName: citation.middleName,
+      LastName: citation.lastName,
+      HomeAddress: citation.homeAddress,
+      LicenseNumber: citation.licenseNumber,
+      DateApprehended: new Date(citation.dateApprehended).toLocaleDateString(),
+      TimeApprehended: citation.timeApprehended ? new Date(citation.timeApprehended).toLocaleTimeString() : 'N/A',
+      StreetApprehended: citation.streetApprehended,
+      PlateNumber: citation.plateNumber,
+      VehicleColor: citation.vehicleColor,
+      ApprehendingOfficer: citation.apprehendingOfficer,
+      ApprehendingUnit: citation.apprehendingUnitOf,
+      CommuteStatus: citation.commuteStatus ? 'Yes' : 'No',
+      CommuteDate: citation.commuteDate ? new Date(citation.commuteDate).toLocaleDateString() : 'N/A',
+      CommutedViolation: citation.commutedViolation,
+      CommutedViolationAmount: citation.commutedViolationAmount ? `₱${citation.commutedViolationAmount}` : 'N/A',  // Changed to ₱
+      CommutedViolationRemark: citation.commutedViolationRemark,
+      PaymentStatus: citation.paymentStatus ? 'Paid' : 'Unpaid',
+      PaymentORNumber: citation.paymentORNumber,
+      AmountPaid: citation.amountPaid ? `₱${citation.amountPaid}` : 'N/A',  // Changed to ₱
+      PaymentDate: citation.paymentDate ? new Date(citation.paymentDate).toLocaleDateString() : 'N/A',
+      PaymentRemarks: citation.paymentRemarks,
+    })));
+
+    const workbook = utils.book_new();
+    utils.book_append_sheet(workbook, worksheet, 'DPS Citations');
+    writeFile(workbook, 'DPS_Citations.xlsx');
+  };
+
   return (
     <Container className="align-items-center">
       <TopBar username={user.username} userrole={user.userrole} bg="light" expand="lg" data-bs-theme="light" />
@@ -77,6 +111,14 @@ const Reporting = () => {
           onChange={(e) => setEndDate(e.target.value)}
           className="mb-2"
         />
+        <Form.Control
+          type="text"
+          placeholder="Search Citations"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="mb-2"
+        />
+
         {/* Dropdown for Payment Status */}
         <Form.Select
           value={paymentStatusFilter}
@@ -88,8 +130,12 @@ const Reporting = () => {
           <option value="Unpaid">Unpaid</option>
         </Form.Select>
 
-        <Button variant="primary" onClick={handleApplyFilters} disabled={loading}>
+        <Button variant="primary" onClick={handleApplyFilters} disabled={loading} className="mb-2">
           Apply Filters
+        </Button>
+
+        <Button variant="success" onClick={downloadAsExcel} className="mb-2">
+          Download as Excel
         </Button>
       </Form>
 
@@ -148,18 +194,18 @@ const Reporting = () => {
                   <td>{citation.commuteStatus ? 'Yes' : 'No'}</td>
                   <td>{citation.commuteDate ? new Date(citation.commuteDate).toLocaleDateString() : 'N/A'}</td>
                   <td>{citation.commutedViolation}</td>
-                  <td>{citation.commutedViolationAmount ? `$${citation.commutedViolationAmount}` : 'N/A'}</td>
+                  <td>{citation.commutedViolationAmount ? `₱${citation.commutedViolationAmount}` : 'N/A'}</td> {/* Changed to ₱ */}
                   <td>{citation.commutedViolationRemark}</td>
                   <td>{citation.paymentStatus ? 'Paid' : 'Unpaid'}</td>
                   <td>{citation.paymentORNumber}</td>
-                  <td>{citation.amountPaid ? `$${citation.amountPaid}` : 'N/A'}</td>
+                  <td>{citation.amountPaid ? `₱${citation.amountPaid}` : 'N/A'}</td> {/* Changed to ₱ */}
                   <td>{citation.paymentDate ? new Date(citation.paymentDate).toLocaleDateString() : 'N/A'}</td>
                   <td>{citation.paymentRemarks}</td>
                   <td>
                     <ul>
                       {citation.violations.map((violation, index) => (
                         <li key={index}>
-                          Violation: {violation.violation}, Amount: ${violation.amount}, Remarks: {violation.remarks}
+                          Violation: {violation.violation}, Amount: ₱{violation.amount}, Remarks: {violation.remarks} {/* Changed to ₱ */}
                         </li>
                       ))}
                     </ul>
