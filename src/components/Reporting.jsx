@@ -58,36 +58,39 @@ const Reporting = () => {
 
   // Function to download data as Excel file
   const downloadAsExcel = () => {
-    const worksheet = utils.json_to_sheet(filteredCitations.map(citation => ({
-      TicketNumber: citation.ticketNumber,
-      FirstName: citation.firstName,
-      MiddleName: citation.middleName,
-      LastName: citation.lastName,
-      HomeAddress: citation.homeAddress,
-      LicenseNumber: citation.licenseNumber,
-      DateApprehended: new Date(citation.dateApprehended).toLocaleDateString(),
-      TimeApprehended: citation.timeApprehended ? new Date(citation.timeApprehended).toLocaleTimeString() : 'N/A',
-      StreetApprehended: citation.streetApprehended,
-      PlateNumber: citation.plateNumber,
-      VehicleColor: citation.vehicleColor,
-      ApprehendingOfficer: citation.apprehendingOfficer,
-      ApprehendingUnit: citation.apprehendingUnitOf,
-      CommuteStatus: citation.commuteStatus ? 'Yes' : 'No',
-      CommuteDate: citation.commuteDate ? new Date(citation.commuteDate).toLocaleDateString() : 'N/A',
-      CommutedViolation: citation.commutedViolation,
-      CommutedViolationAmount: citation.commutedViolationAmount ? `₱${citation.commutedViolationAmount}` : 'N/A',  // Changed to ₱
-      CommutedViolationRemark: citation.commutedViolationRemark,
-      PaymentStatus: citation.paymentStatus ? 'Paid' : 'Unpaid',
-      PaymentORNumber: citation.paymentORNumber,
-      AmountPaid: citation.amountPaid ? `₱${citation.amountPaid}` : 'N/A',  // Changed to ₱
-      PaymentDate: citation.paymentDate ? new Date(citation.paymentDate).toLocaleDateString() : 'N/A',
-      PaymentRemarks: citation.paymentRemarks,
-    })));
+    const formattedData = filteredCitations.map(citation => ({
+      'Ticket Number': citation.ticketNumber,
+      'Full Name': `${citation.firstName} ${citation.middleName} ${citation.lastName}`,  // Combined full name
+      'Home Address': citation.homeAddress,
+      'License Number': citation.licenseNumber,
+      'Amount Paid': citation.amountPaid ? `PhP${citation.amountPaid}` : 'N/A',  // Changed to ₱
+      'Payment Date': citation.paymentDate ? new Date(citation.paymentDate).toLocaleDateString() : 'N/A',
+      'Payment Remarks': citation.paymentRemarks,
+      'Date Apprehended': new Date(citation.dateApprehended).toLocaleDateString(),
+      'Apprehending Officer': citation.apprehendingOfficer,
+      'Unit': citation.apprehendingUnitOf,
+      'Paid': citation.paymentStatus ? 'Paid' : 'Unpaid',
+      'OR Number': citation.paymentORNumber,
+      'Violations': citation.violations.map(violation => `${violation.violation} - PhP${violation.amount}`).join(', '),  // Comma-separated violations
+      '000000': '-------',
+      'Time Apprehended': citation.timeApprehended ? new Date(citation.timeApprehended).toLocaleTimeString() : 'N/A',
+      'Street Apprehended': citation.streetApprehended,
+      'Vehicle Color': citation.vehicleColor,
+      'Commute Status': citation.commuteStatus ? 'Yes' : 'No',
+      'Commute Date': citation.commuteDate ? new Date(citation.commuteDate).toLocaleDateString() : 'N/A',
+      'Commuted Violation': citation.commutedViolation,
+      'Commuted ViolationAmount': citation.commutedViolationAmount ? `₱${citation.commutedViolationAmount}` : 'N/A',
+      'Commuted ViolationRemark': citation.commutedViolationRemark,
+      'Payment Status': citation.paymentStatus ? 'Paid' : 'Unpaid',
+      'Payment OR Number': citation.paymentORNumber,
+    }));
 
+    const worksheet = utils.json_to_sheet(formattedData);
     const workbook = utils.book_new();
     utils.book_append_sheet(workbook, worksheet, 'DPS Citations');
     writeFile(workbook, 'DPS_Citations.xlsx');
   };
+
 
   return (
     <Container className="align-items-center">
@@ -150,62 +153,48 @@ const Reporting = () => {
             <thead>
               <tr>
                 <th>Ticket Number</th>
-                <th>First Name</th>
-                <th>Middle Name</th>
-                <th>Last Name</th>
-                <th>Home Address</th>
+                <th>Full Name</th> {/* Combined full name */}
                 <th>License Number</th>
                 <th>Date Apprehended</th>
-                <th>Time Apprehended</th>
-                <th>Street Apprehended</th>
-                <th>Plate Number</th>
-                <th>Vehicle Color</th>
                 <th>Apprehending Officer</th>
-                <th>Apprehending Unit</th>
-                <th>Commute Status</th>
+                <th>Apprehending</th>
+                {/*                 <th>Commuted</th>
                 <th>Commute Date</th>
                 <th>Commuted Violation</th>
                 <th>Commuted Violation Amount</th>
                 <th>Commuted Violation Remark</th>
-                <th>Payment Status</th>
+ */}                <th>Paid</th>
                 <th>Payment OR Number</th>
                 <th>Amount Paid</th>
                 <th>Payment Date</th>
                 <th>Payment Remarks</th>
-                <th>Violations</th>
+                <th>Violation/s</th>
               </tr>
             </thead>
             <tbody>
               {filteredCitations.map((citation) => (
                 <tr key={citation._id}>
                   <td>{citation.ticketNumber}</td>
-                  <td>{citation.firstName}</td>
-                  <td>{citation.middleName}</td>
-                  <td>{citation.lastName}</td>
-                  <td>{citation.homeAddress}</td>
+                  <td>{`${citation.firstName} ${citation.middleName} ${citation.lastName}`}</td> {/* Combined full name */}
                   <td>{citation.licenseNumber}</td>
                   <td>{new Date(citation.dateApprehended).toLocaleDateString()}</td>
-                  <td>{citation.timeApprehended ? new Date(citation.timeApprehended).toLocaleTimeString() : 'N/A'}</td>
-                  <td>{citation.streetApprehended}</td>
-                  <td>{citation.plateNumber}</td>
-                  <td>{citation.vehicleColor}</td>
                   <td>{citation.apprehendingOfficer}</td>
                   <td>{citation.apprehendingUnitOf}</td>
-                  <td>{citation.commuteStatus ? 'Yes' : 'No'}</td>
+                  {/*                   <td>{citation.commuteStatus ? 'Yes' : 'No'}</td>
                   <td>{citation.commuteDate ? new Date(citation.commuteDate).toLocaleDateString() : 'N/A'}</td>
                   <td>{citation.commutedViolation}</td>
-                  <td>{citation.commutedViolationAmount ? `₱${citation.commutedViolationAmount}` : 'N/A'}</td> {/* Changed to ₱ */}
+                  <td>{citation.commutedViolationAmount ? `₱${citation.commutedViolationAmount}` : 'N/A'}</td>
                   <td>{citation.commutedViolationRemark}</td>
-                  <td>{citation.paymentStatus ? 'Paid' : 'Unpaid'}</td>
+ */}                  <td>{citation.paymentStatus ? 'Paid' : 'Unpaid'}</td>
                   <td>{citation.paymentORNumber}</td>
-                  <td>{citation.amountPaid ? `₱${citation.amountPaid}` : 'N/A'}</td> {/* Changed to ₱ */}
+                  <td>{citation.amountPaid ? `Php${citation.amountPaid}` : 'N/A'}</td>
                   <td>{citation.paymentDate ? new Date(citation.paymentDate).toLocaleDateString() : 'N/A'}</td>
                   <td>{citation.paymentRemarks}</td>
                   <td>
                     <ul>
                       {citation.violations.map((violation, index) => (
                         <li key={index}>
-                          Violation: {violation.violation}, Amount: ₱{violation.amount}, Remarks: {violation.remarks} {/* Changed to ₱ */}
+                          Violation: {violation.violation}, Amount: ₱{violation.amount}, Remarks: {violation.remarks}
                         </li>
                       ))}
                     </ul>
