@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Container, Form, Button, Alert, Spinner, Table } from 'react-bootstrap';
 import axios from 'axios';
@@ -9,11 +9,12 @@ import Footer from './Footer';
 const Reporting = () => {
   const [startDate, setStartDate] = useState('');
   const { token, user } = useSelector((state) => state.auth);
-  const [searchQuery, setSearchQuery] = useState(''); // Search input for filtering citations
+  //const [searchQuery, setSearchQuery] = useState(''); // Search input for filtering citations
   const [data, setData] = useState(null);  // Holds API response data
   const [endDate, setEndDate] = useState('');
   const [loading, setLoading] = useState(false);  // Loading state
   const [error, setError] = useState('');  // Error state
+  const [paymentStatusFilter, setPaymentStatusFilter] = useState('All');  // New state for payment status filter
   const apiUrl = 'https://apps.laoagcity.gov.ph:3002/dpscitations';  // API endpoint
 
   // Fetch DPS Citations based on filters
@@ -37,14 +38,22 @@ const Reporting = () => {
     setLoading(false);
   };
 
-  // Fetch data when filters are applied
-  //useEffect(() => {
-  //  fetchDPSCitations();
-  //}, [startDate, endDate, searchQuery]);
-
   const handleApplyFilters = () => {
     fetchDPSCitations();  // Fetch with updated filters
   };
+
+  // Filter data based on payment status
+  const filteredCitations = data
+    ? data.dpsCitations.filter((citation) => {
+      if (paymentStatusFilter === 'Paid') {
+        return citation.paymentStatus === true;
+      }
+      if (paymentStatusFilter === 'Unpaid') {
+        return citation.paymentStatus === false;
+      }
+      return true; // 'All' case
+    })
+    : [];
 
   return (
     <Container className="align-items-center">
@@ -68,13 +77,17 @@ const Reporting = () => {
           onChange={(e) => setEndDate(e.target.value)}
           className="mb-2"
         />
-        <Form.Control
-          type="text"
-          placeholder="Search Citations"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
+        {/* Dropdown for Payment Status */}
+        <Form.Select
+          value={paymentStatusFilter}
+          onChange={(e) => setPaymentStatusFilter(e.target.value)}
           className="mb-2"
-        />
+        >
+          <option value="All">All</option>
+          <option value="Paid">Paid</option>
+          <option value="Unpaid">Unpaid</option>
+        </Form.Select>
+
         <Button variant="primary" onClick={handleApplyFilters} disabled={loading}>
           Apply Filters
         </Button>
@@ -117,7 +130,7 @@ const Reporting = () => {
               </tr>
             </thead>
             <tbody>
-              {data.dpsCitations.map(citation => (
+              {filteredCitations.map((citation) => (
                 <tr key={citation._id}>
                   <td>{citation.ticketNumber}</td>
                   <td>{citation.firstName}</td>
