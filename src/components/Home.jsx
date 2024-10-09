@@ -20,7 +20,7 @@ const Home = () => {
     event.preventDefault();
     console.log('Form submitted with:', ticketNumberValue);
     // Handle form submission logic here
-  }; 1
+  };
 
   return (
     <Container className="align-items-top justify-content-center">
