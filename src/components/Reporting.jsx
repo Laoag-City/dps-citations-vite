@@ -79,7 +79,8 @@ const Reporting = () => {
         'Violations': citation.violations.map(violation => `${violation.violation} - ₱${violation.amount}`).join(', '),
         'OR Number': citation.paymentORNumber,
         'Payment Date': `${citation.paymentDate ? new Date(citation.paymentDate).toLocaleDateString() : 'N/A'}`,
-        'Payment Remarks': citation.paymentRemarks,
+        'Vehicle Type': citation.vehicleColor,
+        'Plate Number': citation.plateNumber,
         'Apprehending Officer': citation.apprehendingOfficer,
         'Unit': citation.apprehendingUnitOf,
       }));
@@ -157,9 +158,8 @@ const Reporting = () => {
                   </>
                 )}
                 <th>Violations</th>
-                <th>Payment OR Number</th>
-                <th>Payment Date</th>
-                <th>Payment Remarks</th>
+                <th>Vehicle Type</th>
+                <th>Plate No.</th>
                 <th>Apprehending Officer</th>
                 <th>Apprehending</th>
               </tr>
@@ -195,9 +195,11 @@ const Reporting = () => {
                         ))}
                       </ul>
                     </td>
-                    <td>{citation.paymentORNumber}</td>
-                    <td>{citation.paymentDate ? new Date(citation.paymentDate).toLocaleDateString() : 'N/A'}</td>
-                    <td>{citation.paymentRemarks}</td>
+                    {/*<td>{citation.paymentORNumber}</td>*/}
+                    {/*<td>{citation.paymentDate ? new Date(citation.paymentDate).toLocaleDateString() : 'N/A'}</td>*/}
+                    {/*<td>{citation.paymentRemarks}</td> */}
+                    <td>{citation.vehicleColor}</td>
+                    <td>{citation.plateNumber}</td>
                     <td>{citation.apprehendingOfficer}</td>
                     <td>{citation.apprehendingUnitOf}</td>
                   </tr>
