@@ -76,9 +76,17 @@ const TopBar = ({ username, userrole, onSearch }) => {
               <Navbar.Toggle aria-controls="basic-navbar-nav" />
               <NavDropdown title="Account" data-bs-theme="dark" id="basic-nav-dropdown">
                 {/*TODO:Conditional rendering*/}
+                {userrole === "dpsadmin" && (
+                  <NavDropdown.Item href="/Violations">Edit Violations</NavDropdown.Item>
+                )}
+                {userrole === "dpsadmin" && (
+                  <NavDropdown.Item href="/apprehenders">Edit Apprehenders</NavDropdown.Item>
+                )}
                 <NavDropdown.Item href="#action/3.2">Hello, {username}</NavDropdown.Item>
+                {/*
                 <NavDropdown.Item href="/apprehenders">Edit Apprehenders</NavDropdown.Item>
                 <NavDropdown.Item href="/violations">Edit Violations</NavDropdown.Item>
+                */}
                 <NavDropdown.Divider />
                 <NavDropdown.Item href="#action/3.4">Account Settings</NavDropdown.Item>
                 <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
