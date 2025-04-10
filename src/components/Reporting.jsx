@@ -66,29 +66,23 @@ const Reporting = () => {
       })
       .map(citation => ({
         'Ticket Number': citation.ticketNumber,
-        'Full Name': `${citation.firstName} ${citation.middleName} ${citation.lastName}`,  // Combined full name
-        'Home Address': citation.homeAddress,
-        'License Number': citation.licenseNumber,
-        'Date Apprehended': new Date(citation.dateApprehended).toLocaleDateString(),
+        'Violations': citation.violations.map(violation => `${violation.violation} - ₱${violation.amount}`).join(', '),
         'Amount Paid': citation.amountPaid ? `₱${citation.amountPaid}` : 'N/A',
         ...(paymentStatusFilter === 'paid' && citation.paymentStatus && {
           '50% of Amount Paid': `₱${(citation.amountPaid * 0.5).toFixed(2)}`,
           '30% of Amount Paid': `₱${(citation.amountPaid * 0.3).toFixed(2)}`,
           '20% of Amount Paid': `₱${(citation.amountPaid * 0.2).toFixed(2)}`,
         }),
-        'Violations': citation.violations.map(violation => `${violation.violation} - ₱${violation.amount}`).join(', '),
         'OR Number': citation.paymentORNumber,
         'Payment Date': `${citation.paymentDate ? new Date(citation.paymentDate).toLocaleDateString() : 'N/A'}`,
-        'Vehicle Type': citation.vehicleColor,
-        'Plate Number': citation.plateNumber,
         'Apprehending Officer': citation.apprehendingOfficer,
         'Unit': citation.apprehendingUnitOf,
       }));
 
     const worksheet = utils.json_to_sheet(formattedData);
     const workbook = utils.book_new();
-    utils.book_append_sheet(workbook, worksheet, 'DPS Citations');
-    writeFile(workbook, 'DPS_Citations.xlsx');
+    utils.book_append_sheet(workbook, worksheet, `DPS Citations ${startDate} to ${endDate}`);
+    writeFile(workbook, `DPS Citations ${startDate} to ${endDate}` + '.xlsx');
   };
 
 
