@@ -31,7 +31,7 @@ const Reporting = () => {
           limit: 99999  // Large limit to fetch all results
         }
       });
-      console.log(response);
+      //console.log(response);
       setData(response.data);
     } catch (error) {
       setError('Failed to fetch DPS Citations', error);
