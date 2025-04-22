@@ -81,7 +81,7 @@ const Reporting = () => {
 
     const worksheet = utils.json_to_sheet(formattedData);
     const workbook = utils.book_new();
-    utils.book_append_sheet(workbook, worksheet, `DPS Citations ${startDate} to ${endDate}`);
+    utils.book_append_sheet(workbook, worksheet, `DPS Citations Report`);
     writeFile(workbook, `DPS Citations ${startDate} to ${endDate}` + '.xlsx');
   };
 
