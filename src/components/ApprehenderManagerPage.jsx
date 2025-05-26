@@ -33,7 +33,7 @@ const ApprehenderManagerPage = () => {
         // Normally, you would send a PUT request here if the API supports it
       } else {
         // Create new apprehender
-        const response = await axios.post('https://apps.laoagcity.gov.ph:3002/apprehenders', formData, {
+        const response = await axios.post('https://apps.laoagcity.gov.ph/dps-citations-api/apprehenders', formData, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`, // Ensure proper authentication
           },

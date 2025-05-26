@@ -16,7 +16,7 @@ const SearchResults = ({ searchResults, error, handleShow, getRowClass, handleCo
   const [showEditModal, setShowEditModal] = useState(false);
   const [editData, setEditData] = useState({});
   const { token, user } = useSelector((state) => state.auth);
-  const updateUrl = selectedCitation ? `https://apps.laoagcity.gov.ph:3002/dpscitations/${selectedCitation._id}` : '';
+  const updateUrl = selectedCitation ? `https://apps.laoagcity.gov.ph/dps-citations-api/dpscitations/${selectedCitation._id}` : '';
   const { apprehendersList, error: apprehendersError } = useFetchApprehenders(token);
   const { updateData, updateError } = useUpdate(updateUrl, token);
   const printRef = useRef();

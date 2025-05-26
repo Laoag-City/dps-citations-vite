@@ -50,6 +50,18 @@
     ul li {
         font-size: 14px;
     }
+
+    .text-dark {
+        color: #000 !important;
+    }
+
+    .bg-white {
+        background-color: #fff !important;
+    }
+
+    img {
+        max-width: 100px;
+    }
 }
 
 /* Page margin settings */

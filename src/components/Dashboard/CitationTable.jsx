@@ -1,7 +1,5 @@
-// File path: components/CitationTable.jsx
-
 import PropTypes from 'prop-types';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Table, Button, Card, Modal, Form } from 'react-bootstrap';
 import { formatDate } from '../../utils/dateUtils';
@@ -23,29 +21,38 @@ const CitationTable = ({ citations, isPaidTab = false }) => {
   const { token, user } = useSelector((state) => state.auth);
   const printRef = useRef();
 
-  const updateUrl = selectedCitation ? `https://apps.laoagcity.gov.ph:3002/dpscitations/${selectedCitation._id}` : '';
+  const updateUrl = selectedCitation ? `https://apps.laoagcity.gov.ph/dps-citations-api/dpscitations/${selectedCitation._id}` : '';
   const { updateData, updateError } = useUpdate(updateUrl, token);
   const { apprehendersList, error: apprehendersError } = useFetchApprehenders(token);
   const { handleCommuteClick, handlePaymentClick } = useCitationActions();
 
   const handleSortChange = (field) => {
-    const order = (sortField === field && sortOrder === 'asc') ? 'desc' : 'asc';
+    const order = sortField === field && sortOrder === 'asc' ? 'desc' : 'asc';
     setSortField(field);
     setSortOrder(order);
   };
 
-  const handlePrintClick = (citation) => {
-    setSelectedCitation(citation);
-    setTimeout(() => {
-      handlePrint();
-    }, 0);
-  };
-
   const handlePrint = useReactToPrint({
-    content: () => printRef.current,
     documentTitle: 'DPS Laoag City Citation Record Printout',
-    onAfterPrint: () => setSelectedCitation(null)
+    contentRef: printRef || null, // Return null if printRef.current is not set
+    onAfterPrint: () => setSelectedCitation(null),
   });
+
+  // Trigger print when selectedCitation and printRef.current are ready
+  useEffect(() => {
+    if (selectedCitation && printRef.current) {
+      console.log('Selected Citation:', selectedCitation);
+      console.log('Print Ref:', printRef.current);
+      handlePrint();
+    } else if (selectedCitation) {
+      console.log('Waiting for printRef.current to be set...');
+    }
+  }, [selectedCitation, handlePrint]);
+
+  const handlePrintClick = (citation) => {
+    console.log('Printing citation:', citation);
+    setSelectedCitation(citation); // This will trigger useEffect
+  };
 
   const handleEditClick = (citation) => {
     setSelectedCitation(citation);
@@ -70,7 +77,9 @@ const CitationTable = ({ citations, isPaidTab = false }) => {
 
   const handleApprehenderChange = (e) => {
     const selectedApprehenderId = e.target.value;
-    const selectedApprehender = apprehendersList.find(apprehender => apprehender._id === selectedApprehenderId);
+    const selectedApprehender = apprehendersList.find(
+      (apprehender) => apprehender._id === selectedApprehenderId
+    );
 
     setEditData({
       ...editData,
@@ -87,13 +96,21 @@ const CitationTable = ({ citations, isPaidTab = false }) => {
             <th onClick={() => handleSortChange('ticketNumber')}>Ticket Number</th>
             <th onClick={() => handleSortChange('lastname')}>Name</th>
             <th onClick={() => handleSortChange('licenseNumber')}>License Number</th>
-            <th onClick={() => handleSortChange('dateApprehended')}>Date Apprehended</th>
-            <th onClick={() => handleSortChange('streetApprehended')}>Street Apprehended</th>
+            <th onClick={() => handleSortChange('dateApprehended')}>
+              Date Apprehended
+            </th>
+            <th onClick={() => handleSortChange('streetApprehended')}>
+              Street Apprehended
+            </th>
             <th onClick={() => handleSortChange('plateNumber')}>Plate Number</th>
             <th onClick={() => handleSortChange('vehicleColor')}>Vehicle Color</th>
-            <th onClick={() => handleSortChange('apprehendingOfficer')}>Apprehending Officer</th>
+            <th onClick={() => handleSortChange('apprehendingOfficer')}>
+              Apprehending Officer
+            </th>
             <th>Amount/Paid</th>
-            {!isPaidTab && <th onClick={() => handleSortChange('commuteStatus')}>Commuted</th>}
+            {!isPaidTab && (
+              <th onClick={() => handleSortChange('commuteStatus')}>Commuted</th>
+            )}
             {!isPaidTab && <th>Paid</th>}
             <th>Print</th>
           </tr>
@@ -101,30 +118,69 @@ const CitationTable = ({ citations, isPaidTab = false }) => {
         <tbody>
           {citations.length > 0 ? (
             citations.map((citation) => (
-              <tr key={citation._id} className={getRowClass(citation.dateApprehended)}>
+              <tr
+                key={citation._id}
+                className={getRowClass(citation.dateApprehended)}
+              >
                 <td>{citation.ticketNumber}</td>
-                <td>{citation.lastName === 'N/A' || citation.lastName === 'n/a' || citation.lastName === 'NA' ? 'N/A' : citation.lastName + ', ' + citation.firstName + " " + citation.middleName[0] + '.'} </td>
+                <td>
+                  {citation.lastName === 'N/A' ||
+                    citation.lastName === 'n/a' ||
+                    citation.lastName === 'NA'
+                    ? 'N/A'
+                    : `${citation.lastName}, ${citation.firstName} ${citation.middleName[0]}.`}
+                </td>
                 <td>{citation.licenseNumber}</td>
                 <td>{formatDate(citation.dateApprehended)}</td>
                 <td>{citation.streetApprehended}</td>
                 <td>{citation.plateNumber}</td>
                 <td>{citation.vehicleColor}</td>
                 <td>{citation.apprehendingOfficer}</td>
-                <td>{sumAmounts(citation.violations) + " : " + citation.amountPaid}</td>
+                <td>
+                  {sumAmounts(citation.violations) + ' : ' + citation.amountPaid}
+                </td>
                 {!isPaidTab && (
                   <td>
-                    {user.userrole === 'dpshead' && (!citation.commuteStatus || citation.commuteStatus === undefined) ? <Button variant="warning" onClick={() => handleCommuteClick(citation._id)}>Commute</Button> : 'No'}
+                    {user.userrole === 'dpshead' &&
+                      (!citation.commuteStatus ||
+                        citation.commuteStatus === undefined) ? (
+                      <Button
+                        variant="warning"
+                        onClick={() => handleCommuteClick(citation._id)}
+                      >
+                        Commute
+                      </Button>
+                    ) : (
+                      'No'
+                    )}
                   </td>
                 )}
                 {!isPaidTab && (
                   <td>
-                    {user.userrole === 'dpsstaff' && (!citation.paymentStatus || citation.paymentStatus === undefined) ? <Button variant="warning" onClick={() => handlePaymentClick(citation._id)}>Pay</Button> : 'No'}
+                    {user.userrole === 'dpsstaff' &&
+                      (!citation.paymentStatus ||
+                        citation.paymentStatus === undefined) ? (
+                      <Button
+                        variant="warning"
+                        onClick={() => handlePaymentClick(citation._id)}
+                      >
+                        Pay
+                      </Button>
+                    ) : (
+                      'No'
+                    )}
                   </td>
                 )}
                 <td>
                   <Link onClick={() => handlePrintClick(citation)}>Print</Link>
                   <br />
-                  {user.userrole === 'dpsstaff' && (!citation.paymentStatus || citation.paymentStatus === undefined) ? <Link variant="warning" onClick={() => handleEditClick(citation)}>Edit</Link> : ''}
+                  {user.userrole === 'dpsstaff' &&
+                    (!citation.paymentStatus ||
+                      citation.paymentStatus === undefined) ? (
+                    <Link onClick={() => handleEditClick(citation)}>Edit</Link>
+                  ) : (
+                    ''
+                  )}
                 </td>
               </tr>
             ))
@@ -138,7 +194,7 @@ const CitationTable = ({ citations, isPaidTab = false }) => {
         </tbody>
       </Table>
       {selectedCitation && (
-        <div style={{ display: 'none' }}>
+        <div style={{ position: 'absolute', left: '-9999px', top: '-9999px' }}>
           <CitationPrint citation={selectedCitation} ref={printRef} />
         </div>
       )}
@@ -148,7 +204,10 @@ const CitationTable = ({ citations, isPaidTab = false }) => {
         </Modal.Header>
         <Card>
           <Card.Body>
-            <Card.Title>Ticket: {editData.ticketNumber}, {formatDate(editData.dateApprehended, 'yyyy-MM-dd HH:mm:ss')} </Card.Title>
+            <Card.Title>
+              Ticket: {editData.ticketNumber},{' '}
+              {formatDate(editData.dateApprehended, 'yyyy-MM-dd HH:mm:ss')}
+            </Card.Title>
             <Form>
               <Form.Group controlId="formLastName">
                 <Form.Label>Last Name</Form.Label>
@@ -178,15 +237,6 @@ const CitationTable = ({ citations, isPaidTab = false }) => {
                   readOnly
                 />
               </Form.Group>
-              {/*<Form.Group controlId="formDateApprehended">
-                <Form.Label>Date</Form.Label>
-                <Form.Control
-                  type="date"
-                  name="dateApprehended"
-                  value={editData.dateApprehended}
-                  onChange={handleEditChange}
-                />
-              </Form.Group>*/}
               <Form.Group controlId="formStreetApprehended">
                 <Form.Label>Street</Form.Label>
                 <Form.Control
@@ -213,17 +263,7 @@ const CitationTable = ({ citations, isPaidTab = false }) => {
                   value={editData.vehicleColor}
                   onChange={handleEditChange}
                 />
-              </Form.Group>{/*
-              <Form.Group controlId="formApprehendingOfficer">
-                <Form.Label>Apprehending Officer</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="apprehendingOfficer"
-                  value={editData.apprehendingOfficer}
-                  onChange={handleEditChange}
-                  readOnly
-                />
-              </Form.Group>*/}
+              </Form.Group>
               <Form.Group controlId="formApprehendingOfficerId">
                 <Form.Label>Apprehending Officer</Form.Label>
                 <Form.Control
@@ -248,8 +288,12 @@ const CitationTable = ({ citations, isPaidTab = false }) => {
           {apprehendersError && <p className="text-danger">{apprehendersError}</p>}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowEditModal(false)}>Close</Button>
-          <Button variant="primary" onClick={handleEditSave}>Save changes</Button>
+          <Button variant="secondary" onClick={() => setShowEditModal(false)}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleEditSave}>
+            Save changes
+          </Button>
         </Modal.Footer>
       </Modal>
     </>
@@ -275,7 +319,7 @@ CitationTable.propTypes = {
       apprehendingUnitOf: PropTypes.string,
       apprehendingOfficerId: PropTypes.oneOfType([
         PropTypes.string,
-        PropTypes.object // Updated to support ObjectId
+        PropTypes.object,
       ]),
       commuteStatus: PropTypes.bool,
       commuteDate: PropTypes.string,
@@ -291,13 +335,12 @@ CitationTable.propTypes = {
         PropTypes.shape({
           violation: PropTypes.string.isRequired,
           amount: PropTypes.number.isRequired,
-          remarks: PropTypes.string
+          remarks: PropTypes.string,
         })
-      ).isRequired
+      ).isRequired,
     })
   ).isRequired,
   isPaidTab: PropTypes.bool,
-  userRole: PropTypes.string
 };
 
 export default CitationTable;

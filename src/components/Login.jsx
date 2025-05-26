@@ -22,7 +22,7 @@ const Login = () => {
     setError('');
 
     try {
-      const response = await axios.post('https://apps.laoagcity.gov.ph:3002/users/login', {
+      const response = await axios.post('https://apps.laoagcity.gov.ph/dps-citations-api/users/login', {
         //const response = await axios.post('http://localhost:3002/users/login', {
         username,
         password

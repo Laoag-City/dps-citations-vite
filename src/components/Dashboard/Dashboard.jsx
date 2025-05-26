@@ -58,7 +58,7 @@ const Dashboard = () => {
     setSearchQuery(query);
     setCurrentPage(1);
     try {
-      const response = await axios.get('https://apps.laoagcity.gov.ph:3002/dpscitations', {
+      const response = await axios.get('https://apps.laoagcity.gov.ph/dps-citations-api/dpscitations', {
         headers: { Authorization: `Bearer ${token}` },
         params: {
           page: 1,

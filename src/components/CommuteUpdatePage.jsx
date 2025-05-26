@@ -24,8 +24,8 @@ const CommuteUpdatePage = () => {
     }
   }, [citationId, navigate]);
 
-  const fetchUrl = `https://apps.laoagcity.gov.ph:3002/dpscitations/${citationId}`;
-  const updateUrl = `https://apps.laoagcity.gov.ph:3002/dpscitations/${citationId}`;
+  const fetchUrl = `https://apps.laoagcity.gov.ph/dps-citations-api/dpscitations/${citationId}`;
+  const updateUrl = `https://apps.laoagcity.gov.ph/dps-citations-api/dpscitations/${citationId}`;
 
   const { violationsList, error: violationsError } = useFetchViolations(token);
   const { data: citation, loading, error: fetchError } = useFetch(fetchUrl, token);

@@ -110,7 +110,7 @@ function DPSCitationRecordForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('https://apps.laoagcity.gov.ph:3002/dpscitations', JSON.stringify(formData), config);
+      const response = await axios.post('https://apps.laoagcity.gov.ph/dps-citations-api/dpscitations', JSON.stringify(formData), config);
       alert('New DPS Record accepted');
       navigate("/");
     } catch (error) {
