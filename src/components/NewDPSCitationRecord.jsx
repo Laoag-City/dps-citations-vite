@@ -145,7 +145,8 @@ function DPSCitationRecordForm() {
     e.preventDefault();
     try {
       const response = await axios.post(
-        'https://apps.laoagcity.gov.ph:3002/dpscitations',
+        //  'https://apps.laoagcity.gov.ph:3002/dpscitations',
+        'https://apps.laoagcity.gov.ph/dps-citations-api/dpscitations',
         JSON.stringify(formData),
         config
       );

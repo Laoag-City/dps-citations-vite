@@ -34,23 +34,23 @@ const CitationTable = ({ citations, isPaidTab = false }) => {
 
   const handlePrint = useReactToPrint({
     documentTitle: 'DPS Laoag City Citation Record Printout',
-    contentRef: printRef || null, // Return null if printRef.current is not set
+    contentRef: printRef || null,
     onAfterPrint: () => setSelectedCitation(null),
   });
 
   // Trigger print when selectedCitation and printRef.current are ready
   useEffect(() => {
     if (selectedCitation && printRef.current) {
-      console.log('Selected Citation:', selectedCitation);
-      console.log('Print Ref:', printRef.current);
+      //console.log('Selected Citation:', selectedCitation);
+      //console.log('Print Ref:', printRef.current);
       handlePrint();
     } else if (selectedCitation) {
-      console.log('Waiting for printRef.current to be set...');
+      //console.log('Waiting for printRef.current to be set...');
     }
   }, [selectedCitation, handlePrint]);
 
   const handlePrintClick = (citation) => {
-    console.log('Printing citation:', citation);
+    //console.log('Printing citation:', citation);
     setSelectedCitation(citation); // This will trigger useEffect
   };
 

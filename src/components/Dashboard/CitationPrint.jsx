@@ -19,7 +19,7 @@ const CitationPrint = React.forwardRef(({ citation }, ref) => {
           </div>
           <img src="dps_official_seal.webp" alt="Department of Public Safety Logo" style={{ width: '100px' }} />
         </div>
-      </div>  <h3 className='text-center'>Citation</h3>
+      </div>  <h3 className='text-center'>Citation Details</h3>
       <hr />
       <div className='mb-2'>
         <p><strong>ID: </strong>{citation._id}</p>

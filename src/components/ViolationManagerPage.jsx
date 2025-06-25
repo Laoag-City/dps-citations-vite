@@ -42,7 +42,8 @@ const ViolationManagerPage = () => {
         // Normally, you would send a PUT request here if the API supports it
       } else {
         // Create new violation
-        const response = await axios.post('https://apps.laoagcity.gov.ph:3002/violations', formData, config,);
+        //const response = await axios.post('https://apps.laoagcity.gov.ph:3002/violations', formData, config,);
+        const response = await axios.post('https://apps.laoagcity.gov.ph/dpscitations-api/violations', formData, config,);
         setViolationsList([...violationsList, response.data]);
       }
       setFormData({ violation: '', amount: '' });

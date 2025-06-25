@@ -16,7 +16,7 @@ const Reporting = () => {
   const [loading, setLoading] = useState(false);  // Loading state
   const [error, setError] = useState('');  // Error state
   const [paymentStatusFilter, setPaymentStatusFilter] = useState('All');  // New state for payment status filter
-  const apiUrl = 'https://apps.laoagcity.gov.ph:3002/dpscitations';  // API endpoint
+  const apiUrl = 'https://apps.laoagcity.gov.ph/dps-citations-api/dpscitations';  // API endpoint
 
   // Fetch DPS Citations based on filters
   const fetchDPSCitations = async () => {
