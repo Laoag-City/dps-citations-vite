@@ -21,10 +21,12 @@ const SearchResults = ({ searchResults, error, handleShow, getRowClass, handleCo
   const { updateData, updateError } = useUpdate(updateUrl, token);
   const printRef = useRef();
 
+  // Update the useReactToPrint hook configuration
   const handlePrint = useReactToPrint({
     content: () => printRef.current,
     documentTitle: 'Citation Details',
-    onAfterPrint: () => setSelectedCitation(null)
+    onAfterPrint: () => setSelectedCitation(null),
+    removeAfterPrint: true
   });
 
   const handlePrintClick = (citation) => {
@@ -106,7 +108,15 @@ const SearchResults = ({ searchResults, error, handleShow, getRowClass, handleCo
                     {user.userrole === 'dpsstaff' && (!citation.paymentStatus || citation.paymentStatus === undefined) ? <Button variant="warning" onClick={() => handlePaymentClick(citation._id)}>Pay</Button> : 'Paid'}
                     {/*citation.paymentStatus ? 'Paid' : userRole === 'dpsstaff' ? <Button variant="warning" onClick={() => handlePaymentClick(citation)}>Pay</Button> : 'Unpaid'*/}
                   </td>
-                  <td>{violationCount(citation.violations)}</td>
+                  <td>{/*violationCount(citation.violations)*/}
+                    {citation.violations.map((violation, index) => (
+                      <span key={index}>
+                        {violation.violation}: Php{violation.amount}
+                        {violation.remarks ? ` - ${violation.remarks}` : ''}
+                        {index < citation.violations.length - 1 && ', '}
+                      </span>
+                    ))}
+                  </td>
                   <td><Link onClick={() => handlePrintClick(citation)}>Print</Link>
                     <br />
                     {user.userrole === 'dpsstaff' && (!citation.paymentStatus || citation.paymentStatus === undefined) ? <Link variant="warning" onClick={() => handleEditClick(citation)}>Edit</Link> : ''}</td>
@@ -124,14 +134,11 @@ const SearchResults = ({ searchResults, error, handleShow, getRowClass, handleCo
       )}
       {/* Hidden section for printing */}
       {selectedCitation && (
-        /*<div style={{ display: 'none' }}>*/
         <div style={{ display: 'none' }}>
-          <CitationPrint citation={selectedCitation} ref={printRef} />
-        </div>
-      )}
-      {selectedCitation && (
-        <div style={{ display: 'none' }}>
-          <CitationPrint citation={selectedCitation} ref={printRef} />
+          <CitationPrint
+            ref={printRef}
+            citation={selectedCitation}
+          />
         </div>
       )}
       <Modal show={showEditModal} onHide={() => setShowEditModal(false)}>
